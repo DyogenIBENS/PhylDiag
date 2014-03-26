@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# PhylDiag v1.0
+# PhylDiag v1.01
 # needs python 2.7 at least
 # Copyright © 2013 IBENS/Dyogen Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
@@ -8,7 +8,7 @@
 # under the terms of the GNU General Public License, version 2 or later
 
 ###################################################################
-# PhylDiag core algorithm v1.0 and tools to manage synteny blocks #
+# PhylDiag core algorithm and tools to manage synteny blocks #
 ###################################################################
 
 # This code is based on the publication ``PhylDiag : identifying complex cases of conserved synteny that include tandem duplications''
@@ -616,25 +616,32 @@ def convertGenomeIntoDicOfChromOfOrderedGenes(genome):
 	return newGenome
 
 # compute the adviced maximal gap length (in genes) for the diagonal merger
-# Under the assumption that homologous genes are uniformly distributed in chromosomes, we compute the gap that gives the closest probability p-value(sb(m,gap,N12,N1,N2)) to P. However this uniform distribution assumption is not very strict since we only need reasonable rather than optimal values for advisedGap.
+# We compute the gap that gives the closest probability p-value(sb(nbHps,gap,N12,N1,N2)) to targetProba in an a MHP(N1,N2,N12). 
+# Usually this MHP is an average of all the MHPs of the whole genome comparison. Even if considering this average MHP is not very rigorous, we only need reasonable rather than optimal values for recommendedGap.
 @utils.myTools.verbose
-def advisedGap(m, N12, N1, N2, p_hpSign=None, P=0.00001, MaxGapThreshold=50, verbose=False):
+def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThreshold=20, verbose=False):
+	firstPrint=True
 	tries = []
-	for g in range(0,MaxGapThreshold+1):
-		L = (m-1)*g+m # lengths of the chromosomal windows
-		pVal = utils.myProbas.pValue(m,g,L,L,N12,N1,N2,p_hpSign)
-		if pVal != 0.0 and pVal != None:
-			tries.append(abs(pVal - P))
-		elif pVal == None and pVal != 0.0 :
-			tries.append(float('inf'))
-		elif pVal == 0.0:
-			tries.append(abs(0.0 - float('inf') - math.log(P,10)))
+	for g in range(0,maxGapThreshold+1):
+		L = (nbHps-1)*g+nbHps # lengths of the chromosomal windows
+		pVal = utils.myProbas.pValue(nbHps,g,L,L,N12,N1,N2,p_hpSign,verbose=verbose)
+		if firstPrint == True:
+			print >> sys.stderr, "P-values of sbs of %s hps (nbHpsRecommendedGap) hps spaced by a gap 'g' in an average MHP(N1=%s, N2=%s, N12=%s) over all MHPs involved in the whole genome comparison.:" % (nbHps,N1,N2,N12)
+			firstPrint=False
+		print >> sys.stderr, "nbHps=%s, g=%g, pVal=%s" % (nbHps, g,pVal)
+		if pVal != None:
+			tries.append(pVal)
+		elif pVal == None:
+			tries.append(-float('inf'))
 		else:
 			raise ValueError
-		print >> sys.stderr, "g=",g,"pVal=",pVal
-	min_index, min_value = min(enumerate(tries), key=lambda x:x[1])
-	g = min_index
-	return g
+	print >> sys.stderr, "The first p-value over targetProba=%s (targetProbaRecommendedGap) sets the recommended gap value" % targetProba
+	for (g,pVal) in  enumerate(tries):
+		if pVal > targetProba:
+			return g
+	#min_index, min_value = min(enumerate(tries), key=lambda x:x[1])
+	#g = min_index
+	#return g
 
 # Number of non-empty value in the mh or the mhp
 def numberOfHomologies(g1,g2):
@@ -651,74 +658,180 @@ def numberOfHomologies(g1,g2):
 	#Not needed since the two lineages may have undergone some differential gene losses
 	return nbHomologies, nbHomologies_g
 
-# Statistical validation of synteny blocks
-@utils.myTools.verbose
-def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThreshold=0.00001, NbOfHomologiesThreshold=50, verbose=True):
-	rejectedDiagLength = collections.defaultdict(int)
-	impossibleToCalcProbaDiagLength = collections.defaultdict(int)
-	firstTimePrint = True
-	for i,diag in enumerate(listOfDiags):
+#returns the maximum gap between two hps with the Chebyschev Distance metric (CD)
+def max_g_of(diag):
+	if len(diag) == 3:
 		((c1,l1_tb),(c2,l2_tb),la_tb) = diag
+	elif len(diag) == 4:
+		((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
+	l1s = [(l1_tb[i1][0],l1_tb[i1+1][0]) for i1,_ in enumerate(l1_tb[:-1])]
+	max_g1 = max(l1s,key=lambda x:abs(x[1]-x[0]))
+	max_g1 = abs(max_g1[0]-max_g1[1]) - 1 #do not forget the -1
+	l2s = [(l2_tb[i2][0],l2_tb[i2+1][0]) for i2,_ in enumerate(l2_tb[:-1])]
+	max_g2 = max(l2s,key=lambda x:abs(x[1]-x[0]))
+	max_g2 = abs(max_g2[0]-max_g2[1]) - 1 #do not forget the -1
+	max_g = max(max_g1,max_g2)
+	return max_g
+
+# Statistical validation of synteny blocks
+# because of collections.Counter
+@utils.myTools.minimalPythonVersion((2,7))
+@utils.myTools.verbose
+def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThreshold=0.001, NbOfHomologiesThreshold=50, validateImpossToCalc_mThreshold=3, verbose=True):
+	def  calculateCharacteristics(diag):
+		if len(diag) == 3:
+			((c1,l1_tb),(c2,l2_tb),la_tb) = diag
+		elif len(diag) == 4:
+			((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
 		comp = (c1,c2)
 		m = len(la_tb) # number of homologies in the sb
-		if m <= 1:
-			rejectedDiagLength[len(diag[2])] += 1
-			continue # All diagonals of length 1 are rejected 
-		assert l1_tb[1] >=  l1_tb[0] # Because of the scanning process
 		#(x0,y0) = (l1_tb[0][0],l2_tb[0][0])
 		#(x1,y1) = (l1_tb[1][0],l2_tb[1][0])
 		#diagType = '/' if (x1 - x0)*(y1 - y0) else '\\'
-		l1s = [(l1_tb[i1][0],l1_tb[i1+1][0]) for i1,_ in enumerate(l1_tb[:-1])]
-		max_g1 = max(l1s,key=lambda x:abs(x[1]-x[0]))
-		max_g1 = abs(max_g1[0]-max_g1[1]) - 1 #do not forget the -1
-		l2s = [(l2_tb[i2][0],l2_tb[i2+1][0]) for i2,_ in enumerate(l2_tb[:-1])]
-		max_g2 = max(l2s,key=lambda x:abs(x[1]-x[0]))
-		max_g2 = abs(max_g2[0]-max_g2[1]) - 1 #do not forget the -1
-		max_g = max(max_g1,max_g2)
-		m = len(la_tb)
-		#S1 = (min pos i1_tb de l1_tb, max pos i1_tb de l2_tb)
-		la=[sys.maxint,-sys.maxint]
-		lb=[sys.maxint,-sys.maxint]
+		lw1=[sys.maxint,-sys.maxint]
+		lw2=[sys.maxint,-sys.maxint]
 		for tb1 in l1_tb:
-			la[0] = tb1[0] if  tb1[0] < la[0] else la[0]
-			la[1] = tb1[0] if  tb1[0] > la[1] else la[1]
+			lw1[0] = tb1[0] if  tb1[0] < lw1[0] else lw1[0]
+			lw1[1] = tb1[0] if  tb1[0] > lw1[1] else lw1[1]
 		for tb2 in l2_tb:
-			lb[0] = tb2[0] if  tb2[0] < lb[0] else lb[0]
-			lb[1] = tb2[0] if  tb2[0] > lb[1] else lb[1]
-		la = la[1]-la[0]+1 # +1 in order to have the nb of genes in the W1
-		lb = lb[1]-lb[0]+1 # +1 --------------------------------------- W2
-		assert la >= 0, la
-		assert lb >= 0, lb
+			lw2[0] = tb2[0] if  tb2[0] < lw2[0] else lw2[0]
+			lw2[1] = tb2[0] if  tb2[0] > lw2[1] else lw2[1]
+		lw1 = lw1[1]-lw1[0]+1 # +1 in order to have the nb of genes in the W1
+		lw2 = lw2[1]-lw2[0]+1 # +1 --------------------------------------- W2
+		assert lw1 >= 0, lw1
+		assert lw2 >= 0, lw2
+		l1_min=min(l1_tb,key=lambda x:x[0])[0]
+		l1_max=max(l1_tb,key=lambda x:x[0])[0]
+		l2_min=min(l2_tb,key=lambda x:x[0])[0]
+		l2_max=max(l2_tb,key=lambda x:x[0])[0]
+		if m > 1:
+			assert l1_tb[1] >=  l1_tb[0] # Because of the scanning process
+			max_g = max_g_of(diag)
+		else:
+			max_g = None
+		return (m,max_g,lw1,lw2,l1_min,l1_max,l2_min,l2_max)
+
+	listOfRejectedDiags = []
+	listOfImpossibleToCalcProbaDiags = []
+	listOfStatValDiags = []
+	for i,diag in enumerate(listOfDiags):
+		((c1,l1_tb),(c2,l2_tb),la_tb) = diag
+		(m,max_g,lw1,lw2,l1_min,l1_max,l2_min,l2_max) = calculateCharacteristics(diag)
+		comp = (c1,c2)
 		na = len(g1_tb[c1]) # Nb of Tbs on C1
 		nb = len(g2_tb[c2]) # Nb of Tbs on C2
-		nab = N12s[comp] # Nb of homologies in the mhp		
-		if m > NbOfHomologiesThreshold: # This is to avoid too big computations 
+		nab = N12s[comp] # Nb of homologies in the mhp	
+		if m <= 1:
+			# all diagonals of length 1 are rejected 
+			listOfRejectedDiags.append((diag[0],diag[1],diag[2],None))
+			continue 
+		elif m > nab:
+			# there are not m hps in the MHP
+			listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
+			continue
+		elif m > min([lw1, lw2]):
+			# there are too many dispersed paralogies in the window
+			listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
+			continue
+
+		if m > NbOfHomologiesThreshold: # This is to avoid too time consuming computations 
 			p=0
 		else:
 			comp = (c1,c2)
-			p = utils.myProbas.pValue(m, max_g, la, lb, nab, na, nb, p_hpSign[comp])
+			p = utils.myProbas.pValue(m, max_g, lw1, lw2, nab, na, nb, p_hpSign[comp], verbose=True)
 		if p == None:
-			impossibleToCalcProbaDiagLength[len(diag[2])] += 1
+			listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
 		elif p < pThreshold:
-			yield (diag[0],diag[1],diag[2],p)
+			listOfStatValDiags.append((diag[0],diag[1],diag[2],p))
 		else:
-			rejectedDiagLength[len(diag[2])] += 1
+			listOfRejectedDiags.append((diag[0],diag[1],diag[2],p))
 			assert len(diag[2]) == len(diag[0][1])
 			assert len(diag[2]) == len(diag[1][1])
-			if firstTimePrint:
-				print >> sys.stderr, "Diagonals That didn't pass the statistical test :"
-				firstTimePrint = False
+
+	# automatically validate sbs that contain more than validateImpossToCalc_mThreshold hps
+	listOfImpossibleToCalcProbaDiagsStatVal=[]
+	listOfImpossibleToCalcProbaDiagsRejected=[]
+	for diag in listOfImpossibleToCalcProbaDiags:
+		m = calculateCharacteristics(diag)[0]
+		if m >= validateImpossToCalc_mThreshold: 
+			# if the diagonal contains more than validateImpossToCalc_mThreshold  hps, it is validated in order to avoid to reject long and perfect diagonals because of only one dispersed tandem duplication
+			listOfImpossibleToCalcProbaDiagsStatVal.append(diag)
+		else:
+			listOfImpossibleToCalcProbaDiagsRejected.append(diag)
+	
+	# update the lists
+	listOfStatValDiags = listOfStatValDiags + listOfImpossibleToCalcProbaDiagsStatVal
+	listOfRejectedDiags = listOfRejectedDiags + listOfImpossibleToCalcProbaDiagsRejected
+
+	assert len(listOfStatValDiags) + len(listOfRejectedDiags) == len(listOfDiags)
+	assert len(listOfImpossibleToCalcProbaDiags) == len(listOfImpossibleToCalcProbaDiagsStatVal) + len(listOfImpossibleToCalcProbaDiagsRejected)
+
+	firstPrint = True
+	for diag in listOfRejectedDiags:
+		((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
+		(m,max_g,lw1,lw2,l1_min,l1_max,l2_min,l2_max) = calculateCharacteristics(diag)
+		comp = (c1,c2)
+		na = len(g1_tb[c1]) # Nb of Tbs on C1
+		nb = len(g2_tb[c2]) # Nb of Tbs on C2
+		nab = N12s[comp] # Nb of homologies in the mhp	
+		if m>1:
+			if firstPrint:
+				print >> sys.stderr, "Diagonals of more than 1 hp that have been rejected during the statistical test :"
+				firstPrint = False
 			# TODO comment se fait-il que certaines diagonales soient en double ici ?
-			l1_min=min(l1_tb,key=lambda x:x[0])[0]
-			l1_max=max(l1_tb,key=lambda x:x[0])[0]
-			l2_min=min(l2_tb,key=lambda x:x[0])[0]
-			l2_max=max(l2_tb,key=lambda x:x[0])[0]
-			print >> sys.stderr, "(c1=%s:%s-%s,c2=%s:%s-%s) \t (m=%s, max_g=%s, la=%s lb=%s, nab=%s, na=%s, nb=%s)" % (c1,l1_min,l1_max,c2,l2_min,l2_max,m,max_g,la,lb,nab,na,nb), "\t p=", p
-	rejectedDiagLength = ["%s:%s" % (length,nb) for (length,nb) in sorted(rejectedDiagLength.items())]
-	impossibleToCalcProbaDiagLength = ["%s:%s" % (length,nb) for (length,nb) in sorted(impossibleToCalcProbaDiagLength.items())]
-	print >> sys.stderr, "Rejected number of diagonals for each diagonal lengths : {%s}" %  " ".join(rejectedDiagLength)
-	print >> sys.stderr, "Diagonals with p-Value impossible to compute (mainly due to paralogies) : {%s}" %  " ".join(impossibleToCalcProbaDiagLength)
-	return
+			print >> sys.stderr, "(c1=%s:%s-%s,c2=%s:%s-%s) \t (m=%s, max_g=%s, lw1=%s lw2=%s, nab=%s, na=%s, nb=%s)" % (c1,l1_min,l1_max,c2,l2_min,l2_max,m,max_g,lw1,lw2,nab,na,nb), "\t p=", p
+	
+	firstPrint = True
+	for diag in listOfStatValDiags:
+		((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
+		(m,max_g,lw1,lw2,l1_min,l1_max,l2_min,l2_max) = calculateCharacteristics(diag)
+		if m == 2:
+			comp = (c1,c2)
+			na = len(g1_tb[c1]) # Nb of Tbs on C1
+			nb = len(g2_tb[c2]) # Nb of Tbs on C2
+			nab = N12s[comp] # Nb of homologies in the mhp		
+			if firstPrint:
+				print >> sys.stderr, "Diagonals containing 2 hps that have passed the statistical test :"
+				firstPrint = False
+			print >> sys.stderr, "(c1=%s:%s-%s,c2=%s:%s-%s) \t (m=%s, max_g=%s, lw1=%s lw2=%s, nab=%s, na=%s, nb=%s)" % (c1,l1_min,l1_max,c2,l2_min,l2_max,m,max_g,lw1,lw2,nab,na,nb), "\t p=", p
+
+	def statsDiagsM(listOfDiagsX,m):
+		if listOfDiagsX == []:
+			return []
+		if len(listOfDiagsX[0]) == 4:
+			listOfDiagsXM = [((c1,l1_tb),(c2,l2_tb),la_tb) for ((c1,l1_tb),(c2,l2_tb),la_tb,p) in listOfDiagsX if len(la_tb)==m]
+		elif len(listOfDiagsX[0]) == 3:
+			listOfDiagsXM = [((c1,l1_tb),(c2,l2_tb),la_tb) for ((c1,l1_tb),(c2,l2_tb),la_tb) in listOfDiagsX if len(la_tb)==m]
+		listOfDiagsXMGaps = [max_g_of(diag) for diag in listOfDiagsXM]
+		diagsXMGaps = collections.Counter(listOfDiagsXMGaps)
+		diagsXMGaps = ["%s:%s" % (length,nb) for (length,nb) in sorted(diagsXMGaps.items())]
+		return diagsXMGaps
+	print >> sys.stderr, "Over all sbs of 2 hps before stat. val. the distribution of gap maximum is : {%s}" % " ".join(statsDiagsM(listOfDiags,2))
+	print >> sys.stderr, "Over all rejected sbs of 2 hps the distribution of gap maximum is : {%s}" % " ".join(statsDiagsM(listOfRejectedDiags,2))
+	print >> sys.stderr, "Over all sbs where it is imposs. to calculate the proba. with 2 hps the distribution of gap maximum is : {%s} (due to dispersed paralogies)" % " ".join(statsDiagsM(listOfImpossibleToCalcProbaDiags,2))
+	print >> sys.stderr, "Over all sbs where it is imposs. to calculate the proba. with 2 hps which are finally validated, the distribution of gap maximum is : {%s} (due to dispersed paralogies)" % " ".join(statsDiagsM(listOfImpossibleToCalcProbaDiagsStatVal,2))
+	print >> sys.stderr, "Over all sbs where it is imposs. to calculate the proba. with 2 hps which are finally rejected, the distribution of gap maximum is : {%s} (due to dispersed paralogies)" % " ".join(statsDiagsM(listOfImpossibleToCalcProbaDiagsRejected,2))
+
+	print >> sys.stderr, "Over all stat. val. sbs of 2 hps the distribution of gap maximum is : {%s}" % " ".join(statsDiagsM(listOfStatValDiags,2))
+	
+	def statsDiagLengths(listOfDiagsX):
+		if listOfDiagsX == []:
+			return []
+		if len(listOfDiagsX[0]) == 4:
+			listOfDiagsX = [((c1,l1_tb),(c2,l2_tb),la_tb) for ((c1,l1_tb),(c2,l2_tb),la_tb,p) in listOfDiagsX]
+		elif len(listOfDiagsX[0]) == 3:
+			listOfDiagsX = [((c1,l1_tb),(c2,l2_tb),la_tb) for ((c1,l1_tb),(c2,l2_tb),la_tb) in listOfDiagsX]
+		diagXLengths = collections.Counter([len(la_tb) for (_,_,la_tb) in listOfDiagsX])
+		diagXLengths = ["%s:%s" % (length,nb) for (length,nb) in sorted(diagXLengths.items())]
+		return diagXLengths
+	print >> sys.stderr, "Over all diagonal before the stat. val., distribution of the diag lengths : {%s}" % " ".join(statsDiagLengths(listOfDiags))
+	print >> sys.stderr, "Over all rejected diagonals, distribution of all diag lengths : {%s}" %  " ".join(statsDiagLengths(listOfRejectedDiags))
+	print >> sys.stderr, "Over all diagonals with p-Value impossible to compute (mainly due to paralogies), distribution of diag lengths : {%s}" %  " ".join(statsDiagLengths(listOfImpossibleToCalcProbaDiags))
+	print >> sys.stderr, "Over all diagonals with p-Value impossible to compute (mainly due to paralogies) which are finally validated, distribution of diag lengths : {%s}" %  " ".join(statsDiagLengths(listOfImpossibleToCalcProbaDiagsStatVal))
+	print >> sys.stderr, "Over all diagonals with p-Value impossible to compute (mainly due to paralogies) which are finally rejected, distribution of diag lengths : {%s}" %  " ".join(statsDiagLengths(listOfImpossibleToCalcProbaDiagsRejected))
+	print >> sys.stderr, "Over all diagonals that passed the stat. val., distribution of diag lengths : {%s}" %  " ".join(statsDiagLengths(listOfStatValDiags))
+
+	return listOfStatValDiags
 
 # because of collections.Counter
 @utils.myTools.minimalPythonVersion((2,7))
@@ -754,9 +867,9 @@ def numberOfDuplicates(g_aID_filt):
 #
 #########################################################################################################################
 @utils.myTools.verbose
-def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.00001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, verbose=True):
-	
+def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, nbHpsRecommendedGap=2, targetProbaRecommendedGap=0.01, validateImpossToCalc_mThreshold=3, verbose=True):
 	if isinstance(g1,utils.myGenomes.Genome) and isinstance(g2,utils.myGenomes.Genome):
+		print >> sys.stderr, 'toto'
 		g1 = convertGenomeIntoDicOfChromOfOrderedGenes(g1)
 		g2 = convertGenomeIntoDicOfChromOfOrderedGenes(g2)
 	elif isinstance(g1,dict) and isinstance(g2,dict):
@@ -794,7 +907,7 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 	assert N_DD_1_g + N_GTD_1_g == N_GD_1_g
 	assert N_DD_2_g + N_GTD_2_g == N_GD_2_g
 
-	# compute the advised gapMax parameter
+	# compute the recommended gapMax parameter
 	#########################################
 	(p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = utils.myProbas.statsHpSign(g1_tb,g2_tb)
 	print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
@@ -802,14 +915,29 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 	print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%s,-1:%s,None:%s) (probabilities are also calculated for pairwise mhp)" % (p_hpSign_g[+1], p_hpSign_g[-1], p_hpSign_g[None])
 	N1_g=sum([len(g1_tb[c1]) for c1 in g1_tb])
 	N2_g=sum([len(g2_tb[c2]) for c2 in g2_tb])
-	m=2
-	gap = advisedGap(m, N12_g, N1_g, N2_g, p_hpSign=p_hpSign_g, P=0.00001, verbose=verbose)
-	print >> sys.stderr, "advised gapMax = %s tbs" % gap
+	#Build an average MHP
+	#N50 is better than the mean of the chromosome lengths, since it is less sensitive to numerous and very small chromosome lengths
+	#N1_N50 = utils.myMaths.myStats.getValueNX(sorted([len(g1_tb[c1]) for c1 in g1_tb]),50) # calculate the N50
+	#N2_N50 = utils.myMaths.myStats.getValueNX(sorted([len(g2_tb[c2]) for c2 in g2_tb]),50) # calculate the N50
+	#weightedAverage is even better than N50 since it returns a more stable value, not a length of a chromosome of the karyotype, it better reflects the global distribution
+	def weightedAverage(listOfChrLengths):
+		sumLengths = sum(listOfChrLengths)
+		return int(sum([(float(chrLength)/sumLengths)*chrLength for chrLength in listOfChrLengths]))
+
+	#Waring: if the genome is badly assembled and contain a lot of small contigs, this averaging is not relevant and the recommended gapMax won't be relevant neither
+	if len(g1_tb) > 50 or len(g2_tb) > 50:
+		print >> sys.stderr, "Warning: one of the two genome seems badly assembled, this may mislead the recommended gapMax calculation"
+	N1_weightedAverage = weightedAverage([len(g1_tb[c1]) for c1 in g1_tb])
+	N2_weightedAverage = weightedAverage([len(g2_tb[c2]) for c2 in g2_tb])
+	density = float(N12_g)/(N1_g*N2_g)
+	N12_weightedAverage = int(density*N1_weightedAverage*N2_weightedAverage) # conservation of the density
+	gap = recommendedGap(nbHpsRecommendedGap, targetProbaRecommendedGap, N12_weightedAverage, N1_weightedAverage, N2_weightedAverage, p_hpSign=p_hpSign_g, verbose=verbose)
+	print >> sys.stderr, "recommended gapMax = %s tbs" % gap
 	if gapMax == None:
 		gapMax = gap
-	print >> sys.stderr, "used gapMax = %s" % gapMax
+	print >> sys.stderr, "used gapMax = %s tbs" % gapMax
 	
-	# step 2 and 3 : extract sbs in pairwise comparisons of chromosomes and merge sbs
+	# step 2 and 3 : build the MHP and extract putative sbs as diagonals
 	#################################################################################
 	# extract sbs in the tb base
 	if len(g1_tb.keys()) > 1 or len(g2_tb.keys()) > 1:
@@ -824,8 +952,11 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 
 	# setp 4 : statistical validation of putative sbs
 	##################################################
-	sbsGenSV = filterStatisticalValidation(listOfSbs, g1_tb, g2_tb, N12s, p_hpSign, pThreshold = pThreshold, NbOfHomologiesThreshold=50, verbose=verbose) # SV : statistical validation
-
+	#DEBUG
+	#print >> sys.stderr, "sTBG1['Y']=%s" % sTBG1['Y']
+	#print >> sys.stderr, "sTBG2['Y']=%s" % sTBG2['Y']
+	#print >> sys.stderr, "p_hpSign[('Y','Y')]=%s" % p_hpSign[('Y','Y')]
+	sbsGenSV = filterStatisticalValidation(listOfSbs, g1_tb, g2_tb, N12s, p_hpSign, pThreshold = pThreshold, NbOfHomologiesThreshold=50, validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold, verbose=verbose) # SV : statistical validation
 
 	for diag in sbsGenSV:
 		# translate from the tb base to gene base

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# PhylDiag v1.0
+# PhylDiag v1.01
 # python 2.7
 # Copyright © 2013 IBENS/Dyogen Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr

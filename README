@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# PhylDiag v1.0
+# PhylDiag v1.01
 # python 2.7
 # Copyright © 2013 IBENS/Dyogen Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
@@ -15,9 +15,9 @@
 
 # This code uses personal libraries in src/utils: myTools, myGenomes, myMaths, myFile, myPhylTree, mySvgDrawer.py, myProbas.py and myDiags.py
 
-#################
-# PhylDiag v1.0 #
-#################
+##################
+# PhylDiag v1.01 #
+##################
 
 ##############################################################
 # preprocessing step : define gene families using gene trees #
@@ -56,25 +56,28 @@ give excecution rights to scripts :
 -----------------
 
 access PhylDiag man page :
-> res/phylDiag.py
+> src/phylDiag.py
 
 this returns :
 //////////////////////
 - ERREUR - Pas assez d'arguments
- Usage : phylDiag.py
+Usage : src/phylDiag.py
 	1: genome1 <type 'file'>
 	2: genome2 <type 'file'>
 	3: ancGenes <type 'file'>
 	  -gapMax <type 'str'> (None)
 	+/-sameStrand (True)
-	  -orthosFilter <type 'str'> (['None', 'InCommonAncestor', 'InBothSpecies'])
+	  -filterType <type 'str'> (['None', 'InCommonAncestor', 'InBothSpecies'])
 	  -minimalLength <type 'int'> (1)
-	  -distance <type 'str'> (DPD)
-	  -pThreshold <type 'float'> (1e-05)
+	  -distanceMetric <type 'str'> (CD)
+	  -pThreshold <type 'float'> (0.001)
+	  -nbHpsRecommendedGap <type 'int'> (2)
+	  -targetProbaRecommendedGap <type 'float'> (0.01)
+	  -validateImpossToCalc_mThreshold <type 'int'> (3)
 	+/-verbose (False)
 
-
 	Wrapper for PhylDiag Library
+
 //////////////////////
 numbered parameters are required, 
 other parameters are optional (the default value is between brackets)

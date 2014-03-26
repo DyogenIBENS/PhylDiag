@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# PhylDiag v1.0
+# PhylDiag v1.01
 # python 2.7
 # Copyright © 2013 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
@@ -161,14 +161,14 @@ def genesComputeHomologyInformations(chromosome1, chromosome2):
 
 	(TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow) = TbComputeHomologyInformations(chromosome1_tb, chromosome2_tb)
 	
-	genesHomologiesHpSign = collections.defaultdict(lambda:collections.defaultdict(list))
+	genesHomologiesHpSign = collections.defaultdict(lambda:collections.defaultdict(int))
 	for i1_tb in TbHpSign:
 		for i2_tb in TbHpSign[i1_tb]:
 			# TODO : propose to vizualize the mh with the species specific genes
 			for (i1,i2) in itertools.product( [chromosome1filt2chromosome1aID[ii1] for ii1 in chromosome1tb2chromosome1filt[i1_tb]], [chromosome2filt2chromosome2aID[ii2] for ii2 in chromosome2tb2chromosome2filt[i2_tb]]):
 				s1 = chromosome1[i1][1]
 				s2 = chromosome2[i2][1]
-  				genesHomologiesHpSign[i1][i2].append(((i1,i2),s1*s2))
+  				genesHomologiesHpSign[i1][i2] = s1*s2
 
 	###
 	# Build genesNoHomologiesInWindow1 = [..., [i5,i6,i7], ...] list of tbs with [i5,i6,i7] a tb of three genes whose indices are i5,i6 and i7
@@ -213,10 +213,11 @@ def genesComputeDiagIndices(listOfDiags):
 	return diagIndices
 arguments = utils.myTools.checkArgs( \
 	[("genome1",file), ("genome2",file), ("ancGenes",file), ("chr1:deb1-fin1", str), ("chr2:deb2-fin2", str)], \
-	[("gapMax",str,'None'), ("consistentSwDType",bool,True), ("filterType",str, 'InCommonAncestor'), ("minChromLength",int,1), ("pThreshold",float,0.00001), \
+	[("gapMax",str,'None'), ("consistentSwDType",bool,True), ("filterType",str, 'InCommonAncestor'), ("minChromLength",int,1), ("pThreshold",float,0.001), \
 	("out:SyntenyBlocks",str,"./res/syntenyBlocksDrawer.txt"), \
 	("mode:chromosomesRewrittenInTbs", bool, False), ('convertGenicToTbCoordinates', bool, False), \
 	("distanceMetric", str, 'CD'), \
+	('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
 	("out:ImageName", str, "./res/homologyMatrix.svg"),\
 	('verbose',bool,True)], \
 	__doc__ \
@@ -255,7 +256,7 @@ filterType = mD.FilterType[modesFilter.index(arguments["filterType"])]
 thresholdChr = 50 
 
 if not arguments['mode:chromosomesRewrittenInTbs']:
-	#chromosomes are shown as a lists of genes
+	#chromosomes are shown as a list of genes
 	#print >> sys.stderr, "List of (chromosomes, length in genes) of Genome 1, for chr of size > %s " % thresholdChr
 	#for (chr1,len1) in [(key1, len(chr1)) for (key1,chr1) in genome1.items() if len(chr1) > thresholdChr]:
 	#	print >> sys.stderr, "chr %s has %s genes" % (chr1,len1) 
@@ -268,6 +269,24 @@ if not arguments['mode:chromosomesRewrittenInTbs']:
 	chromosome2 ={}
 	chromosome1[chr1] = genome1[chr1][range1[0]:range1[1]]
 	chromosome2[chr2] = genome2[chr2][range2[0]:range2[1]]
+	
+	gapMax = arguments['gapMax']
+
+	###
+	# Build Genes Strands
+	###
+	genesStrandsC1 = [s for (_,s) in chromosome1[chr1]]
+	genesStrandsC2 = [s for (_,s) in chromosome2[chr2]]
+
+	((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), genesHomologiesHpSign,(genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),genesHomologyGroupsInWindow) = genesComputeHomologyInformations(chromosome1, chromosome2)
+
+	# Search diagonals 
+	#FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
+	listOfDiags = list(mD.extractSbInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=gapMax, consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], pThreshold=arguments["pThreshold"], verbose=arguments['verbose']))
+	genesDiagIndices = genesComputeDiagIndices(listOfDiags)
+
+	strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2), genesHomologiesHpSign, genesHomologyGroupsInWindow, genesDiagIndices, outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
+
 else:
 	#chromosomes are shown as lists of tbs
 	genome1_aID = mD.rewriteWithAncGeneID(genome1,ancGenes)
@@ -356,17 +375,7 @@ else:
 	chromosome2tb2chromosome2filt = g2tb2g2filt[chr2]
 	#chromosome12chromosome1tb = g12g1tb[chr1] #useless
 	#chromosome22chromosome2tb = g22g2tb[chr2] #useless
-# Here 
-# either chromosomeX are ready to be analysed and viewed for the gene representation
-# or chromosomeX_tb are ready to be analysed and viewed for the tb representation
-
-#copy the css style sheet
-dirNameImage = os.path.dirname(arguments["out:ImageName"])
-dirNameImage = dirNameImage if dirNameImage != "" else "."
-print >> sys.stderr, "cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage)
-os.system("cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage))
-
-if arguments['mode:chromosomesRewrittenInTbs']:
+	
 	###
 	# Build TbNumberOfGenesInEachTbC1 : [ 4,5,1,1,6,2, ...] number og genes in each TB of C1
 	###
@@ -384,10 +393,11 @@ if arguments['mode:chromosomesRewrittenInTbs']:
 	###
 	(TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow) = TbComputeHomologyInformations(chromosome1_tb[chr1], chromosome2_tb[chr2])
 	
-	# compute the advised gapMax parameter
+	# compute the recommended gapMax parameter
 	#########################################
 	N12s, N12_g = mD.numberOfHomologies(chromosome1_tb,chromosome2_tb)
 	(p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = utils.myProbas.statsHpSign(chromosome1_tb,chromosome1_tb)
+	p_hpSign={(chr1,chr2):p_hpSign[(1,1)]}#FIXME
 	print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
 	print >> sys.stderr, "genome 2 tb orientation proba = {+1=%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG2_g[+1], sTBG2_g[-1], sTBG2_g[None])
 	print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%s,-1:%s,None:%s) (probabilities are for pairwise mhp)" % (p_hpSign_g[+1], p_hpSign_g[-1], p_hpSign_g[None])
@@ -395,15 +405,15 @@ if arguments['mode:chromosomesRewrittenInTbs']:
 	N2_g=sum([len(chromosome2_tb[c2]) for c2 in chromosome2_tb])
 	m=2
 	#FIXME : calculate adviced gapMax before, on the whole chromosome, not the ROI specified by the user ranges
-	gap = mD.advisedGap(m, N12_g, N1_g, N2_g, p_hpSign=p_hpSign_g, P=0.00001, verbose=arguments['verbose'])
-	print >> sys.stderr, "advised gapMax = %s tbs" % gap
+	gap = mD.recommendedGap(arguments["nbHpsRecommendedGap"], arguments["targetProbaRecommendedGap"], N12_g, N1_g, N2_g, p_hpSign=p_hpSign_g, verbose=arguments['verbose'])
+	print >> sys.stderr, "recommended gapMax = %s tbs" % gap
 	if arguments['gapMax'] == None:
 		gapMax = gap
 	else:
 		gapMax = arguments['gapMax']
 	print >> sys.stderr, "used gapMax = %s" % gapMax
 
-	# Search diagonals 
+	# Search diagonals
 	listOfDiags = mD.extractSbsInPairCompChr(chr1, chr2, chromosome1_tb[chr1], chromosome2_tb[chr2], consistentSwDType=arguments['consistentSwDType'], gapMax=gapMax, distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
 	# statistical validation (SV)
 	#FIXME : calculate p-values before, on the whole chromosome, not the ROI specified by the user ranges
@@ -413,23 +423,11 @@ if arguments['mode:chromosomesRewrittenInTbs']:
 	
 	strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2), (TbStrandsC1, TbStrandsC2), ([],[]), (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHpSign, TbHomologyGroupsInWindow, TbDiagIndices, outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100, symbolsInGenes=(TbNumberOfGenesInEachTbC1, TbNumberOfGenesInEachTbC2) )
 
-else:
-	gapMax = arguments['gapMax']
-
-	###
-	# Build Genes Strands
-	###
-	genesStrandsC1 = [s for (_,s) in chromosome1[chr1]]
-	genesStrandsC2 = [s for (_,s) in chromosome2[chr2]]
-
-	((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), genesHomologiesHpSign,(genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),genesHomologyGroupsInWindow) = genesComputeHomologyInformations(chromosome1, chromosome2)
-
-	# Search diagonals 
-	#FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
-	listOfDiags = list(mD.extractSbInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=gapMax, consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose']))
-	genesDiagIndices = genesComputeDiagIndices(listOfDiags)
-
-	strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2), genesHomologiesHpSign, genesHomologyGroupsInWindow, genesDiagIndices, outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
+#copy the css style sheet
+dirNameImage = os.path.dirname(arguments["out:ImageName"])
+dirNameImage = dirNameImage if dirNameImage != "" else "."
+print >> sys.stderr, "cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage)
+os.system("cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage))
 
 # write a simple file with all diagonals into output file
 f=open(arguments['out:SyntenyBlocks'],'w')

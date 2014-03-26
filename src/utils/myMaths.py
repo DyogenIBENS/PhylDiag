@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# PhylDiag v1.0
+# PhylDiag v1.01
 # python 2.7
 # Copyright © 2013 IBENS/Dyogen Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
@@ -8,6 +8,7 @@
 
 import math
 import myTools
+import operator
 
 #############################
 # Fonctions de statistiques #
@@ -43,6 +44,7 @@ class myStats:
 		return lst[int((x*(len(lst)-1))/100.)]
 
 	# Renvoie la valeur telle que x% soit au dessus (x=50 -> N50)
+	# Before using this function, do not forget to sort the input list
 	#############################################################
 	@staticmethod
 	def getValueNX(lst, x):
@@ -359,7 +361,7 @@ def sqrti(n, part, nbdec):
 @myTools.memoize
 def combinations(n,p): 
 	if n < 0:
-		raise ValueError('combination(n,p), n cannot be < 0')
+		raise ValueError("combination(n=%s,p=%s), n cannot be < 0" % (n,p))
 
 	if p > n:
 		return 0 # there is 0 elements with p elements
@@ -373,6 +375,7 @@ def combinations(n,p):
 				# Pascal's recurrence formula, works well with the @myTools.memoize decorator
 				return float(combinations(n-1,p-1) + combinations(n-1,p))
 			except:
+				#Pascal's recursion fails sometimes because of a "maximum recursion depth exceeded"
 				num = prod([a for a in range(n-p+1,n+1)])
 				den = prod([a for a in range(1,p+1)])
 				try:
@@ -393,7 +396,9 @@ def combinations(n,p):
 				else:
 					return float(num)/den
 
-import operator
+#Warning: this function should be called from python 2.7 otherwise it may return annoying warnings in the sys.stderr as:
+#Exception RuntimeError: 'maximum recursion depth exceeded in __subclasscheck__' in <type 'exceptions.RuntimeError'> ignored
+@myTools.minimalPythonVersion((2,7))
 def prod(factors):
-	    return reduce(operator.mul, factors, 1)
+	return reduce(operator.mul, factors, 1)
 

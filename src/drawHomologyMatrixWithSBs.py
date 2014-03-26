@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# PhylDiag v1.0
+# PhylDiag v1.01
 # python 2.7
 # Copyright © 2013 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
@@ -198,6 +198,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 				s = hpSigns[i1][i2]
 				cx = i1*sizeCase + float(sizeCase)/2
 				cy = i2*sizeCase + float(sizeCase)/2
+				assert s == +1 or s== -1 or s == None, "s=%s" % s
 				assocValue = (("+" if s == +1 else "-") if s != None else '?')
 				scene.add(svgDrw.Text((cx+offset_matrix_x,height-(cy+sizeText*0.16+offset_matrix_y)), assocValue, text_anchor="middle", size=sizeText))
 		if nx < 20 and ny < 20:

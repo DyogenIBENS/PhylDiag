@@ -1,0 +1,63 @@
+Arguments: {'distanceMetric': 'MD', 'sameStrand': True, 'verbose': False, 'filterType': 'InCommonAncestor', 'minimalLength': 1, 'pThreshold': 0.001, 'genome2': 'data/genesST.Mus.musculus.list.bz2', 'genome1': 'data/genesST.Homo.sapiens.list.bz2', 'gapMax': 'None', 'ancGenes': 'data/ancGenes.Euarchontoglires.list.bz2', 'targetProbaRecommendedGap': 0.01, 'validateImpossToCalc_mThreshold': 3, 'nbHpsRecommendedGap': 2}
+Chargement du genome de data/genesST.Homo.sapiens.list.bz2 ... (Ensembl) OK
+Genome1
+nb de Chr =   24     Nombre de scaffolds =  1
+Chargement du genome de data/genesST.Mus.musculus.list.bz2 ... (Ensembl) OK
+Genome2
+nb de Chr =   21     Nombre de scaffolds =  1
+Chargement du genome de data/ancGenes.Euarchontoglires.list.bz2 ... (genes ancestraux) OK
+Begining of the extraction of synteny blocks
+toto
+genome 1 initially contains 20171 genes
+genome 2 initially contains 22542 genes
+genome 1 after filterType=InCommonAncestor contains 19351 genes
+genome 2 apres filterType=InCommonAncestor contains 20884 genes
+genome 1 contains 1381 gene duplicates (initial gene excluded)
+genome 2 contains 3138 gene duplicates (initial gene excluded)
+genome 1 rewritten in tbs, contains 18560 tbs
+genome 2 rewritten in tbs, contains 18934 tbs
+pairwise comparison of genome 1 and genome 2 yields 18236 hps
+genome 1 contains 791 tandem duplicated genes (initial gene excluded)
+genome 2 contains 1950 tandem duplicated genes (initial gene excluded)
+genome 1 contains 590 dispersed duplicated tbs (initial tb excluded)
+genome 2 contains 1188 dispersed duplicated tbs (initial tb excluded)
+genome 1 tb orientation proba = {+1:0.502586206897,-1:0.491379310345,None:0.00603448275862} (stats are also calculated for each chromosome)
+genome 2 tb orientation proba = {+1=0.494876940953,-1:0.492605894159,None:0.0125171648886} (stats are also calculated for each chromosome)
+hp sign proba in the 'global' mhp = {+1:0.490774669178,-1:0.490749217791,None:0.0184761130315) (probabilities are also calculated for pairwise mhp)
+P-values of sbs of 2 hps (nbHpsRecommendedGap) hps spaced by a gap 'g' in an average MHP(N1=980, N2=1052, N12=53) over all MHPs involved in the whole genome comparison.:
+nbHps=2, g=0, pVal=0.000347240285173
+nbHps=2, g=1, pVal=0.00138819582349
+nbHps=2, g=2, pVal=0.00312044776836
+nbHps=2, g=3, pVal=0.00553989240575
+nbHps=2, g=4, pVal=0.00864075956348
+nbHps=2, g=5, pVal=0.0124156386329
+nbHps=2, g=6, pVal=0.0168555120182
+nbHps=2, g=7, pVal=0.0219497957255
+nbHps=2, g=8, pVal=0.0276863868689
+nbHps=2, g=9, pVal=0.0340517177316
+nbHps=2, g=10, pVal=0.0410308160121
+nbHps=2, g=11, pVal=0.0486073708542
+nbHps=2, g=12, pVal=0.0567638041989
+nbHps=2, g=13, pVal=0.0654813469861
+nbHps=2, g=14, pVal=0.0747401196974
+nbHps=2, g=15, pVal=0.0845192167092
+nbHps=2, g=16, pVal=0.0947967939078
+nbHps=2, g=17, pVal=0.105550159011
+nbHps=2, g=18, pVal=0.116755864022
+nbHps=2, g=19, pVal=0.128389799252
+nbHps=2, g=20, pVal=0.140427288339
+The first p-value over targetProba=0.01 (targetProbaRecommendedGap) sets the recommended gap value
+recommended gapMax = 5 tbs
+used gapMax = 5 tbs
+10 % of the synteny block extraction
+20 % of the synteny block extraction
+30 % of the synteny block extraction
+40 % of the synteny block extraction
+50 % of the synteny block extraction
+60 % of the synteny block extraction
+70 % of the synteny block extraction
+80 % of the synteny block extraction
+90 % of the synteny block extraction
+100 % of the synteny block extraction
+End of the synteny block research
+Block length 2 [5/15/37] [31/70/139] 358 [31.34/44.25-534]
