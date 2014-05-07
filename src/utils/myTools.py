@@ -12,6 +12,7 @@ import enum
 import itertools
 import time
 import warnings
+from functools import wraps
 
 import myFile
 
@@ -30,6 +31,7 @@ def funcFilter(fun):
 
 # Decorator that adds a switchable verbose mode to a function
 def verbose(functionToExcecute):
+	@wraps(functionToExcecute) # to avoid changing the name of the function
 	def modifiedFunction(*args, **kargs):
 		if 'verbose' in kargs:
 			if kargs['verbose'] == True:
@@ -60,13 +62,14 @@ def minimalPythonVersion(version):
 
 #Decorator that compute the excecuton time
 def tictac(functionToExcecute):
+	@wraps(functionToExcecute) # to avoid changing the name of the function
 	def modifiedFunction(*args,**kargs):
 		tic = time.time()
-		ret = functionToExcecute(*args,**kargs) 
+		res = functionToExcecute(*args,**kargs)
 		tac = time.time()
 		deltaTicTac = tac - tic
 		print >> sys.stderr, "Function \"%s\" was excecuted in %s seconds" % (functionToExcecute.__name__, deltaTicTac)
-		return ret
+		return res
 	return modifiedFunction
 
 # Decorator

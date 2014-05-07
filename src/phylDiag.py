@@ -26,6 +26,7 @@ arguments = utils.myTools.checkArgs( \
 	[("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minimalLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
 	('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
 	('validateImpossToCalc_mThreshold',int,3),\
+	('multiProcess',bool,True),\
 	('verbose',bool,False)], \
 		#, ("computeDiagsWithoutGenesOnlyImplyedInDiagsOfLengthSmallerOrEqualTo",int,-1)], \
 	__doc__ \
@@ -49,7 +50,7 @@ filterType = utils.myDiags.FilterType[modesOrthos.index(arguments["filterType"])
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-listOfDiags = list(utils.myDiags.extractSbInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minimalLength"],  consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], verbose=arguments['verbose']))
+listOfDiags = list(utils.myDiags.extractSbInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minimalLength"],  consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
 print >> sys.stderr, "End of the synteny block research"
 listOfDiags.sort(key=lambda x: len(x[2]))
 lenListOfDiags = len(listOfDiags)
@@ -64,7 +65,7 @@ for ((c1,d1),(c2,d2),daa,pVal) in listOfDiags:
 	res = [l, \
 		c1," ".join(genome1.lstGenes[c1][i1].names[0] for (i1,_) in d1), \
 		c2," ".join(genome2.lstGenes[c2][i2].names[0] for (i2,_) in d2) ]
-	# On enleve l'orientation ancestrale et la largeur et la hauteur de l'Homology Pack pour coler au format de Matthieu
+	# The ancestral orientation, width and high of the homology packs are removed to fit Matthieu's format
 	res.append(utils.myFile.myTSV.printLine([a[0] for a in daa], " "))
 	res.append(utils.myFile.myTSV.printLine([a[2] for a in daa], " "))
 	res.append(utils.myFile.myTSV.printLine([a[3] for a in daa], " "))

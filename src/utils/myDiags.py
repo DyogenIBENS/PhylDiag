@@ -429,6 +429,7 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 #
 # Multiprocess queue 
 #####################
+@utils.myTools.tictac
 @utils.myTools.verbose
 def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='DPD', consistentSwDType=True, verbose=True):
 	manager = Manager()
@@ -644,6 +645,7 @@ def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThresho
 	#return g
 
 # Number of non-empty value in the mh or the mhp
+@utils.myTools.tictac
 def numberOfHomologies(g1,g2):
 	nbHomologies = {}
 	for c1 in g1:
@@ -866,10 +868,11 @@ def numberOfDuplicates(g_aID_filt):
 #	l1 = [...,(i,s),...] with 'i' the index of the gene and 's' its strand in the genome 1 without species specific genes
 #
 #########################################################################################################################
+@utils.myTools.tictac
 @utils.myTools.verbose
-def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, nbHpsRecommendedGap=2, targetProbaRecommendedGap=0.01, validateImpossToCalc_mThreshold=3, verbose=True):
+def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, nbHpsRecommendedGap=2, targetProbaRecommendedGap=0.01, validateImpossToCalc_mThreshold=3, multiProcess=True, verbose=True):
+
 	if isinstance(g1,utils.myGenomes.Genome) and isinstance(g2,utils.myGenomes.Genome):
-		print >> sys.stderr, 'toto'
 		g1 = convertGenomeIntoDicOfChromOfOrderedGenes(g1)
 		g2 = convertGenomeIntoDicOfChromOfOrderedGenes(g2)
 	elif isinstance(g1,dict) and isinstance(g2,dict):
@@ -940,15 +943,15 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 	# step 2 and 3 : build the MHP and extract putative sbs as diagonals
 	#################################################################################
 	# extract sbs in the tb base
-	if len(g1_tb.keys()) > 1 or len(g2_tb.keys()) > 1:
-		# if there is more than one pairwise comparison of chromosomes
-		listOfSbs = []
-		for tmpListOfSbs in extractSbsInPairCompGenomesMultiprocess(g1_tb, g2_tb, gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=verbose):
+	listOfSbs = []
+	if multiProcess and (len(g1_tb.keys()) > 1 or len(g2_tb.keys()) > 1):
+		# if the multiprocess option is True and if there is more than one pairwise comparison of chromosomes
+		for tmpListOfSbs in extractSbsInPairCompGenomesMultiprocess(g1_tb, g2_tb, gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=False):
 			listOfSbs.append(tmpListOfSbs)
 	else:
-		chr1 = g1_tb.keys()[0]
-		chr2 = g2_tb.keys()[0]
-		listOfSbs = extractSbsInPairCompChr(chr1, chr2, g1_tb[chr1], g2_tb[chr2], gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=verbose)
+		for (chr1,chr2) in itertools.product(g1_tb.keys(), g2_tb.keys()):
+			tmpListOfSbs = extractSbsInPairCompChr(chr1, chr2, g1_tb[chr1], g2_tb[chr2], gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=False)
+			listOfSbs.extend(tmpListOfSbs)
 
 	# setp 4 : statistical validation of putative sbs
 	##################################################
@@ -958,7 +961,8 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 	#print >> sys.stderr, "p_hpSign[('Y','Y')]=%s" % p_hpSign[('Y','Y')]
 	sbsGenSV = filterStatisticalValidation(listOfSbs, g1_tb, g2_tb, N12s, p_hpSign, pThreshold = pThreshold, NbOfHomologiesThreshold=50, validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold, verbose=verbose) # SV : statistical validation
 
-	for diag in sbsGenSV:
+	# format output
+	for (i,diag) in enumerate(sbsGenSV):
 		# translate from the tb base to gene base
 		((c1,l1_tb),(c2,l2_tb),la_tb,pVal) = diag
 		tb2gc1 = tb2g1[c1]
@@ -970,7 +974,6 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 		la=[]
 		l1=[]
 		l2=[]
-		# diag = [..., (c1,c2,l1,l2,la),...]
 		# convert diags from tb to genes before yielding them
 		# each hp corresponds to an ancestral gene
 		for (indx_HP,aGene) in enumerate(la_tb):
@@ -980,9 +983,10 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 			l2.extend([(indx,gc2_aID_filt[indx][1]) for indx in tb2gc2[indx_tb_g2]])
 			la.append((ancGenes.lstGenes[None][aGene[0]].names[0], aGene[1], len(tb2gc1[indx_tb_g1]), len(tb2gc2[indx_tb_g2]))) # add informations on the size of the HP.
 		if filterType != FilterType.None:
-			yield ((c1,[(filt2originc1[i1],s1) for (i1,s1) in l1]), (c2,[(filt2originc2[i2],s2) for (i2,s2) in l2]), la, pVal)
+			sbsGenSV[i] = ((c1,[(filt2originc1[i1],s1) for (i1,s1) in l1]), (c2,[(filt2originc2[i2],s2) for (i2,s2) in l2]), la, pVal)
 		else:
-			yield ((c1,l1), (c2,l2), la, pVal)
+			sbsGenSV[i] = ((c1,l1), (c2,l2), la, pVal)
+	return sbsGenSV
 
 #################################
 # Post processing of diags 

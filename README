@@ -74,6 +74,7 @@ Usage : src/phylDiag.py
 	  -nbHpsRecommendedGap <type 'int'> (2)
 	  -targetProbaRecommendedGap <type 'float'> (0.01)
 	  -validateImpossToCalc_mThreshold <type 'int'> (3)
+	  -multiProcess (True)
 	+/-verbose (False)
 
 	Wrapper for PhylDiag Library
@@ -92,19 +93,19 @@ others parameters are optional
 By default gapMax is set to 'None', thus PhylDiag chooses itself the advised gapMax (see article)
 The distance metric may be either the 'DPD', 'ED', 'MD' or 'CD'; the default value is 'CD'
 pThreshold is the p-value threshold for the statistical validation of synteny blocks
-to follow step 1 of PhylDiag as described in the article, users should add -orthosFilter=InCommonAncestor to filter lineage specific gene apparitions
+to follow step 1 of PhylDiag as described in the article, users should add -filterType=InCommonAncestor to filter lineage specific gene apparitions
 
 other parameters are not explained in PhylDiag article and users should avoid changing them 
 
 A standard way to launch PhylDiag is thus:
-> src/phylDiag.py genesST.Homo.sapiens.list.bz2 genesST.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -orthosFilter=InCommonAncestor > res/syntenyBlocks.txt
+> src/phylDiag.py genesST.Homo.sapiens.list.bz2 genesST.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -filterType=InCommonAncestor > res/syntenyBlocks.txt
 (this way, the gapMax is set with the advised value. Take care that the default distance metric is the chebyshev distance metric (CD))
 
 A more customised way is for instance:
-> src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -orthosFilter=InCommonAncestor > res/syntenyBlocks.txt
+> src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks.txt
 
 Adding "+verbose" allows more informations in the error log, thus users willing to have more informations should launch PhylDiag like this:
-> src/phylDiag.py genesST.Homo.sapiens.list.bz2 genesST.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -distance=DPD -gapMax=5 -pThreshold=0.001 +verbose -orthosFilter=InCommonAncestor > res/syntenyBlocks.txt 2> res/logErr
+> src/phylDiag.py genesST.Homo.sapiens.list.bz2 genesST.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -distance=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks.txt 2> res/logErr
 
 
 ###################
