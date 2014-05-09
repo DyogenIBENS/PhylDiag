@@ -282,7 +282,7 @@ if not arguments['mode:chromosomesRewrittenInTbs']:
 
 	# Search diagonals 
 	#FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
-	listOfDiags = list(mD.extractSbInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=gapMax, consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], pThreshold=arguments["pThreshold"], verbose=arguments['verbose']))
+	listOfDiags = list(mD.extractSbsInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=gapMax, consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], pThreshold=arguments["pThreshold"], verbose=arguments['verbose']))
 	genesDiagIndices = genesComputeDiagIndices(listOfDiags)
 
 	strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2), genesHomologiesHpSign, genesHomologyGroupsInWindow, genesDiagIndices, outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
@@ -570,7 +570,7 @@ def chooseChrsAndRanges(genome1, genome2, ancGenes, distanceMetric = 'DPD'):
 	chromosome2 ={}
 	chromosome1[chr1] = genome1[chr1][range1[0]:range1[1]]
 	chromosome2[chr2] = genome2[chr2][range2[0]:range2[1]]
-	listOfDiags = mD.extractSbInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=arguments["gapMax"], consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
+	listOfDiags = mD.extractSbsInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=arguments["gapMax"], consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
 	listOfDiags = list(listOfDiags)
 	print >> sys.stderr, "pairwise comparison of the two chromosomes yields" , len(listOfDiags), "diagonals."
 	if len(listOfDiags) == 0:

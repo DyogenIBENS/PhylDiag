@@ -419,11 +419,11 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 	for args in iter(input.get, 'STOP'):
 		result = extractSbsInPairCompChr(*args, **kwargs)
 		output.put(result)
-		avancement = 100-100*(input.qsize()) / NbOfTasks
+		progress = 100-100*(input.qsize()) / NbOfTasks
 		lock.acquire()
-		if avancement in listOfPercentage:
-			print >> sys.stderr, avancement, "% of the synteny block extraction"
-			listOfPercentage.remove(avancement)
+		if progress in listOfPercentage:
+			print >> sys.stderr, progress, "% of the synteny block extraction"
+			listOfPercentage.remove(progress)
 		lock.release()
 
 #
@@ -870,7 +870,7 @@ def numberOfDuplicates(g_aID_filt):
 #########################################################################################################################
 @utils.myTools.tictac
 @utils.myTools.verbose
-def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, nbHpsRecommendedGap=2, targetProbaRecommendedGap=0.01, validateImpossToCalc_mThreshold=3, multiProcess=True, verbose=True):
+def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, nbHpsRecommendedGap=2, targetProbaRecommendedGap=0.01, validateImpossToCalc_mThreshold=3, multiProcess=True, verbose=True):
 
 	if isinstance(g1,utils.myGenomes.Genome) and isinstance(g2,utils.myGenomes.Genome):
 		g1 = convertGenomeIntoDicOfChromOfOrderedGenes(g1)
@@ -949,9 +949,16 @@ def extractSbInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DP
 		for tmpListOfSbs in extractSbsInPairCompGenomesMultiprocess(g1_tb, g2_tb, gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=False):
 			listOfSbs.append(tmpListOfSbs)
 	else:
-		for (chr1,chr2) in itertools.product(g1_tb.keys(), g2_tb.keys()):
+		nbPairwiseComparisons = len(g1_tb.keys())*len(g2_tb.keys())
+		listOfPercentage = range(0,100,5)
+		for (i,(chr1,chr2)) in enumerate(itertools.product(g1_tb.keys(), g2_tb.keys())):
 			tmpListOfSbs = extractSbsInPairCompChr(chr1, chr2, g1_tb[chr1], g2_tb[chr2], gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=False)
 			listOfSbs.extend(tmpListOfSbs)
+			progress = int(float(i*100)/nbPairwiseComparisons)
+			if progress in listOfPercentage:
+				print >> sys.stderr, progress, "% of the synteny block extraction"
+				listOfPercentage.remove(progress)
+
 
 	# setp 4 : statistical validation of putative sbs
 	##################################################

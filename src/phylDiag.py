@@ -50,7 +50,7 @@ filterType = utils.myDiags.FilterType[modesOrthos.index(arguments["filterType"])
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-listOfDiags = list(utils.myDiags.extractSbInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minimalLength"],  consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
+listOfDiags = list(utils.myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minimalLength"],  consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
 print >> sys.stderr, "End of the synteny block research"
 listOfDiags.sort(key=lambda x: len(x[2]))
 lenListOfDiags = len(listOfDiags)
