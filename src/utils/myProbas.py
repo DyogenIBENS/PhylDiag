@@ -37,6 +37,7 @@
 from utils.myMaths import combinations
 import utils.myTools
 import collections
+import itertools
 import math
 import sys
 
@@ -76,21 +77,31 @@ def statsTbOrientation(genome_tb):
 
 # returns p_hpSign_g {+1:%+1, -1:%-1, None:%None}, percentages of each hp sign in the 'global' mhp of the pairwise comparison of the two genomes
 # p_hpSign is a dict containing the stats for each pairwise comparisons of chromosomes
-def statsHpSign(g1_tb,g2_tb):
+@utils.myTools.tictac
+@utils.myTools.verbose
+def statsHpSign(g1_tb, g2_tb, verbose=False):
 	# compute statistics on tandem blocks orientations
 	sTbG1, sTbG1_g = statsTbOrientation(g1_tb)
 	sTbG2, sTbG2_g = statsTbOrientation(g2_tb)
 	# Probability of hps signs for each chromosome comparison
 	p_hpSign = collections.defaultdict(dict)
-	for c1 in g1_tb:
-		for c2 in g2_tb:
-			comp = (c1,c2)
-			# Here we can use sets since a hp sign +1 in a comparison between ca on X vs cb on Y is still a hp sign +1 in a comparison between cb on X vs ca on Y 
-			p_hpSign[comp][+1] = sTbG1[c1][+1]*sTbG2[c2][+1] + sTbG1[c1][-1]*sTbG2[c2][-1]
-			p_hpSign[comp][-1] = sTbG1[c1][+1]*sTbG2[c2][-1] + sTbG1[c1][-1]*sTbG2[c2][+1]
-			p_hpSign[comp][None] = 	sTbG1[c1][+1]*sTbG2[c2][None] +  sTbG1[c1][None]*sTbG2[c2][+1] + \
-					sTbG1[c1][-1]*sTbG2[c2][None] +  sTbG1[c1][None]*sTbG2[c2][-1] + \
-					sTbG1[c1][None]*sTbG2[c2][None]
+	listOfPercentage = range(0,101,5)[1:]
+	nbPairwiseComparisons = len(g1_tb) * len(g2_tb)
+	print >> sys.stderr, "pairwise comparisons of chromosomes analysis for the calculation of the probabilities of hps signs",
+	for (i,(c1,c2)) in enumerate(itertools.product(g1_tb,g2_tb)):
+		comp = (c1,c2)
+		# Here we can use sets since a hp sign +1 in a comparison between ca on X vs cb on Y is still a hp sign +1 in a comparison between cb on X vs ca on Y 
+		p_hpSign[comp][+1] = sTbG1[c1][+1]*sTbG2[c2][+1] + sTbG1[c1][-1]*sTbG2[c2][-1]
+		p_hpSign[comp][-1] = sTbG1[c1][+1]*sTbG2[c2][-1] + sTbG1[c1][-1]*sTbG2[c2][+1]
+		p_hpSign[comp][None] = 	sTbG1[c1][+1]*sTbG2[c2][None] +  sTbG1[c1][None]*sTbG2[c2][+1] + \
+				sTbG1[c1][-1]*sTbG2[c2][None] +  sTbG1[c1][None]*sTbG2[c2][-1] + \
+				sTbG1[c1][None]*sTbG2[c2][None]
+		progress = int(float(i*100)/nbPairwiseComparisons)
+
+		if progress in listOfPercentage:
+			print >> sys.stderr, "%s" % progress + "%",
+			listOfPercentage.remove(progress)
+	print >> sys.stderr, "" # new line in the print
 	# Probability of hps sign for the comparison of twe two genomes
 	p_hpSign_g={}
 	p_hpSign_g[+1] = sTbG1_g[+1]*sTbG2_g[+1] + sTbG1_g[-1]*sTbG2_g[-1]

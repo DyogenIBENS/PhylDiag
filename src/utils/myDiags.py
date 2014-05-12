@@ -292,20 +292,58 @@ def strandProduct(sa,sb):
 # f : family, often the ancGene index
 ###################################################################################################################################
 def homologyMatrix(gc1,gc2):
+	#1
+	#M={}
+	#locG2 = {}
+	#for (i2,(f2,s2)) in enumerate(gc2):
+	#	if f2 != -1:
+	#		if f2 not in locG2:
+	#			locG2[f2]=[]
+	#	       		locG2[f2].append( (i2,s2) ) # LOCalisation on Gc 2
+        #		for (i1,(f1,s1)) in enumerate(gc1):
+	#			if f1 == f2:
+	#				if i1 not in  M:
+	#					M[i1]={}
+	#				M[i1][i2] = strandProduct(s1,s2)
+	
+	#2 faster than 1
 	locG2 = {}
-	for (i2,(f,s2)) in enumerate(gc2):
-        	if f != -1:
-        		if f not in locG2:
-        			locG2[f]=[]
-        		locG2[f].append( (i2,s2) ) # LOCalisation on Gc 2
-	#TODO optimization: Try to change the dict structure by a Matrix of len(gc1) rows and len(gc2) cols, maybe it will be faster
-        M = {}
+ 	for (i2,(f,s2)) in enumerate(gc2):
+         	if f != -1:
+ 			if f not in locG2:
+ 				locG2[f]=[]
+         		locG2[f].append( (i2,s2) ) # LOCalisation on Gc 2
+ 	M={}
+	if not locG2: # if locG2 is empty
+		return (M, locG2)
+
         for (i1,(f,s1)) in enumerate(gc1):
         	if f !=-1 and f in locG2: #TODO : remove by advance the f == -1 from gc1
+	 	       	M[i1]={}
         		for (i2,s2) in locG2[f]:
-        			if i1 not in M:
-        				M[i1]={}
-        			M[i1][i2]= strandProduct(s1,s2)
+	        		M[i1][i2]= strandProduct(s1,s2)
+	
+	#3 (faster than 2), but since we need to return locG2 of the input gc2 for next computations, it is not convenient
+	#TODO need to add a boolean to the returned values because locG2 may not correspond to the gc2 chromosome
+	# use the dict locG2 on the smallest chromosome
+	#switchedGCs = False
+	#if len(gc1) < len(gc2):
+	#	(gc1,gc2) = (gc2,gc1)
+	#	switchedGCs = True
+        # 	if f != -1:
+ 	#		if f not in locG2:
+ 	#			locG2[f]=[]
+        # 		locG2[f].append( (i2,s2) ) # LOCalisation on Gc 2
+ 	#M={}
+        #for (i1,(f,s1)) in enumerate(gc1):
+        #	if f != -1 and f in locG2: #TODO : remove by advance the f == -1 from gc1
+	# 	       	M[i1]={}
+        #		for (i2,s2) in locG2[f]:
+	#        		M[i1][i2]= strandProduct(s1,s2)
+	#if switchedGCs == True:
+	#	(gc1,gc2) = (gc2,gc1)
+	#	switchedGCs = False
+	
 	return (M, locG2) 
 
 #
@@ -338,7 +376,8 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
 	print >> sys.stderr, "(PPID = %s, PID = %s) start to extract diagonals on G1[%s]_vs_G2[%s]" % (os.getppid(), os.getpid(), c1, c2)
         listOfDiags = []
 	(M,locG2) = homologyMatrix(gc1, gc2) 
-        
+	if not locG2: # if locG2 is empty
+		return listOfDiags
 	la=[]
         l1=[]
         l2=[]
@@ -422,25 +461,24 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 		progress = 100-100*(input.qsize()) / NbOfTasks
 		lock.acquire()
 		if progress in listOfPercentage:
-			print >> sys.stderr, progress, "% of the synteny block extraction"
+			print >> sys.stderr, "%s" % progress + "% of the synteny block extraction"
 			listOfPercentage.remove(progress)
 		lock.release()
 
 #
 # Multiprocess queue 
 #####################
-@utils.myTools.tictac
 @utils.myTools.verbose
 def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='DPD', consistentSwDType=True, verbose=True):
 	manager = Manager()
 	lock = Lock() # Lock is used to give priority to one process in order that it is not disturbed by other process
 	listOfPercentage = Manager().list() # Manager is used to manage objects which are shared among process
-	for i in [10*j for j in range(11)]:
+	for i in [j for j in range(0,101,5)[1:]]:
 		listOfPercentage.append(i)
 
 	NUMBER_OF_PROCESSES = multiprocessing.cpu_count() * 2
 	TASKS = [(c1, c2, g1[c1], g2[c2]) for (c1,c2) in itertools.product([c1 for c1 in g1],[c2 for c2 in g2])]
-	KWARGS = {'gapMax':gapMax, 'distanceMetric':distanceMetric, 'consistentSwDType':consistentSwDType, 'verbose':verbose}
+	KWARGS = {'gapMax':gapMax, 'distanceMetric':distanceMetric, 'consistentSwDType':consistentSwDType, 'verbose':False}
 	
 	# Create queues
 	task_queue = Queue()
@@ -646,15 +684,23 @@ def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThresho
 
 # Number of non-empty value in the mh or the mhp
 @utils.myTools.tictac
-def numberOfHomologies(g1,g2):
+@utils.myTools.verbose
+def numberOfHomologies(g1,g2,verbose):
 	nbHomologies = {}
-	for c1 in g1:
-		for c2 in g2:
-			comp = (c1,c2)
-			gc1 = g1[c1]
-			gc2 = g2[c2]
-			(Ms,_) = homologyMatrix(gc1, gc2)
-			nbHomologies[comp] = sum([len(Ms[i1]) for i1 in Ms])
+	listOfPercentage = range(0,101,5)[1:]
+	nbPairwiseComparisons = len(g1) * len(g2)
+	print >> sys.stderr, "pairwise comparison of chromosomes analysis for counting hps",
+	for (i,(c1,c2)) in enumerate(itertools.product(g1,g2)):
+		comp = (c1,c2)
+		gc1 = g1[c1]
+		gc2 = g2[c2]
+		(Ms,_) = homologyMatrix(gc1, gc2)
+		progress = int(float(i*100)/nbPairwiseComparisons)
+		if progress in listOfPercentage:
+			print >> sys.stderr, "%s" % progress + "%",
+			listOfPercentage.remove(progress)
+		nbHomologies[comp] = sum([len(Ms[i1]) for i1 in Ms])
+	print >> sys.stderr, "" # new line in the print
 	nbHomologies_g = sum([a for a in nbHomologies.values()])
 	#assert nbHomologies_g >= min(sum([len(g1[c]) for c in g1]), sum([len(g2[c]) for c in g2])),"%s,%s" %  (sum([len(g1[c]) for c in g1]), sum([len(g2[c]) for c in g2])) 
 	#Not needed since the two lineages may have undergone some differential gene losses
@@ -879,7 +925,6 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 		pass
 	else:
 		raise TypeError('g1 and/or g2 must be either utils.myGenomes.Genome or dict')
-	
 	#step 1 : remove genes specific to each lineage
 	################################################
 	# rewrite genomes by family names (ie ancGene names)
@@ -899,7 +944,9 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 	(g2_tb, tb2g2, N_GTD_2_g) = rewriteInTb(g2_aID_filt)
 	print >> sys.stderr, "genome 1 rewritten in tbs, contains %s tbs" % sum([len(g1_tb[c1]) for c1 in g1_tb])
 	print >> sys.stderr, "genome 2 rewritten in tbs, contains %s tbs" % sum([len(g2_tb[c2]) for c2 in g2_tb])
-	N12s, N12_g = numberOfHomologies(g1_tb,g2_tb)
+	#TODO, optimise next step
+	verbose2 = True if (len(g1) > 500 or len(g2) > 500) else False # second level of verbosity
+	N12s, N12_g = numberOfHomologies(g1_tb,g2_tb,verbose=verbose2)
 	print >> sys.stderr, "pairwise comparison of genome 1 and genome 2 yields %s hps" % N12_g
 	print >> sys.stderr, "genome 1 contains %s tandem duplicated genes (initial gene excluded)" % N_GTD_1_g
 	print >> sys.stderr, "genome 2 contains %s tandem duplicated genes (initial gene excluded)" % N_GTD_2_g
@@ -912,7 +959,7 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 
 	# compute the recommended gapMax parameter
 	#########################################
-	(p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = utils.myProbas.statsHpSign(g1_tb,g2_tb)
+	(p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = utils.myProbas.statsHpSign(g1_tb,g2_tb,verbose=verbose2)
 	print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
 	print >> sys.stderr, "genome 2 tb orientation proba = {+1=%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG2_g[+1], sTBG2_g[-1], sTBG2_g[None])
 	print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%s,-1:%s,None:%s) (probabilities are also calculated for pairwise mhp)" % (p_hpSign_g[+1], p_hpSign_g[-1], p_hpSign_g[None])
@@ -946,19 +993,20 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 	listOfSbs = []
 	if multiProcess and (len(g1_tb.keys()) > 1 or len(g2_tb.keys()) > 1):
 		# if the multiprocess option is True and if there is more than one pairwise comparison of chromosomes
-		for tmpListOfSbs in extractSbsInPairCompGenomesMultiprocess(g1_tb, g2_tb, gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=False):
+		for tmpListOfSbs in extractSbsInPairCompGenomesMultiprocess(g1_tb, g2_tb, gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=True):
 			listOfSbs.append(tmpListOfSbs)
 	else:
 		nbPairwiseComparisons = len(g1_tb.keys())*len(g2_tb.keys())
-		listOfPercentage = range(0,100,5)
+		listOfPercentage = range(0,101,5)[1:]
+		print >> sys.stderr, "synteny block extraction",
 		for (i,(chr1,chr2)) in enumerate(itertools.product(g1_tb.keys(), g2_tb.keys())):
 			tmpListOfSbs = extractSbsInPairCompChr(chr1, chr2, g1_tb[chr1], g2_tb[chr2], gapMax=gapMax, distanceMetric=distanceMetric, consistentSwDType=consistentSwDType, verbose=False)
 			listOfSbs.extend(tmpListOfSbs)
 			progress = int(float(i*100)/nbPairwiseComparisons)
 			if progress in listOfPercentage:
-				print >> sys.stderr, progress, "% of the synteny block extraction"
+				print >> sys.stderr, "%s" % progress + "%",
 				listOfPercentage.remove(progress)
-
+		print >> sys.stderr, "" # new line in the print
 
 	# setp 4 : statistical validation of putative sbs
 	##################################################
