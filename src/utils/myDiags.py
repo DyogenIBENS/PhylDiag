@@ -685,7 +685,7 @@ def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThresho
 # Number of non-empty value in the mh or the mhp
 @utils.myTools.tictac
 @utils.myTools.verbose
-def numberOfHomologies(g1,g2,verbose):
+def numberOfHomologies(g1,g2,verbose=True):
 	nbHomologies = {}
 	listOfPercentage = range(0,101,5)[1:]
 	nbPairwiseComparisons = len(g1) * len(g2)
