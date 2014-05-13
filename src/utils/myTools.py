@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-# PhylDiag v1.01
+# PhylDiag v1.02
 # python 2.7
 # Copyright © 2013 IBENS/Dyogen Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
-# This is free software; you may copy, modify and/or distribute this work
-# under the terms of the GNU General Public License, version 2 or later
+# This is free software, you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 (GPL v3) or later and the CeCiLL v2 license in France
 
 import os
 import sys
