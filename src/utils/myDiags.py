@@ -528,7 +528,8 @@ def rewriteWithAncGeneID(genome, ancGenes):
 def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 	# Mark genes that are not in the intersection for future removal
 	# Marking is done by switching (g,s) into (-1,s)
-	def markGeneIntersection():
+	# warning : modifies g1 and g2
+	def markGeneIntersection(g1,g2):
 		def usedValues(genome): # create a set with all gene names
 			val = set()
 			for x in genome.itervalues():
@@ -545,6 +546,7 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 		rewrite(g1, inters)
 		rewrite(g2, inters)
 	# Remove too small chromosomes
+	# warning : modifies genome
 	def filterSize(genome):
 		flag = False
 		for c in genome.keys():
@@ -552,12 +554,12 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 				flag = True
 				del genome[c]
 		return flag
-	# Remove genes that are not inherited of a gene in the ancestor
-	# Warning : modify genome 
+	# Remove genes that are marked -1
+	# Warning : modifies genome 
 	def filterContent(genome):
 		transNewToOld = collections.defaultdict(dict)
 		for c in genome:
-			tmp = [(i,x) for (i,x) in enumerate(genome[c]) if x[0] != -1] #i corresponds to indices of the non-filtered genome
+			tmp = [(i,x) for (i,x) in enumerate(genome[c]) if x[0] != -1] # i corresponds to indices of the non-filtered genome
 			transNewToOld[c] = dict((newi,oldi) for (newi,(oldi,_)) in enumerate(tmp)) # here newi corresponds to indices of the filtered genome and oldi corresponds to indices of the non-filtered genome
 			# oldi : index of gene before filtering
 			# newi : index of gene after filtering
@@ -586,13 +588,33 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 		filterSize(g2)
 	# Only conserve genes present in both extant genomes
 	elif filterType == FilterType.InBothSpecies:
+		old_g1filt2g1origin = {}
+		old_g2filt2g2origin = {}
 		while True:
-			markGeneIntersection()
-			g1filt2g1origin = filterContent(g1)
-			g2filt2g2origin = filterContent(g2)
+			markGeneIntersection(g1,g2) # after this step genes that have no homolog in the other genome are marked -1
+			tmp_g1filt2g1origin = filterContent(g1)
+			tmp_g2filt2g2origin = filterContent(g2)
+			if len(old_g1filt2g1origin) > 0 or len(old_g2filt2g2origin) > 0:
+				if len(old_g1filt2g1origin) == 0 or len(old_g2filt2g2origin) == 0:
+					raise RuntimeError('one of the two dictionnaries for back-translating indices is empty')
+				new_g1filt2g1origin = collections.defaultdict(dict)
+				for c in tmp_g1filt2g1origin:
+					for newi in tmp_g1filt2g1origin[c]:
+						new_g1filt2g1origin[c][newi] = old_g1filt2g1origin[c][tmp_g1filt2g1origin[c][newi]]
+				old_g1filt2g1origin = new_g1filt2g1origin
+				new_g2filt2g2origin = collections.defaultdict(dict)
+				for c in tmp_g2filt2g2origin:
+					for newi in tmp_g2filt2g2origin[c]:
+						new_g2filt2g2origin[c][newi] = old_g2filt2g2origin[c][tmp_g2filt2g2origin[c][newi]]
+				old_g2filt2g2origin = new_g2filt2g2origin
+			else:
+				old_g1filt2g1origin = tmp_g1filt2g1origin
+				old_g2filt2g2origin = tmp_g2filt2g2origin
 			useful = filterSize(g1) or filterSize(g2)
 			if not useful: # if a chromosome has been removed because of the filtering on the length, the filtering is performed once more
 				break
+		g1filt2g1origin = old_g1filt2g1origin
+		g2filt2g2origin = old_g2filt2g2origin
 	else:
 		# impossible case
 		raise
@@ -933,8 +955,8 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 	print >> sys.stderr, "genome 1 initially contains %s genes" %  sum([len(g1[c1]) for c1 in g1])
 	print >> sys.stderr, "genome 2 initially contains %s genes" %  sum([len(g2[c2]) for c2 in g2])
 	(g1_aID_filt, g2_aID_filt, filt2origin1, filt2origin2) = filter(g1_aID, g2_aID, filterType, minChromLength) # Must be applied on the two genomes, because of the mode inBothGenomes (InCommonAncestor => not only anchor genes are kept but all genes herited from a gene of the LCA)
-	print >> sys.stderr, "genome 1 after filterType=%s contains %s genes" % (filterType, sum([len(g1_aID_filt[c1]) for c1 in g1_aID_filt]))
-	print >> sys.stderr, "genome 2 apres filterType=%s contains %s genes" % (filterType, sum([len(g2_aID_filt[c2]) for c2 in g2_aID_filt]))
+	print >> sys.stderr, "genome 1 after filterType=%s and minChromLength=%s contains %s genes" % (filterType, minChromLength, sum([len(g1_aID_filt[c1]) for c1 in g1_aID_filt]))
+	print >> sys.stderr, "genome 2 after filterType=%s and minChromLength=%s contains %s genes" % (filterType, minChromLength, sum([len(g2_aID_filt[c2]) for c2 in g2_aID_filt]))
 	N_GD_1_g  = numberOfDuplicates(g1_aID_filt)
 	N_GD_2_g  = numberOfDuplicates(g2_aID_filt)
 	print >> sys.stderr, "genome 1 contains %s gene duplicates (initial gene excluded)" % N_GD_1_g

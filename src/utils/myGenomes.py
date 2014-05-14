@@ -158,7 +158,7 @@ class Genome:
 	def __init__(self, fichier, **kwargs):
 
 		if isinstance(fichier, str):
-			print >> sys.stderr, "Chargement du genome de", fichier, "...",
+			print >> sys.stderr, "Loading genome of", fichier, "...",
 
 			f = myFile.firstLineBuffer(myFile.openFile(fichier, 'r'))
 

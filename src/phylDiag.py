@@ -40,10 +40,10 @@ else:
 
 genome1 = utils.myGenomes.Genome(arguments["genome1"])
 print >> sys.stderr, "Genome1"
-print >> sys.stderr, "nb de Chr =  ", len(genome1.chrList[utils.myGenomes.ContigType.Chromosome]),"    Nombre de scaffolds = ", len(genome1.chrList[utils.myGenomes.ContigType.Scaffold])
+print >> sys.stderr, "nb of Chr =  ", len(genome1.chrList[utils.myGenomes.ContigType.Chromosome]),"    nb of scaffolds = ", len(genome1.chrList[utils.myGenomes.ContigType.Scaffold])
 genome2 = utils.myGenomes.Genome(arguments["genome2"])
 print >> sys.stderr, "Genome2"
-print >> sys.stderr, "nb de Chr =  ", len(genome2.chrList[utils.myGenomes.ContigType.Chromosome]),"    Nombre de scaffolds = ", len(genome2.chrList[utils.myGenomes.ContigType.Scaffold])
+print >> sys.stderr, "nb of Chr =  ", len(genome2.chrList[utils.myGenomes.ContigType.Chromosome]),"    nb of scaffolds = ", len(genome2.chrList[utils.myGenomes.ContigType.Scaffold])
 ancGenes = utils.myGenomes.Genome(arguments["ancGenes"])
 filterType = utils.myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
 statsDiags = []
