@@ -22,7 +22,7 @@ import utils.myDiags
 modesOrthos = list(utils.myDiags.FilterType._keys)
 arguments = utils.myTools.checkArgs( \
 	[("genome1",file), ("genome2",file), ("ancGenes",file)], \
-	[("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minimalLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
+	[("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
 	('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
 	('validateImpossToCalc_mThreshold',int,3),\
 	('multiProcess',bool,True),\
@@ -49,7 +49,7 @@ filterType = utils.myDiags.FilterType[modesOrthos.index(arguments["filterType"])
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-listOfDiags = list(utils.myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minimalLength"],  consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
+listOfDiags = list(utils.myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minChromLength"],  consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
 print >> sys.stderr, "End of the synteny block research"
 listOfDiags.sort(key=lambda x: len(x[2]))
 lenListOfDiags = len(listOfDiags)
@@ -57,7 +57,7 @@ lenListOfDiags = len(listOfDiags)
 for ((c1,d1),(c2,d2),daa,pVal) in listOfDiags:
 
 	l = len(daa)
-	if l < arguments["minimalLength"]:
+	if l < arguments["minChromLength"]:
 		continue
 	statsDiags.append(l)
 	

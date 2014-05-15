@@ -76,7 +76,7 @@ Usage : src/phylDiag.py
 	  -gapMax <type 'str'> (None)
 	+/-sameStrand (True)
 	  -filterType <type 'str'> (['None', 'InCommonAncestor', 'InBothSpecies'])
-	  -minimalLength <type 'int'> (1)
+	  -minChromLength <type 'int'> (1)
 	  -distanceMetric <type 'str'> (CD)
 	  -pThreshold <type 'float'> (0.001)
 	  -nbHpsRecommendedGap <type 'int'> (2)
@@ -119,7 +119,7 @@ Adding the "-multiProcess" (set the multiProcess boolean to False) option allow 
 
 "-nbHpsRecommendedGap=X" sets the number of homologies to X for the target synteny block in the average MHP for the recommended gapMax type (the default value is 2) and "-targetProbaRecommendedGap" is the value of the p-value of this target synteny block of "nbHpsRecommendedGap" hps. See the Supp Data of PhylDiag for more explicit informations
 
-"-minimalLength" is the minimal length of considered chromosome for pairwise comparisons. Using a minimalLength of 2 may improve a lot the speed of the algorithm without loosing any sb (since sb comes from chromosomes of at least 2 genes) but may give wrong statistics on genomes at the beginning of the error log
+"-minChromLength" is the minimal length of considered chromosome for pairwise comparisons. Using a minChromLength of 2 may improve a lot the speed of the algorithm without loosing any sb (since sb comes from chromosomes of at least 2 genes) but may give wrong statistics on genomes at the beginning of the error log
 
 ###################
 # PhylDiag Viewer #
