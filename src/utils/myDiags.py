@@ -225,12 +225,23 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 				#elif dTa == '\\':
 				#	assert all( (x[0] == '\\' or x[0] == None ) for x in fusionableDiags)
 
-				# Sort by priority depending on the choice of the distance :
-				# either we want to fuse in priority along the diagonal line or relatively to the proximity on chromosome 1
-				if distanceMetric in ['DPD', 'ED', 'CD', 'MD']:
+				#sort fusionableDiags by number of hps, the more hps there are in the diagonal, the more the fusion may yield a long diagonal
+				fusionableDiags = sorted(fusionableDiags, key=lambda x:len(x[3]), reverse=True)
+				#if fusionableDiags contains at least 2 diags and if the two first diags of fusionableDiags have the same number of hps, we keep sorting all the diags that have the same number of hps
+				if len(fusionableDiags) > 1 and len(fusionableDiags[0][3]) == len(fusionableDiags[1][3]):
+					maxNbHps = len(fusionableDiags[0][3])
+					tmpBestrFusionableDiags = [diag for diag in fusionableDiags if len(diag[3]) == maxNbHps]
 					# score'Non'Diagonality = abs(deltaX - deltaY)
-					scoreNonDiagonality= lambda x: abs(x[4][0]-diagA[5][0]) - abs(x[4][1]-diagA[5][1])
-					fusionableDiags = sorted(fusionableDiags, key=scoreNonDiagonality, reverse=True)
+					scoreNonDiagonality = lambda x: abs(x[4][0]-diagA[5][0]) - abs(x[4][1]-diagA[5][1])
+					# sort from non diagonality score, the best fusionable diag is the one that is farthest from the diagonal axis
+					tmpBestrFusionableDiags = sorted(tmpBestrFusionableDiags, key=scoreNonDiagonality, reverse=True)
+					fusionableDiags = tmpBestrFusionableDiags + fusionableDiags[len(tmpBestrFusionableDiags):]
+					
+				# Sort by priority depending on the choice of the distance :
+				# either we want to fuse in priority along the diagonal line or relatively to the proximity on chromosome 1
+				#scoreNonDiagonality= lambda x: abs(x[4][0]-diagA[5][0]) - abs(x[4][1]-diagA[5][1])
+				#fusionableDiags = sorted(fusionableDiags, key=scoreNonDiagonality, reverse=True)
+				
 				#sort by proximity to the diagonal line
 				#elif distanceMetric == 'MD': # Doesn't change the result
 				#	#sort by proximity on chromosome 1
@@ -312,6 +323,7 @@ def homologyMatrix(gc1,gc2):
  			if f not in locG2:
  				locG2[f]=[]
          		locG2[f].append( (i2,s2) ) # LOCalisation on Gc 2
+         		#locG2.setdefault(f,[]).append( (i2,s2) ) # LOCalisation on Gc 2, same excecution time but less readable
  	M={}
 	if not locG2: # if locG2 is empty
 		return (M, locG2)
@@ -460,7 +472,7 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 		progress = 100-100*(input.qsize()) / NbOfTasks
 		lock.acquire()
 		if progress in listOfPercentage:
-			print >> sys.stderr, "%s" % progress + "% of the synteny block extraction"
+			print >> sys.stderr, "%s" % progress + '%'
 			listOfPercentage.remove(progress)
 		lock.release()
 
@@ -488,6 +500,7 @@ def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='
 		task_queue.put(task)
 
 	# Start worker processes
+	print >> sys.stderr, "synteny block extraction"
 	for i in range(NUMBER_OF_PROCESSES):
 		Process(target=wrapper_extractSbsPairCompChr, args=(task_queue, KWARGS, done_queue, int(task_queue.qsize()), listOfPercentage, lock)).start()
 
