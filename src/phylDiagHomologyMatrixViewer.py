@@ -461,7 +461,7 @@ var += ['<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5" xmlns="http:/
 		'<foreignObject x="0" y="0" width="95" height="5">\n',
 		'<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
 			'<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-			'<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + "coordinates %s, gapMax %s%s, %s sbs" % ('tb' if arguments['mode:chromosomesRewrittenInTbs'] else 'gene', arguments['distanceMetric'], gapMax, len(listOfDiags)) + '\n',
+			'<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + "%s, gapMax %s%s, %s sbs" % ('MHP' if arguments['mode:chromosomesRewrittenInTbs'] else 'MH', arguments['distanceMetric'], gapMax, len(listOfDiags)) + '\n',
 					'</xhtml:div>\n',
 				'</xhtml:div>\n',
 			'</xhtml:div>\n',

@@ -462,7 +462,7 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
 	listOfDiags = [((c1, diag[1]), (c2, diag[2]), diag[3]) for diag in listOfDiags] #FIXME diagType=diag[0] could be added as an information on the diagonal here
 	return listOfDiags
 
-#
+# FIXME : cut and paste into myTools the part corresponding to the management of the multiprocess
 # Wrapper used to print the % of the task progression
 #######################################################
 def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercentage, lock):
@@ -476,7 +476,7 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 			listOfPercentage.remove(progress)
 		lock.release()
 
-#
+# FIXME : cut and paste into myTools the part corresponding to the management of the multiprocess
 # Multiprocess queue 
 #####################
 @utils.myTools.verbose

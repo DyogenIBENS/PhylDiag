@@ -27,18 +27,35 @@
 # PhylDiag v1.02 #
 ##################
 
+###########
+# INSTALL #
+###########
+
+From now on we consider that the user is in the root directory of the PhylDiag deposit 
+: cd <PhylDiagFolder>
+
+install PhylDiag
+-----------------
+install python 2.7 :
+: sudo apt-get install python2.7
+
+give excecution rights to scripts :
+: chmod +x src/*.py
+: chmod +x src/utils/*.py
+-----------------
+
 ##############################################################
 # preprocessing step : define gene families using gene trees #
 ##############################################################
 
 convert nhx (or .nwk, newick) gene trees to our tabular format (phylTree):
-> src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.phylTree
+: src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.phylTree
 
 convert a newick species tree into a phylTree species tree:
-> src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree
+: src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree
 
 extract the ancestral gene content (ancGene) from the gene trees:
-> src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.phylTree -OUT.ancGenesFiles=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.phylTree
+: src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.phylTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.phylTree
 
 these ancGenes files can be used to define gene families
 usually when two species Sa and Sb are compared, gene families are defined by ancGenes.<LCA(Sa,Sb)>
@@ -47,29 +64,17 @@ usually when two species Sa and Sb are compared, gene families are defined by an
 # processing of PhylDiag #
 ##########################
 
-PhylDiag core is in src/utils/myDiags.py
+The core of PhylDiag is in src/utils/myDiags.py
 Probability calculations are in src/utils/myProbas.py
 The wrapper of PhylDiag is src/phylDiag.py
 
-from now on we consider that the user is in the root directory of the PhylDiag deposit (cd <PhylDiagFolder>)
-
-install PhylDiag
------------------
-install python 2.7 :
-> sudo apt-get install python2.7
-
-give excecution rights to scripts :
-> chmod +x src/*.py
-> chmod +x src/utils/*.py
------------------
-
-access PhylDiag man page :
-> src/phylDiag.py
+access to the manual of PhylDiag :
+: src/phylDiag.py
 
 this returns :
 //////////////////////
-- ERREUR - Pas assez d'arguments
-Usage : src/phylDiag.py
+- ERROR - Not enough arguments
+ Usage : src/phylDiag.py
 	1: genome1 <type 'file'>
 	2: genome2 <type 'file'>
 	3: ancGenes <type 'file'>
@@ -82,11 +87,11 @@ Usage : src/phylDiag.py
 	  -nbHpsRecommendedGap <type 'int'> (2)
 	  -targetProbaRecommendedGap <type 'float'> (0.01)
 	  -validateImpossToCalc_mThreshold <type 'int'> (3)
-	  -multiProcess (True)
+	+/-multiProcess (True)
 	+/-verbose (False)
 
-	Wrapper for PhylDiag Library
 
+	Wrapper for PhylDiag Library
 //////////////////////
 numbered parameters are required, 
 other parameters are optional (the default value is between brackets)
@@ -96,8 +101,6 @@ other parameters are optional (the default value is between brackets)
 -1 ancGene file (for gene family definitions)
 Examples are given in <PhylDiagRootPath>/data: human and mouse genomes and the anGene defining families from the Euarchontoglire ancestor (LCA(human,mouse))
 
-others parameters are optional
-
 By default gapMax is set to 'None', thus PhylDiag chooses itself the advised gapMax (see article)
 The distance metric may be either the 'DPD', 'ED', 'MD' or 'CD'; the default value is 'CD'
 pThreshold is the p-value threshold for the statistical validation of synteny blocks
@@ -106,14 +109,14 @@ to follow step 1 of PhylDiag as described in the article, users should add -filt
 other parameters are not explained in PhylDiag article and users should avoid changing them 
 
 A standard way to launch PhylDiag is thus:
-> src/phylDiag.py genesST.Homo.sapiens.list.bz2 genesST.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -filterType=InCommonAncestor > res/syntenyBlocks.txt
+: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -filterType=InCommonAncestor > res/syntenyBlocks.txt
 (this way, the gapMax is set with the advised value. Take care that the default distance metric is the chebyshev distance metric (CD))
 
 A more customised way is for instance:
-> src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks.txt
+: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks.txt
 
 Adding "+verbose" (set the verbose boolean to True) allows more informations in the error log, thus users willing to have more informations should launch PhylDiag like this:
-> src/phylDiag.py genesST.Homo.sapiens.list.bz2 genesST.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -distance=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks.txt 2> res/logErr
+: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -distanceMetric=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks.txt 2> res/logErr
 
 Adding the "-multiProcess" (set the multiProcess boolean to False) option allow to launch phylDiag in sequential mode on one process alone. This may be usefull for users that wants to launch phylDiag on a personal computer. Adding "nice -n 19" before the command line "phylDiag ..." may also be usefull in order to prevent any crash of the OS if the CPU or memory consuption becomes greedy
 
@@ -125,11 +128,12 @@ Adding the "-multiProcess" (set the multiProcess boolean to False) option allow 
 # PhylDiag Viewer #
 ###################
 
-help :
-> src/phylDiagHomologyMatrixViewer.py
-returns:
+access to the manual of PhylDiag's viewer :
+: src/phylDiagHomologyMatrixViewer.py
+
+this returns :
 ////////////////////////////////
-- ERREUR - Pas assez d'arguments
+- ERROR - Not enough arguments
  Usage : src/phylDiagHomologyMatrixViewer.py
 	1: genome1 <type 'file'>
 	2: genome2 <type 'file'>
@@ -140,11 +144,13 @@ returns:
 	+/-consistentSwDType (True)
 	  -filterType <type 'str'> (InCommonAncestor)
 	  -minChromLength <type 'int'> (1)
-	  -pThreshold <type 'float'> (1e-05)
+	  -pThreshold <type 'float'> (0.001)
 	  -out:SyntenyBlocks <type 'str'> (./res/syntenyBlocksDrawer.txt)
 	+/-mode:chromosomesRewrittenInTbs (False)
 	+/-convertGenicToTbCoordinates (False)
 	  -distanceMetric <type 'str'> (CD)
+	  -nbHpsRecommendedGap <type 'int'> (2)
+	  -targetProbaRecommendedGap <type 'float'> (0.01)
 	  -out:ImageName <type 'str'> (./res/homologyMatrix.svg)
 	+/-verbose (True)
 
@@ -161,7 +167,7 @@ numbered parameters are required
 other parameters are optional  (the default value is between brackets)
 
 To see the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome, launch:
-> src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=11 -distanceMetric=MD -out:ImageName=res/MH.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH.txt
+: src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=5 -distanceMetric=MD -out:ImageName=res/MH.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH.txt
 
 "X:1-~" means X chromosome from the 1st gene to the last gene
 For instance "4:45-80" means the 4th chromosome from the 45th gene to the 80th gene
@@ -169,9 +175,7 @@ For instance "4:45-80" means the 4th chromosome from the 45th gene to the 80th g
 the image MH.svg be viewed with an internet browser as firefox 
 
 It is also possible to draw the Matrix of Homology Packs (MHP):
-> src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -gapMax=11 -out:ImageName=./res/MHP.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP.txt
+: src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -distanceMetric=MD -gapMax=5 -out:ImageName=./res/MHP.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP.txt
 
 Many parameters can be customised, for instance a user can run:
-> Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="1-500" && C2=X && R2="1-680" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt.txt -verbose -pThreshold=0.001 
-
-
+: Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && C2=X && R2="1-100" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001

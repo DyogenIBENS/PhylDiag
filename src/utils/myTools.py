@@ -28,7 +28,7 @@ def applyFunctions(fun, data):
 def funcFilter(fun):
 	return lambda data: (f(x) for (f,x) in itertools.izip(fun, data))
 
-# Decorator that adds a switchable verbose mode to a function
+# decorator that adds a switchable verbose mode to a function
 def verbose(functionToExcecute):
 	@wraps(functionToExcecute) # to avoid changing the name of the function
 	def modifiedFunction(*args, **kargs):
@@ -47,7 +47,7 @@ def verbose(functionToExcecute):
 		return res
 	return  modifiedFunction
 
-# Decorator for functions that requires a minimal python version >= 2.7 for instance
+# decorator for functions that requires a minimal python version >= 2.7 for instance
 # version is a tuple, for instance if the function requires python version at least 2.7, version = (2,7)
 def minimalPythonVersion(version):
 	def decorator(functionToExcecute):
@@ -59,7 +59,7 @@ def minimalPythonVersion(version):
 		return modifiedFunction
 	return decorator
 
-#Decorator that compute the excecuton time
+# decorator that computes the execution time
 def tictac(functionToExcecute):
 	@wraps(functionToExcecute) # to avoid changing the name of the function
 	def modifiedFunction(*args,**kargs):
@@ -67,11 +67,11 @@ def tictac(functionToExcecute):
 		res = functionToExcecute(*args,**kargs)
 		tac = time.time()
 		deltaTicTac = tac - tic
-		print >> sys.stderr, "Function \"%s\" was excecuted in %s seconds" % (functionToExcecute.__name__, deltaTicTac)
+		print >> sys.stderr, "Function \"%s\" was executed in %s seconds" % (functionToExcecute.__name__, deltaTicTac)
 		return res
 	return modifiedFunction
 
-# Decorator
+# decorator that warns the user that the function is deprecated
 def deprecated(func):
 	"""This is a decorator which can be used to mark functions
 	as deprecated. It will result in a warning being emmitted
@@ -86,11 +86,9 @@ def deprecated(func):
 	return newFunc
 
 
-#########################################################
-# Record results of a function for each parameter value #
-#########################################################
+# record results of a function for each parameter value #
 class memoize:
-	"""Decorator that caches a function's return value each time it is called.
+	"""Decorator that caches a value returned by the function each time it is called.
 	If called later with the same arguments, the cached value is returned, and
 	not re-evaluated.
 	"""
@@ -124,11 +122,7 @@ class memoize:
 		self.nbcall = 0
 		self.cache = {}
 
-
-######################################################
-# Mon gestionnaire de queue pour calcul en parallele #
-######################################################
-
+# Matthieu's queue manager for parallel computations
 def myPool(nbThreads, func, largs):
 
 	# Librairies
@@ -180,13 +174,9 @@ def myPool(nbThreads, func, largs):
 		sys.stdout = backstdout
 		sys.stderr = backstderr
 
-#####################################################################
-# Une classe pour avoir un iterateur a deux positions sur une liste #
-#####################################################################
+# iterator of adjacent components of a list
 class myIterator:
-
-	# Couple (x,y) glissant
-	########################
+	# sliding couple (x,y)
 	@staticmethod
 	def slidingTuple(lst):
 		if len(lst) > 0:
@@ -196,8 +186,7 @@ class myIterator:
 				yield (x,y)
 				x = y
 
-# Liste des partitions taille k de range(n)
-############################################
+# liste of partitions of size k in range(n)
 @memoize
 def partitions(n, k):
 	if n == 1:
@@ -214,9 +203,7 @@ def partitions(n, k):
 	else:
 		return []
 
-##########################################################
-# Gestion du lancement multiple sur une plage de valeurs #
-##########################################################
+# management of a parallel execution on a range of values
 def getRange(s):
 	if myFile.hasAccess(s):
 		f = myFile.openFile(s, "r")
@@ -230,25 +217,19 @@ def getRange(s):
 		return range(int(start), int(end)+1)
 
 
-###########################################################
-# Classe dict hashable, utile pour s'en servir comme clef #
-###########################################################
+# hashable dict class, useful to use it as a key
 class hashabledict(dict):
 	def __hash__(self):
 		return hash(tuple(sorted(self.items())))
 
-########################
-# Classe list hashable #
-########################
+# hashable list class
 class hashablelist(list):
 	def __hash__(self):
 		return hash(tuple(self))
 
-########################################################################
-# Cette classe permet de regrouper une liste d'elements                #
-# Partant d'une liste initiale, on ajoute des liens entre des elements #
-#  de la liste et la classe les regroupe                               #
-########################################################################
+# This class allows to group a list of elements.
+# From an initial list of elements, links are added between these elements. 
+# The class gathers elements that are linked.
 class myCombinator:
 
 	def __init__(self, ini = []):
@@ -259,9 +240,8 @@ class myCombinator:
 			for x in self.grp[i]:
 				self.dic[x] = i
 
-	# Definit un lien entre tous les elements de obj
-	# Met a jour les ensembles deja construits
-	#################################################
+	# define a link between all elements of obj
+	# update sets already built
 	def addLink(self, obj):
 
 		if len(obj) == 0:
@@ -271,11 +251,11 @@ class myCombinator:
 		grp = self.grp
 		dic = self.dic
 
-		# Les elements de obj deja presents dans le combinateur
+		# elements of obj already present in the combinator
 		d = set( dic[x] for x in obj if x in dic )
 
 		if len(d) == 0:
-			# Aucun, on rajoute tel quel l'objet alors
+			# None, the obj is added just like it is
 			i = len(grp)
 			grp.append(list(obj))
 			for x in obj:
@@ -297,32 +277,26 @@ class myCombinator:
 			return grp[i]
 
 
-	# Renvoie un iterateur sur les donnees
-	# Les ensembles vides sont donc elimines
-	#########################################
+	# return an iterator over the data
+	# empty sets are thus removed
 	def __iter__(self):
 		for g in self.grp:
 			if len(g) > 0:
 				yield g
 
-	# Enleve les ensembles vides
-	# ###########################
+	# remove empty sets
 	def reduce(self):
 		self.__init__(self)
 
 
-#####################################################
-# Rajoute des options pour un module en particulier #
-#####################################################
+# add more options to a specific module
 __moduleoptions = []
 def addModuleOptions(namespace, options):
 	for (name,typ,val) in options:
 		__moduleoptions.append( (namespace+":"+name,typ,val) )
 
 
-########################################################
-# Permet de demander une liste de fichiers en argument #
-########################################################
+# ask a list of file in arguments
 class FileList:
 	def __init__(self, value):
 		self.minNbFiles = value
@@ -331,20 +305,16 @@ class FileList:
 		return '<FileList(%d)>' % self.minNbFiles
 
 
-#################################################################################
-# Lit la ligne de commande et parse les arguments                               #
-#  1. des arguments obligatoires (nom,constructeur)                             #
-#  2. des options sous la forme -opt=val (nom, constructeur, val_defaut)        #
-# En cas d'erreur, affiche la syntaxe demandee et une courte description (info) #
-#################################################################################
+# Parse arguments on the command line            
+#  1. requested arguments (name, builder)                          
+#  2. options in the form of -opt=val (name, builder, default_value)
+# If an error occurs, user's command line is printed as well as a short description of the bug and a brief manual of the script (info).
 def checkArgs(args, options, info, showArgs=True):
 
 	options = options + __moduleoptions
-	#
-	# Affiche le message d'erreur de mauvais arguments
-	#
+	# print error informations if wrong arguments
 	def error_usage(reason):
-		print >> sys.stderr, "- ERREUR -", reason
+		print >> sys.stderr, "- ERROR -", reason
 		print >> sys.stderr, " Usage :", sys.argv[0]
 		for (i,t) in enumerate(args):
 			print >> sys.stderr, "\t", "%d:" % (i+1), t[0], t[1]
@@ -361,28 +331,28 @@ def checkArgs(args, options, info, showArgs=True):
 		sys.exit(1)
 
 	def putValue(typ, val, v):
-		# Creation de la valeur en fonction du type
+		# instantiate the value depending on the type
 		if typ == bool:
 			# Type booleen
 			res = {"false": False, "true":True}[v.lower()]
 		elif typ == file:
-			# Type 'fichier': test de presence
+			# Type 'fichier': test of presence
 			v = os.path.expanduser(v)
 			if not myFile.hasAccess(v):
-				error_usage("Fichier '%s' non accessible" % v)
+				error_usage("File '%s' innaccessible" % v)
 			else:
 				res = v
 		elif isinstance(typ, enum.Enum):
 			try:
 				res = getattr(typ, v)
 			except AttributeError:
-				error_usage("'%s' n'est pas parmi %s" % (v,typ._keys))
+				error_usage("'%s' is not among %s" % (v,typ._keys))
 		else:
-			# Sinon, on utilise le constructeur
+			# otherwise the builder is used
 			res = typ(v)
 			if isinstance(val, list) and (res not in val):
-				# Valeur de parametre non autorisee
-				error_usage("'%s' n'est pas parmi %s" % (res,myFile.myTSV.printLine(val, '/')))
+				# non authorised parameter value
+				error_usage("'%s' is not among %s" % (res,myFile.myTSV.printLine(val, '/')))
 		return res
 
 	valOpt = {}
@@ -392,32 +362,32 @@ def checkArgs(args, options, info, showArgs=True):
 		opt[name] = (typ,val)
 		valOpt[name] = val[0] if isinstance(val, list) else getattr(typ, val) if isinstance(typ, enum.Enum) else val
 
-	# On scanne les arguments pour les compter et recuperer les valeurs
+	# arguments are scanned, counted and values are extracted
 	for tt in sys.argv[1:]:
 
 		t = tt.replace('^', ' ')
 
-		# Un argument optionnel
+		# an optional argument
 		if t[0] in '-+':
 
-			# Un parametre non bool
+			# non bool parameter
 			try:
 				i = t.index('=')
 				s = t[1:i]
 
-				# Le nom du parametre doit etre connnu
+				# the parameter name must be known
 				if not s in valOpt:
-					error_usage("Option '%s' non reconnue" % s)
+					error_usage("Option '%s' unknown" % s)
 
 				valOpt[s] = putValue(opt[s][0], opt[s][1], t[i+1:])
 
-			# Si on ne trouve pas de '=', c'est une type bool
+			# if '=' is not found, it is a bool type
 			except ValueError:
 				s = t[1:]
-				# Nom de parametre non attendu
+				# unexpected parameter name
 				if s not in valOpt:
 
-					# Valeurs predefinies
+					# predefined values
 					if s.startswith("psyco"):
 						if t[0] == '+':
 							try:
@@ -443,11 +413,11 @@ def checkArgs(args, options, info, showArgs=True):
 							global debug
 							debug = sys.stderr
 					else:
-						error_usage("Option '%s' non reconnue" % s)
+						error_usage("Option '%s' unknown" % s)
 				elif opt[s][0] != bool:
-					error_usage("Utiliser -%s=valeur" % s)
+					error_usage("Use -%s=value" % s)
 				else:
-					# Ici, on affecte False
+					# Here, False is assigned
 					valOpt[s] = (t[0] == '+')
 		else:
 			if len(valArg) < len(args):
@@ -461,17 +431,17 @@ def checkArgs(args, options, info, showArgs=True):
 			elif isinstance(args[-1][1], FileList):
 				valArg[args[-1][0]].append(putValue(file, None, t))
 			else:
-				error_usage("Trop d'arguments sur '%s'" % t)
+				error_usage("Too many arguments on '%s'" % t)
 
 	if isinstance(args[-1][1], FileList):
 		if args[-1][0] not in valArg:
 			valArg[args[-1][0]] = []
 		if len(valArg[args[-1][0]]) < args[-1][1].minNbFiles:
-			error_usage("Pas assez de fichiers pour '%s'" % args[-1][0])
+			error_usage("Not enough files for '%s'" % args[-1][0])
 
-	# Il n'y a pas le nombre d'arguments minimal
+	# there is less than the minimal number of arguments
 	if len(valArg) < len(args):
-		error_usage("Pas assez d'arguments")
+		error_usage("Not enough arguments")
 
 	valArg.update(valOpt)
 	if showArgs:

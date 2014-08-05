@@ -6,20 +6,20 @@
 # mail : hrc@ens.fr or jlucas@ens.fr
 # This is free software; you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 or later and the CeCiLL v2 license in France
 
-""" Convert species tree (newick to phylTree) or (phylTree to newick) """
+__doc__ = """ convert species tree (newick to phylTree) or (phylTree to newick) """
 
 import utils.myFile
 import utils.myTools
 import utils.myPhylTree
 
-arguments = utils.myTools.checkArgs([("phylTree.conf",file)], [("fromNewick",bool,True)], "Convertit un arbre en phylogenetique depuis/vers le format Newick")
+arguments = utils.myTools.checkArgs([("phylTree.conf",file)], [("fromNewick",bool,True)], __doc__)
 
 phylTree = utils.myPhylTree.PhylogeneticTree(arguments["phylTree.conf"])
 
 
 if arguments["fromNewick"]:
 
-	# Impression sous mon format, avec des indentations
+	# print into phylTree format, with tabulations
 	def do(node, indent):
 		node = node.replace("*", "")
 		node = node.replace("."," ")
@@ -32,7 +32,7 @@ if arguments["fromNewick"]:
 	do(phylTree.root, 0)
 
 else:
-	# Renvoie l'arbre au format Newick
+	# return the tree into the newick tree
 	def convertToFlatFile(anc):
 
 		a = phylTree.fileName[anc] # anc.replace(' ', '.')

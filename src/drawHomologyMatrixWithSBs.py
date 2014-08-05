@@ -98,13 +98,14 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 		if ni%50 == 0: 
 			cxText = offset_matrix_x+sizeCase/2+cx
 			cyText = height - max(offset_genes_y/2, sizeTextTicks/2)
+			cxx = offset_matrix_x+cx+sizeCase/2
 			if nx > 750 or ny > 750:
 				if ni%100 == 0:
 					scene.add(svgDrw.Text((cxText, cyText), str(ni), text_anchor="middle", size=sizeTextTicks))
-					scene.add(svgDrw.Line((offset_matrix_x+cx, height - offset_matrix_y), (offset_matrix_x+cx, sizeCase), width=sizeCase*0.1))
+					scene.add(svgDrw.Line((cxx, height - offset_matrix_y), (cxx, sizeCase), width=sizeCase*0.1))
 			else:
 				scene.add(svgDrw.Text((cxText, cyText), str(ni), text_anchor="middle", size=sizeTextTicks))
-				scene.add(svgDrw.Line((offset_matrix_x+cx, height - offset_matrix_y), (offset_matrix_x+cx, sizeCase), width=sizeCase*0.1))
+				scene.add(svgDrw.Line((cxx, height - offset_matrix_y), (cxx, sizeCase), width=sizeCase*0.1))
 
 	for j,nj in enumerate(range(begC2,endC2)): # TODO : better place ticks
 		cy = j*sizeCase
@@ -215,7 +216,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 					cx_s=i1*sizeCase
 					cy_s=i2*sizeCase
 					scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x,height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill=(0,0,0), fill_opacity=0.90))
-		print >> sys.stderr, "Warning : Genes and Homology associated values  are not displayed because one of the two dimension of the window is > 300"
+		print >> sys.stderr, "Warning : some supplementary informations are not displayed because one of the two dimension of the window is > 300"
 	 
 	
 	if outputFileName != None:

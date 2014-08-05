@@ -5,88 +5,78 @@
 # mail : hrc@ens.fr or jlucas@ens.fr
 # This is free software, you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 (GPL v3) or later and the CeCiLL v2 license in France
 
-# Contient les fonctions de gestion des fichiers
+# file management functions
 
 import os
 
 null = open(os.devnull, 'w')
 
-###################################
-# Gestion des fichiers tabulaires #
-###################################
+# tabular file management
 class myTSV:
 
 	import collections
 	csvProxy = collections.namedtuple("csvProxy", ['file','csvobject'])
 
-	# Lecture en utilisant le module csv
-	######################################
+	# read with the csv module
 	@staticmethod
 	def reader(fileName, **keywords):
 		import csv
 		f = openFile(fileName, 'r')
 		return myTSV.csvProxy(f,csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE, lineterminator="\n", **keywords))
 
-	# Ecriture en utilisant le module csv
-	#######################################
+	# write with the csv module
 	@staticmethod
 	def writer(fileName):
 		import csv
 		f = openFile(fileName, 'w')
 		return myTSV.csvProxy(f,csv.writer(f, delimiter="\t", quoting=csv.QUOTE_NONE, lineterminator="\n"))
 
-	# Renvoie la ligne preparee pour l'impression
-	###############################################
+	# return the prepared line for printing
 	@staticmethod
 	def printLine(line, delim = "\t", func = str):
 		return delim.join(func(x) for x in line)
 
 
-	# Lit un fichier tabulaire, en convertissant les colonnes separees de delim selon type_list
-	#############################################################################################
+	# read a tabular file, convert columns separated by delim depending on the type_list
 	@staticmethod
 	def readTabular(filename, type_list, delim = '\t'):
 
 		import itertools
 		f = openFile(filename, 'r')
-		# Liste des types de chaque colonne
+		# list of each column type
 		new_type_list = []
 		for x in type_list:
 			if type(x) == type:
 				new_type_list.append(x)
 			else:
 				new_type_list.extend([x[0]] * x[1])
-		# Parcours du fichier
+		# run through the file (parcours du fichier)
 		for (i,line) in enumerate(f):
 			current_line = line.replace('\n','').split(delim)
-			assert len(current_line) == len(new_type_list), "Erreur nombre de colonne. Ligne:%d" % (i+1)
+			assert len(current_line) == len(new_type_list), "Error number of columns. Line:%d" % (i+1)
 			yield tuple(t(x) for (x,t) in itertools.izip(current_line,new_type_list))
 		f.close()
 
-	# Permet de charger les dumps de MySQL (raboute les lignes tronquees)
-	#######################################################################
+	# load MySQL dumps (join truncated lines)
 	@staticmethod
 	def MySQLFileLoader(f):
 		tmp = ""
 		for ligne in f:
 			ligne = ligne.replace('\n', '')
 			if ligne[-1] == '\\':
-				# Signe que la ligne n'est pas terminee
+				# sign that shows that the line is not finished
 				tmp = ligne[:-1]
 			else:
 				yield tmp + ligne
 				tmp = ""
 		assert (tmp == "")
 
-	# Ecrit un fichier de dump MySQL (\N pour NULL)
-	################################################
+	# write a mySQL dump file (\N for NULL)
 	@staticmethod
 	def MySQLFileWriter(data):
 		return myTSV.printLine(data).replace("None", "\N")
 
-#########################################################################################################################
-# Le but est de pouvoir acceder au fichier et lire la premiere ligne sans devoir le fermer pour le reouvrir juste apres #
-#########################################################################################################################
+# Read the first line of a file. Useful when you want to know the format without having to open-close it before opening it once more
 class firstLineBuffer:
 	def __init__(self, f):
 		self.f = f
@@ -103,7 +93,7 @@ class firstLineBuffer:
 	def next(self):
 		while True:
 			l = self.f.next().replace('\n', '').replace('\r', '')
-			# Suppression des lignes avec commentaire
+			# Suppression of the lines with comments
 			if (not l.startswith("#")) and (len(l) > 0):
 				return l
 
@@ -111,25 +101,20 @@ class firstLineBuffer:
 		return self.f.close()
 
 
-####################
-# Fichier existant #
-####################
+# existing file
 def hasAccess(s):
 	return os.access(os.path.expanduser(s), os.R_OK)
 
 
-
-####################################################################
-# Cette fonction ouvre le fichier en le decompressant s'il le faut #
-#   Retourne l'objet FILE et le nom complet du fichier             #
-####################################################################
+# open a file and decompress it if possible
+# return the object 'file' and the full name of the file
 def openFile(nom, mode):
 
-	# Fichier deja ouvert
+	# file already open
 	if type(nom) != str:
 		return nom
 
-	# Resource Web
+	# file on the web
 	elif nom.startswith("http://") or nom.startswith("ftp://"):
 		comm = "wget %s -O -"
 		# Compression bzip2
@@ -145,16 +130,16 @@ def openFile(nom, mode):
 		stdin.close()
 		stderr.close()
 
-	# Entree standard
+	# standard entry
 	elif nom == "-":
 		import sys
 		return sys.stdin
 
-	# Fichier sur le disque
+	# file on the disk
 	else:
 		nom = os.path.expanduser(nom)
 		if ("w" in mode) or ("a" in mode):
-			# Cree le repertoire pour les sorties dans fichiers #
+			# create the folder for the output into files
 			try:
 				os.makedirs(os.path.dirname(nom))
 			except OSError:
@@ -180,5 +165,3 @@ def openFile(nom, mode):
 		else:
 			f = open(nom, mode)
 	return f
-
-

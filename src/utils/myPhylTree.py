@@ -15,29 +15,27 @@ import myTools
 GeneSpeciesPosition = collections.namedtuple("GeneSpeciesPosition", ['species', 'chromosome', 'index'])
 
 
-##########################################
-# Classe mere de tous les types d'arbres #
-##########################################
+# class mother of all types of trees
 class PhylogeneticTree:
 
 	ParentItem = collections.namedtuple("ParentItem", ['name', 'distance'])
 
-	def __init__(self, fichier, skipInit = False):
+	def __init__(self, file, skipInit = False):
 
-		if type(fichier) == tuple:
-			print >> sys.stderr, "Creation de l'arbre phylogenetique ...",
-			(self.items, self.root, self.officialName) = fichier
+		if type(file) == tuple:
+			print >> sys.stderr, "Creation of the phylogenetic tree ...",
+			(self.items, self.root, self.officialName) = file
 		else:
-			print >> sys.stderr, "Chargement de l'arbre phylogenique de %s ..." % fichier,
+			print >> sys.stderr, "Loading phylogenetic tree %s ..." % file,
 			self.officialName = {}
 			self.items = self.newCommonNamesMapperInstance()
 
-			# le nom et l'instance de file
-			f = myFile.openFile(fichier, 'r')
+			# name and instance of file
+			f = myFile.openFile(file, 'r')
 			try:
-				self.nom = f.name
+				self.name = f.name
 			except AttributeError:
-				self.nom = fichier
+				self.name = file
 
 			f = myFile.firstLineBuffer(f)
 			if (';' in f.firstLine) or ('(' in f.firstLine):
@@ -53,7 +51,7 @@ class PhylogeneticTree:
 
 	def reinitTree(self):
 
-		# La procedure d'analyse de l'arbre
+		# analysing process of the tree
 		def recInitialize(node):
 
 			sys.stderr.write(".")
@@ -73,7 +71,7 @@ class PhylogeneticTree:
 					self.parent.setdefault(f, PhylogeneticTree.ParentItem(node,l))
 					desc = recInitialize(f)
 					s.extend(self.species.get(f))
-					# On remonte a node
+					# we go back up
 					res.extend(desc)
 					ld.append(desc)
 					for e in desc:
@@ -82,7 +80,7 @@ class PhylogeneticTree:
 						self.dicLinks.get(e).setdefault(node, self.dicLinks.get(e).get(f) + [node])
 						self.dicLinks.get(node).setdefault(e, [node] + self.dicLinks.get(f).get(e))
 				self.species.setdefault(node, frozenset(s))
-				# Liens de parente
+				# phylogenetic relationships
 				for (s1,s2) in itertools.combinations(ld, 2):
 					for e1 in s1:
 						for e2 in s2:
@@ -99,9 +97,9 @@ class PhylogeneticTree:
 
 			return res
 
-		print >> sys.stderr, "Analyse des donnees ",
+		print >> sys.stderr, "Data analysis ",
 
-		# Initialisation des structures
+		# object initialisations
 		self.parent = self.newCommonNamesMapperInstance()
 		self.species = self.newCommonNamesMapperInstance()
 		self.fileName = self.newCommonNamesMapperInstance()
@@ -111,12 +109,12 @@ class PhylogeneticTree:
 		self.tmpS = []
 		self.tmpA = []
 
-		# Remplissage
+		# filling
 		recInitialize(self.root)
 		self.listSpecies = frozenset(self.species).difference(self.items)
 		self.listAncestr = frozenset(self.items)
 
-		# Structures post-analyse
+		# post-analysis
 		self.allNames = self.tmpA + self.tmpS
 		self.outgroupSpecies = self.newCommonNamesMapperInstance()
 		self.indNames = self.newCommonNamesMapperInstance()
@@ -130,7 +128,7 @@ class PhylogeneticTree:
 		self.numParent = [None] * len(self.allNames)
 		for (e,(par,l)) in self.parent.iteritems():
 			self.numParent[self.indNames.get(e)] = (self.indNames.get(par),l)
-		# Les noms officiels / courants
+		# official names / common names
 		tmp = collections.defaultdict(list)
 		for (curr,off) in self.officialName.iteritems():
 			tmp[off].append(curr)
@@ -142,8 +140,7 @@ class PhylogeneticTree:
 		print >> sys.stderr, " OK"
 
 
-	# Renvoie le nom de l'ancetre commun de plusieurs especes
-	##########################################################
+	# return the name of the last common ancestor of several species
 	def lastCommonAncestor(self, species):
 		anc = species[0]
 		for e in species[1:]:
@@ -152,11 +149,11 @@ class PhylogeneticTree:
 				return self.root
 		return anc
 
-	# Teste si le fils est bien un fils de son pere
-	################################################
-	def isChildOf(self, fils, pere):
-		return self.dicParents[fils][pere] == self.officialName[pere]
-
+	# assess if 'child' is really the child of 'parent'
+	def isChildOf(self, child, parent):
+		return self.dicParents[child][parent] == self.officialName[parent]
+	
+	#FIXME
 	def compact(self, maxlength=1e-4):
 		def do(node):
 			if node not in self.items:
@@ -173,19 +170,17 @@ class PhylogeneticTree:
 		do(self.root)
 		self.reinitTree()
 
-	#
-	# Forme la liste des especes a comparer
-	# Les ancetres doivent etre prefixes d'un '.' pour etre pris en tant que genomes
-	#   sinon, ce sont leurs especes descendantes qui sont utilisees
-	##################################################################################
+	# return the list of species to be compared
+	# ancestors must be prefixed with '.' to be taken into account as genomes
+	#   otherwise, that is their descendant species that are used 
 	def getTargets(self, s):
 
-		# Est-ce qu'on est uniquement sur les ancetres communs
+		# are we exclusively on the common ancestors 
 		allIntermediates = (s[-1] == "+")
 		if allIntermediates:
 			s = s[:-1]
 
-		# La liste des especes modernes
+		# list of extant species
 		listSpecies = set()
 		listAncestors = set()
 		for x in s.split(','):
@@ -195,23 +190,21 @@ class PhylogeneticTree:
 				listSpecies.add(x[1:])
 				listAncestors.add(x[1:])
 
-		# La liste des ancetres
+		# list of ancestors
 		for (e1,e2) in itertools.combinations(listSpecies, 2):
 			if allIntermediates:
 				listAncestors.update(self.dicLinks[e1][e2][1:-1])
 			else:
 				listAncestors.add(self.dicParents[e1][e2])
-			# si e1 ou e2 est deja un ancetre
+			# if e1 or e2 is already an ancestor
 
 		return (listSpecies, listAncestors)
 
-	#
-	# Renvoie la liste des especes designees par target
+	# return the list of species pointed out by target 
 	#   =esp
-	#   +anc [enfants]
+	#   +anc [children]
 	#   /anc [outgroup]
-	#   _** pour enlever au lieu de rajouter
-	#######################################################
+	#   _** in order to remove instead of adding
 	def getTargetsSpec(self, target):
 		lesp = set()
 		for x in target.split(","):
@@ -232,14 +225,12 @@ class PhylogeneticTree:
 		return lesp
 
 
-	#
-	# Renvoie la liste des ancetres designes par target
+	# return the list of ancestors pointed out by target
 	#   =anc
-	#   +anc [enfants]
+	#   +anc [children]
 	#   -anc [parents]
 	#   /anc [parents+outgroups]
-	#   _** pour enlever au lieu de rajouter
-	##################################################################################
+	#   _** in order to remove instead of adding
 	def getTargetsAnc(self, target):
 		lanc = set()
 		for x in target.split(","):
@@ -264,8 +255,7 @@ class PhylogeneticTree:
 		return lanc
 
 
-	# Renvoie la structure du sous-arbre dans lequel se trouve uniquement les especes choisies
-	###########################################################################################
+	# return the structure of the sub-tree in which are exclusively the chosen species
 	def getSubTree(self, goodSpecies, rootAnc=None):
 		goodAnc = set(self.dicParents[e1][e2] for (e1,e2) in itertools.combinations(goodSpecies, 2))
 		newtree = collections.defaultdict(list)
@@ -286,38 +276,37 @@ class PhylogeneticTree:
 		return (root[0], newtree)
 
 
-	# Calcule les valeurs sur les noeuds de l'arbre
-	#  - values represente des valeurs definies (noeuds ou feuilles)
-	#  - notdefined est la valeur a renvoyer si pas de resultat
-	#  - resultNode indique de quel ancetre on veut le resultat
-	#########################################################################
+	# calculate the values for the nodes of the tree
+	#  - 'values' represents some defined values (nodes or leaves)
+	#  - 'notdefined' is the value to be returned if no result
+	#  - 'resultNode' indicates at which ancestral node we want to find the result
 	def calcWeightedValue(self, values, notdefined, resultNode):
 
 		import numpy
 
 		n = len(self.allNames)
-		# Par defaut, les resultats seront "notdefined"
+		# by default the results will be wil be "notdefined"
 		matriceA = numpy.identity(n)
 		matriceB = numpy.empty((n,))
 		matriceB.fill(notdefined)
 
-		# Construit recursivement la matrice
-		def recBuild(ianc, father, length):
+		# recursively build the matrix
+		def recBuild(ianc, parent, length):
 			anc = self.allNames[ianc]
 
-			# Appels recursifs: on selectionne les fils OK (en supposant qu'on le soit nous meme)
+			#FIXME recursive calls: children are selected OK (supposing that we are it ourself)
 			items = [(e,p) for (e,p) in self.numItems[ianc] if recBuild(e, ianc, p)]
-			# Le pere si disponible
-			if father != None:
-				items.append( (father,length) )
+			# parent if available
+			if parent != None:
+				items.append( (parent,length) )
 
 			if anc in values:
-				# Si on a une valeur, on met "x = val"
+				# if we have a value, "x = val" is assigned
 				matriceB[ianc] = values.get(anc)
 				return True
 
 			elif len(items) >= 2:
-				# S'il a suffisament de voisins, on ecrit l'equation
+				# if it has enough neighbours, the equation is written
 				s = 0.
 				for (e,p) in items:
 					p = 1./max(p,0.00001)
@@ -329,25 +318,25 @@ class PhylogeneticTree:
 			else:
 				return False
 
-		# Construction de la matrice
+		# matrix building
 		if len(values) == 0:
 			return matriceB
 
 		rootNode = self.indNames[self.lastCommonAncestor(values.keys())]
 		recBuild(rootNode, None, 0)
-		# Resolution de l'equation
+		# equation solving
 		res = numpy.linalg.solve(matriceA, matriceB)
 
 
-		# Cherche la valeur la plus proche de node sachant que notre parcours nous fait venir de origin
+		# search the neirest value around 'node' knowing that we come from 'origin'
 		def searchBestValue(node, origin, tripLength):
 
-			# Est-ce que node a une valeur definie
+			# Does node have a defined value
 			val = res[node]
 			if val != notdefined:
 				return (tripLength,node,val)
 
-			# Les chemins a parcourir
+			# Paths to go through
 			test = self.numItems[node][:]
 			par = self.numParent[node]
 			if par != None:
@@ -355,10 +344,10 @@ class PhylogeneticTree:
 			# Iteration
 			best = (1e300,node,notdefined)
 			for (e,l) in test:
-				# Pour ne pas boucler
+				# In order to not loop
 				if e == origin:
 					continue
-				# Coupure
+				# Break
 				if best[0] < tripLength+l:
 					continue
 				tmp = searchBestValue(e, node, tripLength+l)
@@ -375,9 +364,8 @@ class PhylogeneticTree:
 
 
 
-	# Renvoie un dictionnaire qui utilise en interne les noms officiels des taxons
-	#  mais que l'on peut utiliser avec les noms communs
-	# #############################################################################
+	# return a dict that uses internally official names of taxons
+	#  but that can be used with common names
 	def newCommonNamesMapperInstance(self):
 
 		dsi = dict.__setitem__
@@ -399,7 +387,7 @@ class PhylogeneticTree:
 
 		return commonNamesMapper()
 
-	# Charge toutes les especes qui descendent d'un ancetre
+	# load all the species that come from an ancestor
 	def loadAllSpeciesSince(self, ancestr, template, **args):
 		if ancestr in self.species:
 			l = self.species[ancestr]
@@ -407,7 +395,7 @@ class PhylogeneticTree:
 			l = self.listSpecies
 		self.loadSpeciesFromList(l, template, **args)
 
-	# Charge toutes les especes outgroup d'un ancetre
+	# load all the outgroup species of an ancestor
 	def loadAllSpeciesBefore(self, ancestr, template, **args):
 		if ancestr in self.outgroupSpecies:
 			l = self.outgroupSpecies[ancestr]
@@ -415,7 +403,7 @@ class PhylogeneticTree:
 			l = self.listSpecies
 		self.loadSpeciesFromList(l, template, **args)
 
-	# Charge toutes les especes d'une liste
+	# load all the species of a list
 	def loadSpeciesFromList(self, lst, template, storeGenomes = True):
 
 		import myGenomes
@@ -429,7 +417,7 @@ class PhylogeneticTree:
 				#self.dicGenes[x] = (esp, c, i)
 				self.dicGenes[x] = GeneSpeciesPosition(esp, c, i)
 
-	# Renvoie le nombre de genes dans chaque espece pour une famille donnee
+	# return the number of genes in each species for a given family
 	def findFamilyComposition(self, fam):
 
 		score = self.newCommonNamesMapperInstance()
@@ -443,9 +431,7 @@ class PhylogeneticTree:
 		return score
 
 
-	#
-	# Bascule l'arbre autour d'un noeud
-	#
+	# topple over ("basculer" in french) the tree around a node
 	def reroot(self, node, useOutgroups, newname=0):
 		self.tmpItems = self.items.copy()
 		if useOutgroups:
@@ -459,58 +445,57 @@ class PhylogeneticTree:
 
 
 
-	# Charge un arbre phylogenetique dans mon format a moi
-	#######################################################
+	# load a phylogenetic tree into the phylTree format (with tabulations)
 	def __loadFromMyFormat__(self, f):
-
-		# Procedure de chargement du fichier
+		
+		# loading process
 		def loadFile():
 			lignes = []
 			for ligne in f:
 
-				# On enleve le \n final et on coupe suivant les \t
+				# the final "\n" is removed and we cut owing to the "\t"
 				l = ligne.split('\t')
 
-				# Le niveau d'indentation
+				# indentation level
 				indent = 0
 				for x in l:
 					if x != '':
 						break
 					indent += 1
 
-				# On stocke le triplet (indentation,noms,age)
-				noms = [x.strip() for x in l[indent].split('|')]
+				# the triplet (indentation,names,age) is recorded
+				names = [x.strip() for x in l[indent].split('|')]
 				if len(l) > (indent+1):
 					age = int(l[indent+1])
 				else:
 					age = 0
-				lignes.append( (indent,noms,age) )
+				lignes.append( (indent,names,age) )
 
 			lignes.reverse()
 			return lignes
 
 
-		# La procedure d'analyse des lignes du fichier
+		# lines analysis process
 		def recLoad(indent):
 
-			# On ne continue que si la ligne suivante est indentee comme prevu
+			# we continue only if the next line is indented as expected
 			if len(lignes) == 0  or lignes[-1][0] != indent:
 				return None
 
-			# On charge la ligne
+			# the line is loaded
 			currLine = lignes.pop()
 
-			# On charge tous les sous arbres-fils tant que possible
-			fils = []
+			# all the children sub-trees are loaded, as long as it is possible
+			children = []
 			while True:
 				tmp = recLoad(indent + 1)
 				if tmp == None:
 					break
-				# On stocke (nom_du_fils, temps_d_evolution)
-				fils.append( (tmp, currLine[2]-self.ages.get(tmp)) )
+				# record (name_of_child, evolution_time)
+				children.append( (tmp, currLine[2]-self.ages.get(tmp)) )
 
 			n = currLine[1][0]
-			if len(fils) == 0:
+			if len(children) == 0:
 				if n[0] == ".":
 					currLine[1][0] = n = n[1:]
 					self.lstEsp6X.add(n)
@@ -520,14 +505,14 @@ class PhylogeneticTree:
 				else:
 					self.lstEspFull.add(n)
 
-			# Un seul fils, on remonte le noeud
-			if len(fils) == 1:
-				return fils[0][0]
-			# Plusieurs fils, on les enregistre
-			elif len(fils) > 1:
-				self.items.setdefault(n, fils)
+			# a single child, the node is returned
+			if len(children) == 1:
+				return children[0][0]
+			# several children, they are recorded
+			elif len(children) > 1:
+				self.items.setdefault(n, children)
 
-			# Info standard
+			# standard informations
 			self.ages.setdefault(n, currLine[2])
 			for s in currLine[1]:
 				self.officialName[s] = n
@@ -542,50 +527,49 @@ class PhylogeneticTree:
 		self.root = recLoad(0)
 
 
-	# Arbre au format Newick (parentheses)
-	#######################################
+	# tree in the Newick format (between parentheses)
 	def __loadFromNewick__(self, s):
 
-		# Lit les nb prochains caracteres de l'arbre
+		#FIXME read the nb next characters of the tree
 		def readStr(nb):
 			ret = s[self.pos:self.pos+nb]
 			self.pos += nb
 			return ret
 
-		# Enleve les caracteres interdits
+		# remove forbidden characters
 		def keepWhile(car):
 			x = self.pos
 			while s[x] in car:
 				x += 1
 			return readStr(x-self.pos)
 
-		# Garde les caracteres autorises
+		# keep the authorised characters
 		def keepUntil(car):
 			x = self.pos
 			while s[x] not in car:
 				x += 1
 			return readStr(x-self.pos)
 
-		# Lit l'arbre sous forme de texte
+		# read the tree in the form of text informations
 		def readTree():
 			keepWhile(' ')
 
 			if s[self.pos] == '(':
 				items = []
-				# '(' la premiere fois, puis des ',' jusqu'au ')' final
+				# '(' the first time, then some ',' untill the final ')'
 				while readStr(1) != ')':
 					items.append( readTree() )
 					keepWhile(' ')
 				keepWhile(' ')
-				# Le resultat est la liste des fils + le nom
+				# the result is the list of children + the name
 				elt = (items, keepUntil("),:;[ "))
 			else:
-				# Le resultat est un nom
+				# the result is a name
 				elt = keepUntil("),:;[ ")
 
 			keepWhile(' ')
 
-			# Eventuellement une longueur de branche non nulle
+			# possibly a non-null branch length
 			if s[self.pos] == ':':
 				readStr(1) # ":"
 				length = float(keepWhile("0123456789.eE-"))
@@ -594,7 +578,7 @@ class PhylogeneticTree:
 
 			keepWhile(' ')
 
-			# Eventuellement des infos entre crochets
+			# possibly informations between brackets
 			if s[self.pos] == '[':
 				readStr(1) # "["
 				info = keepUntil("]")
@@ -607,14 +591,14 @@ class PhylogeneticTree:
 
 			return (elt,length,info)
 
-		# Remplit les variables d'un GenericTree
+		# fill the variables of a GenericTree
 		def storeTree(data):
 			(elt,length,info) = data
 
 			if type(elt) == tuple:
-				(fils,nom) = elt
+				(children,nom) = elt
 			else:
-				fils = []
+				children = []
 				nom = elt
 
 			if (nom == '') or (nom in self.officialName):
@@ -623,9 +607,9 @@ class PhylogeneticTree:
 			self.officialName[nom] = nom
 			self.info[nom] = info
 
-			if len(fils) > 0:
+			if len(children) > 0:
 				items = []
-				for arbre in fils:
+				for arbre in children:
 					items.append( storeTree(arbre) )
 				self.items.setdefault(nom, items)
 
