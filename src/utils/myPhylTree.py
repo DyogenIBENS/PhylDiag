@@ -10,7 +10,6 @@ import itertools
 import collections
 
 import myFile
-import myTools
 
 GeneSpeciesPosition = collections.namedtuple("GeneSpeciesPosition", ['species', 'chromosome', 'index'])
 
@@ -152,7 +151,7 @@ class PhylogeneticTree:
 	# assess if 'child' is really the child of 'parent'
 	def isChildOf(self, child, parent):
 		return self.dicParents[child][parent] == self.officialName[parent]
-	
+
 	#FIXME
 	def compact(self, maxlength=1e-4):
 		def do(node):
@@ -172,10 +171,10 @@ class PhylogeneticTree:
 
 	# return the list of species to be compared
 	# ancestors must be prefixed with '.' to be taken into account as genomes
-	#   otherwise, that is their descendant species that are used 
+	#   otherwise, that is their descendant species that are used
 	def getTargets(self, s):
 
-		# are we exclusively on the common ancestors 
+		# are we exclusively on the common ancestors
 		allIntermediates = (s[-1] == "+")
 		if allIntermediates:
 			s = s[:-1]
@@ -200,7 +199,7 @@ class PhylogeneticTree:
 
 		return (listSpecies, listAncestors)
 
-	# return the list of species pointed out by target 
+	# return the list of species pointed out by target
 	#   =esp
 	#   +anc [children]
 	#   /anc [outgroup]
@@ -447,7 +446,7 @@ class PhylogeneticTree:
 
 	# load a phylogenetic tree into the phylTree format (with tabulations)
 	def __loadFromMyFormat__(self, f):
-		
+
 		# loading process
 		def loadFile():
 			lignes = []

@@ -23,7 +23,7 @@ arguments = utils.myTools.checkArgs( [("speciesTree",file), ("geneTreeForest",fi
 
 speciesTree = utils.myPhylTree.PhylogeneticTree(arguments["speciesTree"])
 
-# duplication counter 
+# duplication counter
 dupCount = collections.defaultdict(int)
 def futureName(name, dup):
 	if dup >= 2:
@@ -34,10 +34,10 @@ def futureName(name, dup):
 		return name
 
 # finds out the roots in gene families
-def getRoots(node, previousAnc, lastWrittenAnc):  
+def getRoots(node, previousAnc, lastWrittenAnc):
 
-	newAnc = tree.info[node]['taxon_name'] 
-	
+	newAnc = tree.info[node]['taxon_name']
+
 	# names of the ancestors since the last read, here only newLastWritten is kept
 	(_,newLastWritten,isroot) = utils.myProteinTree.getIntermediateAnc(speciesTree, previousAnc, lastWrittenAnc, newAnc, tree.info[node]['Duplication'] >=2)
 
@@ -71,7 +71,7 @@ def extractGeneFamilies(node, baseName, previousAnc, lastWrittenAnc):
 	# genes of children
 	if node in tree.data: # true if the node is in the forest of gene trees (if the node is a leaf it is not in tree.data)
 		allGenes = []
-		for (g,_) in tree.data[node]: # {(g.a,len_a),(g_b,len_b),...} 
+		for (g,_) in tree.data[node]: # {(g.a,len_a),(g_b,len_b),...}
 			allGenes.extend( extractGeneFamilies(g, futureName(currName, tree.info[node]['Duplication']), newAnc, newLastWritten) )
 
 	else: # when the node is a leaf
@@ -79,7 +79,7 @@ def extractGeneFamilies(node, baseName, previousAnc, lastWrittenAnc):
 
 	for a in toWrite: # 'a'= name of the ancestor to print
 	 	geneFamilies[a].append( [currName] + allGenes ) # write the name of the gene of Anc followed by the names of the genes of the children (this is done for all the species in toWrite)
-		#FIXME geneFamilies is defined in the main, it is modified whereas it is not even a parameter 
+		#FIXME geneFamilies is defined in the main, it is modified whereas it is not even a parameter
 
 	return allGenes # for the recurrence
 

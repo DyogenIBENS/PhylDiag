@@ -27,7 +27,7 @@
 # s : may refer to 'strand', the transcriptional orientation of a gene or a tb
 # hp : homology pack
 # sign : may refer to a sign of a homology pack
-# MH : matrix of homologies 
+# MH : matrix of homologies
 # MHP: matrix of homology packs
 # diagonal : synonym of a sb (a sb is roughly  a daigonal in the MHP)
 # diagonal type : either 'slash' ('/', bottom-left to top-right) or 'backslash' ('\', top-left to bottom-right)
@@ -76,9 +76,9 @@ def DPD((x0,y0),(x1,y1), diagType):
 	f=lambda (x0,y0),(x1,y1) : 2*max(abs(x1-x0),abs(y1-y0))-min(abs(x1-x0),abs(y1-y0))
 	return frameDistance(f,(x0,y0),(x1,y1), diagType)
 
-# Chebyshev Distance 
+# Chebyshev Distance
 def CD((x0,y0),(x1,y1), diagType):
-	f=lambda (x0,y0),(x1,y1) : max(abs(x1-x0), abs(y1-y0)) 
+	f=lambda (x0,y0),(x1,y1) : max(abs(x1-x0), abs(y1-y0))
 	return frameDistance(f,(x0,y0),(x1,y1), diagType)
 
 # Manhattan Distance
@@ -92,7 +92,7 @@ def ED((x0,y0),(x1,y1), diagType):
 	return frameDistance(f,(x0,y0),(x1,y1), diagType)
 
 #
-# Generator managing the queue of diagonals for the merging process 
+# Generator managing the queue of diagonals for the merging process
 ####################################################################
 class queueWithBackup:
 	# gen is a generator
@@ -100,59 +100,59 @@ class queueWithBackup:
 		self.gen = gen
 		self.backup = collections.deque()
 		self.todofirst = []
-	
+
 	def __iter__(self):
 		return self
-	
+
 	# The next returned value comes from either the buffer or from the main generator
 	def next(self):
 		if len(self.todofirst) > 0:
 			return self.todofirst.pop()
 		return self.gen.next() # Returns the next value of the generator
-	
+
 	# The reinserted element is put on hold, the last reinserted element will be on top of the pile during the next rewind
 	def putBack(self, x):
 		self.backup.appendleft(x)
-	
+
 	# Recorded elements are put in a prioritary buffer
 	def rewind(self):
 		self.todofirst.extend(self.backup)
 		self.backup = collections.deque()
 
 #
-# Merge diagonals if they are separated by a gap less long than 'gapMax' relatively to a distance metric 
+# Merge diagonals if they are separated by a gap less long than 'gapMax' relatively to a distance metric
 # inputs:
 # listOfDiags : a list containing elements as (l1, l2, la)
 #	l1 = [ (i12,s12), (i12,s12), ....] with i1x < i1y for all x<y
-#		i1 : gene index in the genome i1 
-#	l2 : [..., (i2,s2), ...] 
-#		i2 : gene index in the genome i2 
-#	la : [..., j1,...] 
-#		j1 is the ancGene number (corresponds to the line index of the gene)  
+#		i1 : gene index in the genome i1
+#	l2 : [..., (i2,s2), ...]
+#		i2 : gene index in the genome i2
+#	la : [..., j1,...]
+#		j1 is the ancGene number (corresponds to the line index of the gene)
 # gapMax : the maximum allowed gap between merged diagonals
 # distanceMetric : the metric used for the gap calculation
-# outputs: 
+# outputs:
 #	listOfSortedAndMergedDiagonals : same structure than listOfDiags
 ########################################################################################
 # TODO : optimize the search of diags by avoiding considering diags that are on the left of diagA
 @utils.myTools.verbose
-def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True): 
+def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 	assert gapMax>=0
 
 	if distanceMetric == 'DPD':
-		print >> sys.stderr, "use Diagonal Pseudo Distance to merge diagonals with a gap up to %s elements" % gapMax 
+		print >> sys.stderr, "use Diagonal Pseudo Distance to merge diagonals with a gap up to %s elements" % gapMax
 		distance = DPD
 	elif distanceMetric == 'CD':
-		print >> sys.stderr, "use Chebyshev Distance to merge diagonals with a gap up to %s elements" % gapMax 
+		print >> sys.stderr, "use Chebyshev Distance to merge diagonals with a gap up to %s elements" % gapMax
 		distance = CD
 	elif distanceMetric == 'MD':
-		print >> sys.stderr, "use Manhattan Distance to merge diagonals with a gap up to %s elements" % gapMax 
+		print >> sys.stderr, "use Manhattan Distance to merge diagonals with a gap up to %s elements" % gapMax
 		distance = MD
 	elif distanceMetric == 'ED':
-		print >> sys.stderr, "use Euclidean Distance to merge diagonals with a gap up to %s elements" % gapMax 
+		print >> sys.stderr, "use Euclidean Distance to merge diagonals with a gap up to %s elements" % gapMax
 		distance = ED
 	else:
-		raise ErrorValue('Must use a distance either DPD (Diagonal PSeudo Distance) or MD (Manhattan Distance), Euclidean Distance (ED) or Chebyshev Distance (CD)') 
+		raise ValueError('Must use a distance either DPD (Diagonal PSeudo Distance) or MD (Manhattan Distance), Euclidean Distance (ED) or Chebyshev Distance (CD)')
 
 	print >> sys.stderr, "Number of Diags before DiagMerger = ", len(listOfDiags)
 	diagGen = []
@@ -186,15 +186,15 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 				(dTb,_,_,_,startB,endB) = diagB
 				### DEBUG example
 				#if 427 == startB[0]+1 and 541 == startB[1]+1:
-				#	print >> sys.stderr, "Is diag B : [diagType = %s, start = (%s,%s), end =(%s,%s)] fusionable with" % (dTb,startB[0]+1,startB[1]+1,endB[0]+1,endB[1]+1) 
+				#	print >> sys.stderr, "Is diag B : [diagType = %s, start = (%s,%s), end =(%s,%s)] fusionable with" % (dTb,startB[0]+1,startB[1]+1,endB[0]+1,endB[1]+1)
 				#	print >> sys.stderr, "endA = (%s,%s)" % (endA[0]+1,endA[1]+1), " ?"
 				### DEBUG example
 				# Thanks to the sort at the beginning, we known that the starting hp of diagB is on the right of the starting hp of diagA
-				#TODO : change diagGen to put diags that are on the left of diagA in a buffer and avoid considering them 
+				#TODO : change diagGen to put diags that are on the left of diagA in a buffer and avoid considering them
 				if startB[0] < endA[0]: # in i-adhore startB[0] <= endA[0]
 					impossibleToMergeDiags.append(diagB)
 					continue
-				elif startB[0] <= endA[0] + currGap+1: 
+				elif startB[0] <= endA[0] + currGap+1:
 					# endA[0] < startB[0] <= endA[0] + currGap
 					# Check if diagTypes are compatible
 					if dTa == dTb or dTa == None or dTb == None:
@@ -209,14 +209,14 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 					else:
 						impossibleToMergeDiags.append(diagB)
 						continue
-			
+
 				else:
 					# endA[0] + currGap < startB[0]
 				 	# stop the loop (remember that the diags are sorted!)
 					# Impossible to merge next diags to diagA
 					continueToSearch = False
 					impossibleToMergeDiags.append(diagB)
-			
+
 			if len(fusionableDiags) > 0 :
 				#assert all(x[4][0] >= endA[0] for x in fusionableDiags)
 				#if dTa == '/':
@@ -236,17 +236,17 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 					# sort from non diagonality score, the best fusionable diag is the one that is farthest from the diagonal axis
 					tmpBestrFusionableDiags = sorted(tmpBestrFusionableDiags, key=scoreNonDiagonality, reverse=True)
 					fusionableDiags = tmpBestrFusionableDiags + fusionableDiags[len(tmpBestrFusionableDiags):]
-					
+
 				# Sort by priority depending on the choice of the distance :
 				# either we want to fuse in priority along the diagonal line or relatively to the proximity on chromosome 1
 				#scoreNonDiagonality= lambda x: abs(x[4][0]-diagA[5][0]) - abs(x[4][1]-diagA[5][1])
 				#fusionableDiags = sorted(fusionableDiags, key=scoreNonDiagonality, reverse=True)
-				
+
 				#sort by proximity to the diagonal line
 				#elif distanceMetric == 'MD': # Doesn't change the result
 				#	#sort by proximity on chromosome 1
 				#	fusionableDiags = sorted(fusionableDiags, key=lambda x:x[4][0]-diagA[5][0])
-				
+
 				diagToFuse = fusionableDiags.pop(0) # Pop the first element of the list
 				(dt,l1,l2,la,start,end) = diagToFuse
 				# Lists are fused
@@ -255,7 +255,7 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 						dt_res = dt
 					else:
 						# opposed diagTypes
-						raise ErrorValue
+						raise ValueError
 				elif dt != None and dTa == None:
 					dt_res = dt
 				elif dTa != None and dt == None:
@@ -280,7 +280,7 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 				diagGen.putBack(diag) # diagonals that were not fusionable are recorded to try to merge them after
 			diagGen.rewind()
 		print >> sys.stderr, "number of merges for currGap=%s :" % currGap, nbFusionCurrGap
-	# Once all merges have been performed for a currGap it is necessary to repeat the merging process with all the diagonals for currGap+1 
+	# Once all merges have been performed for a currGap it is necessary to repeat the merging process with all the diagonals for currGap+1
 	print >> sys.stderr, "Total number of merges", nbFusion
 	print >> sys.stderr, "number of Diags after the merging process", len(sorted(list(diagGen) + listOfFinishedDiags, key=lambda x:x[1][0]))
 	listOfSortedAndMergedDiagonals = sorted(list(diagGen) + listOfFinishedDiags, key=lambda x:x[1][0])
@@ -294,7 +294,7 @@ def strandProduct(sa,sb):
 
 # Return the hm (or the mhp) of two compared chromosomes rewritten with family names instead of gene (or tb) names
 # inputs :
-# 	gcX : a chromosome of the genome X rewritten with the family names : [...,(f,s),...] 
+# 	gcX : a chromosome of the genome X rewritten with the family names : [...,(f,s),...]
 # ouputs :
 #	M : mh or mhp depending on whether gc1 and gc2 are chromosomes written in genes or in tbs
 #		M is a dict of dict : M[i1][i2] = hpSign, this structure is lighter since M is a sparse matrix
@@ -315,7 +315,7 @@ def homologyMatrix(gc1,gc2):
 	#				if i1 not in  M:
 	#					M[i1]={}
 	#				M[i1][i2] = strandProduct(s1,s2)
-	
+
 	#2 faster than 1
 	locG2 = {}
  	for (i2,(f,s2)) in enumerate(gc2):
@@ -333,7 +333,7 @@ def homologyMatrix(gc1,gc2):
 	 	       	M[i1]={}
         		for (i2,s2) in locG2[f]:
 	        		M[i1][i2]= strandProduct(s1,s2)
-	
+
 	#3 (faster than 2), but since we need to return locG2 of the input gc2 for next computations, it is not convenient
 	#TODO need to add a boolean to the returned values because locG2 may not correspond to the gc2 chromosome
 	# use the dict locG2 on the smallest chromosome
@@ -354,18 +354,18 @@ def homologyMatrix(gc1,gc2):
 	#if switchedGCs == True:
 	#	(gc1,gc2) = (gc2,gc1)
 	#	switchedGCs = False
-	
-	return (M, locG2) 
+
+	return (M, locG2)
 
 #
-# At the beginning of a diagonal this function is called to set a diagonal type 
+# At the beginning of a diagonal this function is called to set a diagonal type
 # inputs :
 #	i1,i2 : the indices of the first hp of the current diagonal in M
 #	M : the homology matrix (either mh or mhp)
 #	consistentDiagonals : boolean (true if you want consistent diagonals otherwise false)
 # output :
 # 	diagType :
-# 		either a bottom-left to top-right (slash : '/') diagonal 
+# 		either a bottom-left to top-right (slash : '/') diagonal
 # 		or top-left to bottom right (backslash : '\') diagonal
 ################################################################################################
 def findDiagType(i1,i2,M,consistentSwDType):
@@ -386,29 +386,28 @@ def findDiagType(i1,i2,M,consistentSwDType):
 def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', consistentSwDType=True, verbose = True):
 	print >> sys.stderr, "(PPID = %s, PID = %s) start to extract diagonals on G1[%s]_vs_G2[%s]" % (os.getppid(), os.getpid(), c1, c2)
         listOfDiags = []
-	(M,locG2) = homologyMatrix(gc1, gc2) 
+	(M,locG2) = homologyMatrix(gc1, gc2)
 	if not locG2: # if locG2 is empty
 		return listOfDiags
 	la=[]
         l1=[]
         l2=[]
         diagType = None
-        strand = None
       	i1_old = -1
-	
+
 	#TODO scan M instead of gc1 : impossible since 'dict size cannot change during a loop over its items'
 	# scan M from left to right
         for (i1,(f,_)) in enumerate(gc1):
 		# f in locG2 means that i1 has at least one homolog on gc2, locG2 never changes, that is why we iterate over locG2
-        	if f != -1 and f in locG2: 
+        	if f != -1 and f in locG2:
 			i1_old=i1
-        		# scan M from bottom to top 
+        		# scan M from bottom to top
 			for (i2,_) in locG2[f]: # the family name of the gene at index i2 is the same as f
 				# When a diagonal is extracted the scanning of M must continue right after the first hp of the extracted diagonal
-				i1=i1_old 
+				i1=i1_old
 				# TODO write a recursive function easier understanding
         			# While hps can be added to a diagonal
-        			while i1 in M and i2 in M[i1]: 
+        			while i1 in M and i2 in M[i1]:
 					# Here a diagonal is started or hps are added to an already started diagonal
 					f = gc1[i1][0]
 					if len(la) == 0:
@@ -418,11 +417,11 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
 					# A hp has a unique associated gene family (often a unique ancestral gene)
 					# orientation of tbs on gc1 are used as a reference, if the orientation of a tb on gc1 is unknown, it is possible to infer the ancestral orientation by using the diagType and the orientation of the homologous tb on gc2
 					if gc1[i1][1] != None:
-						ancestralStrand = gc1[i1][1] 
+						ancestralStrand = gc1[i1][1]
 					elif diagType == '/' and gc2[i2][1] != None:
-						ancestralStrand = gc2[i2][1] 
+						ancestralStrand = gc2[i2][1]
 					elif diagType == '\\' and gc2[i2][1] != None:
-						ancestralStrand = -gc2[i2][1] 
+						ancestralStrand = -gc2[i2][1]
 					else:
 						ancestralStrand = None
 
@@ -431,7 +430,7 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
 					l2.append((i2,gc2[i2][1]))
 					del M[i1][i2]
 					if len(M[i1].keys()) == 0:
-						del M[i1] 
+						del M[i1]
 					#diagType == None if sameStrand == False and len(la) == 1, first element of a diagonal which we donnot take care of gene orientation
 					#if (diagType == "/" or diagType == None) and i1+1 in M and i2+1 in M[i1+1] and ((M[i1+1][i2+1] in [+1,None]) if consistentSwDType else True):
 					if diagType == "/" and i1+1 in M and i2+1 in M[i1+1] and ((M[i1+1][i2+1] in [+1,None]) if consistentSwDType else True):
@@ -440,14 +439,14 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
 						#assert i2-l2[-1][0] == +1
 						#assert i1-l1[-1][0] == +1
 						#assert i2 in M[i1]
-					
+
 					elif diagType=="\\" and i1+1 in M and i2-1 in M[i1+1] and ((M[i1+1][i2-1] in [-1,None]) if consistentSwDType else True):
 						i1=i1+1
 						i2=i2-1
 						#assert i2-l2[-1][0] == -1
 						#assert i1-l1[-1][0] == +1
 						#assert i2 in M[i1]
-					else: 
+					else:
 						# Since no more hps can be added to the current diagonal, the diagonal is recorded
 						#assert len(la) > 0
 						listOfDiags.append((diagType,l1,l2,la))
@@ -456,7 +455,7 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
 						la=[]
 						diagType=None
 						break # exit the while loop and iter the for loop
-	# merging process, fuse diagonals 
+	# merging process, fuse diagonals
 	if len(listOfDiags) > 0 and gapMax >= 0 :
 		listOfDiags = mergeSbs(listOfDiags, gapMax, distanceMetric=distanceMetric, verbose=verbose)
 	listOfDiags = [((c1, diag[1]), (c2, diag[2]), diag[3]) for diag in listOfDiags] #FIXME diagType=diag[0] could be added as an information on the diagonal here
@@ -477,24 +476,24 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 		lock.release()
 
 # FIXME : cut and paste into myTools the part corresponding to the management of the multiprocess
-# Multiprocess queue 
+# Multiprocess queue
 #####################
 @utils.myTools.verbose
 def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='DPD', consistentSwDType=True, verbose=True):
 	manager = Manager()
 	lock = Lock() # Lock is used to give priority to one process in order that it is not disturbed by other process
-	listOfPercentage = Manager().list() # Manager is used to manage objects which are shared among process
+	listOfPercentage = manager.list() # Manager is used to manage objects which are shared among process
 	for i in [j for j in range(0,101,5)[1:]]:
 		listOfPercentage.append(i)
 
 	NUMBER_OF_PROCESSES = multiprocessing.cpu_count() * 2
 	TASKS = [(c1, c2, g1[c1], g2[c2]) for (c1,c2) in itertools.product([c1 for c1 in g1],[c2 for c2 in g2])]
 	KWARGS = {'gapMax':gapMax, 'distanceMetric':distanceMetric, 'consistentSwDType':consistentSwDType, 'verbose':False}
-	
+
 	# Create queues
 	task_queue = Queue()
 	done_queue = Queue()
-	
+
 	# Submit tasks
 	for task in TASKS :
 		task_queue.put(task)
@@ -513,16 +512,16 @@ def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='
 	# Tell child processes to stop
 	for i in range(NUMBER_OF_PROCESSES):
 		task_queue.put('STOP')
-	
+
 	return
-	
+
 # Rewrite genomes as a list of ancGeneIds
 # ancGeneId can be considered as a family name
 def rewriteWithAncGeneID(genome, ancGenes):
 	newGenome = {}
 	for c in genome.keys():
 		#assert len(genome[c]) >=1
-		# Genome.getPosition(name) returns a set of GenePosition that corresponds to the positions of the gene g.names in the ancGene file. 
+		# Genome.getPosition(name) returns a set of GenePosition that corresponds to the positions of the gene g.names in the ancGene file.
 		# Gene position is a namedtuple : GenePosition(chromosome=value, index=value)
 		tmp = [(ancGenes.getPosition([gn]),s)  for (gn,s) in genome[c]]
 		#assert all([len(g) <= 1 for (g,_) in tmp]) # DEBUG assertion, verify that there is only one ancGene ID for each gene
@@ -548,9 +547,9 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 			for x in genome.itervalues():
 				val.update(i for (i,_) in x)
 			return val
-		# Rewrite genomes using the intersection 
+		# Rewrite genomes using the intersection
 		# genes in intersection are kept other are changed into -1
-		def rewrite(genome, inters): 
+		def rewrite(genome, inters):
 			for c in genome:
 				genome[c] = [(i,s) if i in inters else (-1,s) for (i,s) in genome[c]]
 		val1 = usedValues(g1)
@@ -568,7 +567,7 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 				del genome[c]
 		return flag
 	# Remove genes that are marked -1
-	# Warning : modifies genome 
+	# Warning : modifies genome
 	def filterContent(genome):
 		transNewToOld = collections.defaultdict(dict)
 		for c in genome:
@@ -578,7 +577,7 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 			# newi : index of gene after filtering
 			genome[c] = [x for (_,x) in tmp]
 		return transNewToOld
-	
+
 	if keepOriginal:
 		g1 = copy.deepcopy(g1_orig)
 		g2 = copy.deepcopy(g2_orig)
@@ -631,11 +630,11 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 	else:
 		# impossible case
 		raise
-	
+
 	# In order to write genomes in files and verify sbs predictions
 	# for c in g2:
 	#	for (i,(g,s)) in enumerate(g2[c]):
-	#		print >> sys.stderr, c, "\t", s, "\t", g2.lstGenes[c][trans2[c][i]].names[0] 
+	#		print >> sys.stderr, c, "\t", s, "\t", g2.lstGenes[c][trans2[c][i]].names[0]
 
 	return (g1, g2, g1filt2g1origin, g2filt2g2origin)
 
@@ -644,14 +643,14 @@ def filter(g1_orig, g2_orig, filterType, minChromLength, keepOriginal=False):
 # Outputs :
 #	genome_tb and tb2g are two dics
 #	for each chromosome c
-#		genome_tb[c] = [..., (aID,s), ...] the rewritten genome into TBs. A TB is caracterized by its 'aID' and its strand, either 0,1 or None 
+#		genome_tb[c] = [..., (aID,s), ...] the rewritten genome into TBs. A TB is caracterized by its 'aID' and its strand, either 0,1 or None
 #		tb2g[c] (TB to genes) = [..., [i1,i2,i3], ...] contains as many lists as TBs. Each TB has a list [i1,i2,i3] which contains indices of the genes in 'genome_aID'
 #		g2tb[c] (gene to TB) = [i_tb1, itb1, i_tb2, ...] for each gene of genome_aID the index of its tb in genome_tb
 #####################################################################################################################################
 def rewriteInTb(genome_aID):
 	#TODO? it may be interesting to merge tbs that are closer or equal to a user defined trheshold 'tandemGap', introduce gappedTandemBlocks as in i-ADHoRe
-	# in i-ADHoRe genes are remapped on the first paralog 
-	
+	# in i-ADHoRe genes are remapped on the first paralog
+
 	# the rewritten genome
 	genome_tb = {} # Need to keep dictionnaries because there is often a gap in chromosome notations
 	tb2g = {}
@@ -683,13 +682,13 @@ def rewriteInTb(genome_aID):
 
 def convertGenomeIntoDicOfChromOfOrderedGenes(genome):
 	newGenome = {} # Warning : it is important to use a dict since there are sometimes a jump in the numerotation of chromosomes in a genome
-	for c in genome.chrList[utils.myGenomes.ContigType.Chromosome] + genome.chrList[utils.myGenomes.ContigType.Scaffold]:	
+	for c in genome.chrList[utils.myGenomes.ContigType.Chromosome] + genome.chrList[utils.myGenomes.ContigType.Scaffold]:
 		assert len(genome.lstGenes[c]) >=1
 		newGenome[c] = [(g.names[0],g.strand) for g in genome.lstGenes[c]]
 	return newGenome
 
 # compute the adviced maximal gap length (in genes) for the diagonal merger
-# We compute the gap that gives the closest probability p-value(sb(nbHps,gap,N12,N1,N2)) to targetProba in an a MHP(N1,N2,N12). 
+# We compute the gap that gives the closest probability p-value(sb(nbHps,gap,N12,N1,N2)) to targetProba in an a MHP(N1,N2,N12).
 # Usually this MHP is an average of all the MHPs of the whole genome comparison. Even if considering this average MHP is not very rigorous, we only need reasonable rather than optimal values for recommendedGap.
 @utils.myTools.verbose
 def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThreshold=20, verbose=False):
@@ -736,7 +735,7 @@ def numberOfHomologies(g1,g2,verbose=True):
 		nbHomologies[comp] = sum([len(Ms[i1]) for i1 in Ms])
 	print >> sys.stderr, "" # new line in the print
 	nbHomologies_g = sum([a for a in nbHomologies.values()])
-	#assert nbHomologies_g >= min(sum([len(g1[c]) for c in g1]), sum([len(g2[c]) for c in g2])),"%s,%s" %  (sum([len(g1[c]) for c in g1]), sum([len(g2[c]) for c in g2])) 
+	#assert nbHomologies_g >= min(sum([len(g1[c]) for c in g1]), sum([len(g2[c]) for c in g2])),"%s,%s" %  (sum([len(g1[c]) for c in g1]), sum([len(g2[c]) for c in g2]))
 	#Not needed since the two lineages may have undergone some differential gene losses
 	return nbHomologies, nbHomologies_g
 
@@ -765,7 +764,6 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 			((c1,l1_tb),(c2,l2_tb),la_tb) = diag
 		elif len(diag) == 4:
 			((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
-		comp = (c1,c2)
 		m = len(la_tb) # number of homologies in the sb
 		#(x0,y0) = (l1_tb[0][0],l2_tb[0][0])
 		#(x1,y1) = (l1_tb[1][0],l2_tb[1][0])
@@ -802,11 +800,11 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 		comp = (c1,c2)
 		na = len(g1_tb[c1]) # Nb of Tbs on C1
 		nb = len(g2_tb[c2]) # Nb of Tbs on C2
-		nab = N12s[comp] # Nb of homologies in the mhp	
+		nab = N12s[comp] # Nb of homologies in the mhp
 		if m <= 1:
-			# all diagonals of length 1 are rejected 
+			# all diagonals of length 1 are rejected
 			listOfRejectedDiags.append((diag[0],diag[1],diag[2],None))
-			continue 
+			continue
 		elif m > nab:
 			# there are not m hps in the MHP
 			listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
@@ -816,10 +814,9 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 			listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
 			continue
 
-		if m > NbOfHomologiesThreshold: # This is to avoid too time consuming computations 
+		if m > NbOfHomologiesThreshold: # This is to avoid too time consuming computations
 			p=0
 		else:
-			comp = (c1,c2)
 			p = utils.myProbas.pValue(m, max_g, lw1, lw2, nab, na, nb, p_hpSign[comp], verbose=True)
 		if p == None:
 			listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
@@ -835,12 +832,12 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 	listOfImpossibleToCalcProbaDiagsRejected=[]
 	for diag in listOfImpossibleToCalcProbaDiags:
 		m = calculateCharacteristics(diag)[0]
-		if m >= validateImpossToCalc_mThreshold: 
+		if m >= validateImpossToCalc_mThreshold:
 			# if the diagonal contains more than validateImpossToCalc_mThreshold  hps, it is validated in order to avoid to reject long and perfect diagonals because of only one dispersed tandem duplication
 			listOfImpossibleToCalcProbaDiagsStatVal.append(diag)
 		else:
 			listOfImpossibleToCalcProbaDiagsRejected.append(diag)
-	
+
 	# update the lists
 	listOfStatValDiags = listOfStatValDiags + listOfImpossibleToCalcProbaDiagsStatVal
 	listOfRejectedDiags = listOfRejectedDiags + listOfImpossibleToCalcProbaDiagsRejected
@@ -855,14 +852,14 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 		comp = (c1,c2)
 		na = len(g1_tb[c1]) # Nb of Tbs on C1
 		nb = len(g2_tb[c2]) # Nb of Tbs on C2
-		nab = N12s[comp] # Nb of homologies in the mhp	
+		nab = N12s[comp] # Nb of homologies in the mhp
 		if m>1:
 			if firstPrint:
 				print >> sys.stderr, "Diagonals of more than 1 hp that have been rejected during the statistical test :"
 				firstPrint = False
 			# TODO comment se fait-il que certaines diagonales soient en double ici ?
 			print >> sys.stderr, "(c1=%s:%s-%s,c2=%s:%s-%s) \t (m=%s, max_g=%s, lw1=%s lw2=%s, nab=%s, na=%s, nb=%s)" % (c1,l1_min,l1_max,c2,l2_min,l2_max,m,max_g,lw1,lw2,nab,na,nb), "\t p=", p
-	
+
 	firstPrint = True
 	for diag in listOfStatValDiags:
 		((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
@@ -871,7 +868,7 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 			comp = (c1,c2)
 			na = len(g1_tb[c1]) # Nb of Tbs on C1
 			nb = len(g2_tb[c2]) # Nb of Tbs on C2
-			nab = N12s[comp] # Nb of homologies in the mhp		
+			nab = N12s[comp] # Nb of homologies in the mhp
 			if firstPrint:
 				print >> sys.stderr, "Diagonals containing 2 hps that have passed the statistical test :"
 				firstPrint = False
@@ -895,7 +892,7 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
 	print >> sys.stderr, "Over all sbs where it is imposs. to calculate the proba. with 2 hps which are finally rejected, the distribution of gap maximum is : {%s} (due to dispersed paralogies)" % " ".join(statsDiagsM(listOfImpossibleToCalcProbaDiagsRejected,2))
 
 	print >> sys.stderr, "Over all stat. val. sbs of 2 hps the distribution of gap maximum is : {%s}" % " ".join(statsDiagsM(listOfStatValDiags,2))
-	
+
 	def statsDiagLengths(listOfDiagsX):
 		if listOfDiagsX == []:
 			return []
@@ -937,14 +934,14 @@ def numberOfDuplicates(g_aID_filt):
 # 	minChromLength is the minimal length of the chromosome to be considered
 #	distanceMetric : the distance metric (either MD,DPD,ED or CD)
 #	pThreshold : the probability threshold under which the sb is considered significant
-#	FilterType 
+#	FilterType
 #		InCommonAncestor : all genes herited from a gene of the LCA are kept during the filtering of extant genomes
 #		InBothGenomes : only 'anchor genes' (genes present in both genomes) are kept
 #		None : genomes are not filtered
 # Outputs:
 #	synteny blocks are yielded as (strand,(c1,l1),(c2,l2),la)
 #	c1 : chromosomes of genome 'g1' where there is a synteny block corresponding to the diagonal
-#	l1 : the synteny block on genome 'g1' 
+#	l1 : the synteny block on genome 'g1'
 #	l1 = [...,(i,s),...] with 'i' the index of the gene and 's' its strand in the genome 1 without species specific genes
 #
 #########################################################################################################################
@@ -962,7 +959,7 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 	#step 1 : remove genes specific to each lineage
 	################################################
 	# rewrite genomes by family names (ie ancGene names)
-	g1_aID = rewriteWithAncGeneID(g1, ancGenes) 
+	g1_aID = rewriteWithAncGeneID(g1, ancGenes)
 	g2_aID = rewriteWithAncGeneID(g2, ancGenes)
 	# genes that are not in ancGene have a aID=-1
 	print >> sys.stderr, "genome 1 initially contains %s genes" %  sum([len(g1[c1]) for c1 in g1])
@@ -1020,7 +1017,7 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 	if gapMax == None:
 		gapMax = gap
 	print >> sys.stderr, "used gapMax = %s tbs" % gapMax
-	
+
 	# step 2 and 3 : build the MHP and extract putative sbs as diagonals
 	#################################################################################
 	# extract sbs in the tb base
@@ -1078,22 +1075,23 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 	return sbsGenSV
 
 #################################
-# Post processing of diags 
+# Post processing of diags
 #################################
 
 # Build a genome with sbs as contigs and only conserve one ancestral gene by hp
 def buildGenomeFromSbs(listOfSbs, sbLengthThreshold):
 	cptSb=0
+	ancSbGenome={}
 	for sb in listOfSbs:
-		((c1,l1),(c2,l2),la)
+		((c1,l1), (c2,l2), la)=sb
 		old_ancGene=None
-		for ihp,ancGene in enumerate(la):
+		for ihp,(ancGene,ancStrand) in enumerate(la):
 			#assert ancGene != old_ancGene, "%s,%s" % (ancGene, old_ancGene) # Happens when there are paralogous hps in the same diagonal
 			if ancGene == old_ancGene:
 				continue # This may create diags of size 1 that will need to be removed
-			ancSbGenome[cptSb].append((ancGene,ss[ihp])) # ancGene synonymous of hp-name
+			ancSbGenome[cptSb].append((ancGene,ancStrand)) # ancGene synonymous of hp-name
 			old_ancGene = ancGene
-		
+
 		if len(ancSbGenome[cptSb]) <= 1: # In every cases sbs of length 1 are removed
 			del ancSbGenome[cptSb]
 			continue

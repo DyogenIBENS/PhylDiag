@@ -13,7 +13,6 @@ import operator
 # Fonctions de statistiques #
 #############################
 class myStats:
-	
 
 	# Renvoie la moyenne d'une liste
 	#################################
@@ -255,9 +254,6 @@ class myInterpolator:
 ####################################
 class randomValue:
 
-	import random
-	import bisect
-
 	# Renvoie un indice au hasard dans l, compte tenu des valeurs de l, qui indiquent une frequence d'apparition
 	#############################################################################################################
 	@staticmethod
@@ -358,7 +354,7 @@ def sqrti(n, part, nbdec):
 # Fast computation of combinations for probability computation #
 ################################################################
 @myTools.memoize
-def combinations(n,p): 
+def combinations(n,p):
 	if n < 0:
 		raise ValueError("combination(n=%s,p=%s), n cannot be < 0" % (n,p))
 
@@ -385,7 +381,7 @@ def combinations(n,p):
 					den = float(den)
 				except OverflowError:
 					den = float('inf')
-	
+
 				if num == float('inf') and den == float('inf'):
 					return None
 				elif num == float('inf') and den != float('inf'):

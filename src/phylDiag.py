@@ -76,7 +76,7 @@ for ((c1,d1),(c2,d2),daa,pVal) in listOfDiags:
 
 	# We add the pValue
 	res.append(utils.myFile.myTSV.printLine([pVal], " "))
-	
+
 	print utils.myFile.myTSV.printLine(res)
 
 print >> sys.stderr, "Distribution of the synteny block lengths", utils.myMaths.myStats.txtSummary(statsDiags)

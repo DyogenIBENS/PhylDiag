@@ -12,7 +12,6 @@ import collections
 import enum
 
 import myFile
-import myTools
 
 Gene = collections.namedtuple("Gene", ['chromosome', 'beginning', 'end', 'strand', 'names'])
 GenePosition = collections.namedtuple("GenePosition", ['chromosome', 'index'])
@@ -64,7 +63,7 @@ class myFASTA:
 					yield (name, "".join(tmp))
 				name = ligne[1:].strip()
 				tmp = []
-			# lines must be concatenated 
+			# lines must be concatenated
 			elif name != None:
 				tmp.append(ligne.upper())
 		if name != None:

@@ -11,10 +11,7 @@ __doc__ = """
 """
 
 
-import sys
 import cStringIO
-import collections
-import re 
 import string
 
 import utils.myPhylTree
@@ -28,83 +25,83 @@ ntree = 0
 def processData(data):
 
 	tree = utils.myPhylTree.PhylogeneticTree(cStringIO.StringIO(data))
-		
+
 	def printTree(indent, node):
 		global nodeid, ntree
 		print "%sid\t%d" % (indent, nodeid)
 		nodeid += 1
-		
+
 		info={}
-		
-			
+
+
 		if "B" in tree.info[node]:
 			info["Bootstrap"]=int(tree.info[node]["B"])
 
-			
+
 		if "D" in tree.info[node] and tree.info[node]["D"]=="N":
 			info["Duplication"]=0
 			if "E" in tree.info[node]:
-				info["taxon_lost"]=tree.info[node]["E"].split("=-$")[1].split("-") 
+				info["taxon_lost"]=tree.info[node]["E"].split("=-$")[1].split("-")
 				if "S" in tree.info[node]:
 					info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
 			else:
-				if "S" in tree.info[node] : 
+				if "S" in tree.info[node] :
 					info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
-				
 
-			
-		elif "D" in tree.info[node] and tree.info[node]["D"]=="Y": 
-			
-			if "DD" in tree.info[node] and tree.info[node]["DD"]=="Y" : 
+
+
+		elif "D" in tree.info[node] and tree.info[node]["D"]=="Y":
+
+			if "DD" in tree.info[node] and tree.info[node]["DD"]=="Y" :
 				info["Duplication"]=1
 				info["dubious_duplication"]=1
-				
-				if "E" in tree.info[node] : 
-					info["taxon_lost"]=tree.info[node]["E"].split("=$-")[1].split("-") 
 
-					if "S" in tree.info[node] : 
+				if "E" in tree.info[node] :
+					info["taxon_lost"]=tree.info[node]["E"].split("=$-")[1].split("-")
+
+					if "S" in tree.info[node] :
 						info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
 
-						if "SIS" in tree.info[node] : 
-							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100 
+						if "SIS" in tree.info[node] :
+							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100
 				else :
 
-					if "S" in tree.info[node]: 
+					if "S" in tree.info[node]:
 						info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
 
-						if "SIS" in tree.info[node]: 
-							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100 
+						if "SIS" in tree.info[node]:
+							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100
 			else :
 				info["Duplication"]=2
-				if "E" in tree.info[node] : 
-					info["taxon_lost"]=tree.info[node]["E"].split("=$-")[1].split("-") 
+				if "E" in tree.info[node] :
+					info["taxon_lost"]=tree.info[node]["E"].split("=$-")[1].split("-")
 
-					if "S" in tree.info[node]: 
+					if "S" in tree.info[node]:
 						info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
 
-						if "SIS" in tree.info[node] : 
-							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100 
+						if "SIS" in tree.info[node] :
+							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100
 				else :
-					if "S" in tree.info[node]: 
-						info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," ")) 		
+					if "S" in tree.info[node]:
+						info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
 
-						if "SIS" in tree.info[node] : 
-							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100 
-					
-		elif "E" in tree.info[node] : 
-			info["taxon_lost"]=tree.info[node]["E"].split("=$-")[1].split("-") 
+						if "SIS" in tree.info[node] :
+							info["duplication_confidence_score"]=float(tree.info[node]["SIS"])/100
 
-			if "S" in tree.info[node]: 
+		elif "E" in tree.info[node] :
+			info["taxon_lost"]=tree.info[node]["E"].split("=$-")[1].split("-")
+
+			if "S" in tree.info[node]:
 				info["Duplication"]=0
 				info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
-		
-			
-		elif "S" in tree.info[node]: 
+
+
+		elif "S" in tree.info[node]:
 			info["Duplication"]=0
 			info["taxon_name"]=string.capitalize(tree.info[node]["S"].replace("_"," ").replace("."," "))
-		
-			
-		
+
+
+
 		if indent == "":
 			info["tree_name"] = "TreeBeST%06d" % ntree
 			ntree += 1
@@ -112,13 +109,13 @@ def processData(data):
 		if node not in tree.items:
 			# modifier par alex pour garder le "_" dans le nom de gene!
 			############################################################
-			
+
 			#x = node.rpartition("_")[0]
 			x=node
-			
+
 			# fin de modif Alex
-			
-			
+
+
 			info["gene_name"] = x
 
 		print "%sinfo\t%s" % (indent, info)

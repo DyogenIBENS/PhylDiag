@@ -14,7 +14,7 @@ import utils.myTools
 
 # return the ancestor names since the previousAnc
 def getIntermediateAnc(phylTree, previousAnc, lastWrittenAnc, newAnc, isDuplication):
-	
+
 	if lastWrittenAnc:							# cruise mode
 		toWrite =list(phylTree.dicLinks[lastWrittenAnc][newAnc][1:])	# genes of the species between lastWritten and newAnc are recorded exepted if it is a duplication node (see after)
 
@@ -32,7 +32,7 @@ def getIntermediateAnc(phylTree, previousAnc, lastWrittenAnc, newAnc, isDuplicat
 
 	if isDuplication:						# if the current node is a duplication newAnc is not recorded in the list to be written
 		toWrite.remove(newAnc)
-	
+
 	root=False 						# root refers to terminal genes of the first species
 	if not lastWrittenAnc: 					# in the first species or at the first node outside the first species
 		if not isDuplication: 				# if it is a speciation node
@@ -67,9 +67,9 @@ class ProteinTree:
 	def printTree(self, f, node=None):
 
 		def rec(n, node):
-			
+
 			indent = "\t" * n
-			# id of the node 
+			# id of the node
 			print >> f, "%sid\t%d" % (indent, node)
 			# informations
 			print >> f, "%sinfo\t{%s}" % (indent, ", ".join(repr(key) + ": " + repr(value) for (key, value) in sorted(self.info[node].iteritems())))
@@ -115,20 +115,20 @@ class ProteinTree:
 				genes.append(self.info[node]['gene_name'])
 				return self.info[node]['gene_name']
 			else:
-				return "(" + ",".join([rec(x) + ":" + str(l) for (x,l)  in self.data[node]]) + ") " + info[node]['family_name']
+				return "(" + ",".join([rec(x) + ":" + str(l) for (x,l)  in self.data[node]]) + ") " + self.info[node]['family_name']
 		tr = rec(self.root if node is None else node)
 		print >> f, " ".join(genes)
 		print >> f, tr, ";"
-	
+
 
 	# Compact a tree by removing intermediary nodes that have only one child
 	def compactTree(self, phylTree, node=None):
-	
+
 		def do(node):
 			# end of the process on one leaf
 			if node not in self.data:
 				return False
-			
+
 			flag = False
 			# recursive calls
 			for (gg,_) in self.data[node]:
@@ -153,7 +153,7 @@ class ProteinTree:
 
 	# rename all nodes in order to make them match with the common ancestors of their descendants
 	def renameTree(self, phylTree, node=None):
-	
+
 		def do(node):
 			# end of the process on one leaf
 			if node not in self.data:
@@ -176,10 +176,10 @@ class ProteinTree:
 
 	# Flatten a node and direct children if they represent the same taxon and if their is no duplication
 	# For instance:
-	#  ((Eutheria1,Eutheria2)XA,(Eutheria3,Eutheria4)XB)XC is transformed into (Eutheria1,Eutheria2,Eutheria3,Eutheria4) 
-	#    only if XA, XB et XC are speciation nodes                                                              
+	#  ((Eutheria1,Eutheria2)XA,(Eutheria3,Eutheria4)XB)XC is transformed into (Eutheria1,Eutheria2,Eutheria3,Eutheria4)
+	#    only if XA, XB et XC are speciation nodes
 	def flattenTree(self, phylTree, rec, node=None):
-	
+
 		def do(node):
 			# end of the process on one leaf
 			if node not in self.data:
@@ -203,18 +203,18 @@ class ProteinTree:
 			for (g,d) in self.data[node]:
 				inf = self.info[g]
 				# 2x the same taxon and no duplication
-				
+
 				if (inf['taxon_name'] == taxonName) and (inf['Duplication'] < 2) and (g in self.data):
-					
+
 					newData.extend([(g2,d+d2) for (g2,d2) in self.data[g]])
 					del self.data[g]
-						
+
 					self.info[node].update(self.info[g])
 					del self.info[g]
 					flag = True
 				else:
 					newData.append( (g,d) )
-			
+
 			assert len(newData) == len(set(g for (g,_) in newData)), newData
 			assert len(newData) > 0, (node,self.data[node],newData)
 
@@ -229,7 +229,7 @@ class ProteinTree:
 		return do(self.root if node is None else node)
 
 
-	# give back the expected topology to the tree (to match the species tree) 
+	# give back the expected topology to the tree (to match the species tree)
 	#   gather equivalent nodes under the same child
 	def rebuildTree(self, phylTree, hasLowScore, node=None):
 
@@ -241,7 +241,7 @@ class ProteinTree:
 
 			flag = False
 
-			# only if it is not a true duplication the children are changed 
+			# only if it is not a true duplication the children are changed
 			if self.info[node]['Duplication'] < 2:
 
 				# the node will be a speciation exepted special case under
@@ -259,14 +259,14 @@ class ProteinTree:
 							break
 					else:
 						# we can be here only if g is in the same ancestor than node and if g is a duplication,
-						# this usually entails Duplication >= 2, exepted for the new created nodes 
+						# this usually entails Duplication >= 2, exepted for the new created nodes
 						assert (gname == anc), "ERROR: name!=anc [%s / %s / %s]" % (node, anc, gname)
 						# false: g is not always a duplication !
 						# assert self.info[g]['Duplication'] >= 2
 						# the current node will thus be a duplication node
 						self.info[node]['Duplication'] = 3
 						children[anc].append( (g,d) )
-			
+
 				#print >> sys.stderr, "NEW CHILD", child
 				# len(child):
 				#  1 -> only anc
@@ -363,12 +363,12 @@ def loadTree(name):
 
 	# the analysing process of the lines of the file
 	def recLoad(tree, indent):
-		
+
 		# id of the point
 		currID = int(nextLine()[2])
 		# associated informations
 		tree.info[currID] = eval(nextLine()[2])
-		
+
 		# children ?
 		child = []
 		while (ns.curr != None) and (ns.curr[0] == indent+1):
@@ -376,7 +376,7 @@ def loadTree(name):
 			child.append( (recLoad(tree, indent+1), length) )
 		if len(child) > 0:
 			tree.data[currID] = child
-			
+
 		return currID
 
 	import utils.myFile

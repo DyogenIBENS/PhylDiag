@@ -11,7 +11,6 @@ Build the homology matrix with synteny blocks using the mySvgDrawer Library
 """
 
 import sys
-import os
 import collections
 import itertools
 import random
@@ -20,7 +19,7 @@ import utils.mySvgDrawer as svgDrw
 
 # draw either the mh or the mhp, if draw mode is 'writeinTB'
 # inputs :
-# 	genesStrandsCX = [+1, -1, ...] of length = to nX 
+# 	genesStrandsCX = [+1, -1, ...] of length = to nX
 # 	genesRemovedDuringFilteringC1 = [..., i, ...] with i the index of the gene removed during the filtering process (CX : Chromosome X)
 # 	tbWithNoHomologyInWindowC1 = [..., [i6,i7,i8], ...] list of tbs with no homologies in the window, inside the index of genes. If draw mode is 'writeinTB' : tbWithNoHomologyInWindowC1 = [..., i6, ...] : just the index of the TB
 # 	hpSigns = { i1 : {i2 : s, ...}...} with hpSign the hp sign (s1*s2) of the homology at the (i1,i2) coordinate (i1-th gene on C1 and i2-th gene on C2)
@@ -50,13 +49,13 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 	# the size of the components of the matrix is chosen using the smallest and more restricting dimension (contains more genes comparing to its size)
 	sizeCase = float (      min( float(maxWidth) / (nx + 3), float(maxHeight) / (ny + 3))    )# +3 for margins
 	sizeText = float( sizeCase*0.9 )
-	width = float(nx+3) * sizeCase 
+	width = float(nx+3) * sizeCase
 	height = float(ny+3) * sizeCase
 	print >> sys.stderr, "width=", width
 	print >> sys.stderr, "height=", height
-	
+
 	scene = svgDrw.Scene(name='homology_matrix', width=width, height=height)
-	
+
 	nbLinesX= nx+1 #Nb of vertical lines (x varies) in the matrix
 	nbLinesY= ny+1 #Nb of horizontal lines (y varies) in the matrix
 
@@ -95,7 +94,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 		cx = i*sizeCase
 		if ni%10==0:
 			scene.add(svgDrw.Line((offset_matrix_x+sizeCase/2+cx, height - offset_genes_y/2), (offset_matrix_x+sizeCase/2+cx, height - offset_genes_y), width=widthTicks))
-		if ni%50 == 0: 
+		if ni%50 == 0:
 			cxText = offset_matrix_x+sizeCase/2+cx
 			cyText = height - max(offset_genes_y/2, sizeTextTicks/2)
 			cxx = offset_matrix_x+cx+sizeCase/2
@@ -111,7 +110,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 		cy = j*sizeCase
 		if nj%10==0:
 			scene.add(svgDrw.Line((offset_genes_x/2, height - (offset_matrix_y+sizeCase/2+cy)), (offset_genes_x, (height - (offset_matrix_y+sizeCase/2+cy))), width=widthTicks))
-		if nj%50 == 0: 
+		if nj%50 == 0:
 			cyText = height - (offset_matrix_y+sizeCase/2+cy)
 			cxText = max(offset_genes_x/2, sizeTextTicks/2)
 			cxx = offset_genes_x/2
@@ -136,7 +135,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 
 		chromosome1={}
 		chromosome2={}
-		
+
 		# create chromosomes
 		for i1,s1 in enumerate(genesStrandsC1):
 			cx = i1*sizeCase
@@ -169,7 +168,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 			if isinstance(tb,list):
 				for i1 in tb:
 					chromosome1[i1].SVGclass = "NoHomologyInWindow%s" % grey
-			else: 
+			else:
 				chromosome1[tb].SVGclass = "NoHomologyInWindow%s" % grey
 		for tb in tbWithNoHomologyInWindowC2:
 			grey = availableGreys.pop() if len(availableGreys) > 0 else random.choice(range(0,13,1))
@@ -178,17 +177,17 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 					chromosome2[i2].SVGclass = "NoHomologyInWindow%s" % grey
 			else:
 				chromosome2[tb].SVGclass = "NoHomologyInWindow%s" % grey
-		
+
 		for i1 in genesRemovedDuringFilteringC1:
 			chromosome1[i1].SVGclass = "SpeciesSpecificGenes"
 		for i2 in genesRemovedDuringFilteringC2:
 			chromosome2[i2].SVGclass = "SpeciesSpecificGenes"
-		
+
 		for i1 in chromosome1:
 			scene.add(chromosome1[i1])
 		for i2 in chromosome2:
 			scene.add(chromosome2[i2])
-		
+
 		# fill homologies with +1,-1 or ? or 0
 		nonZeroValues=[]
 		for i1 in hpSigns:
@@ -207,7 +206,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 					cx = i1*sizeCase + float(sizeCase)/2
 					cy = i2*sizeCase + float(sizeCase)/2
 					scene.add(svgDrw.Text((cx+offset_matrix_x,height-(cy+sizeText*0.16+offset_matrix_y)), "0", text_anchor="middle", size=sizeText, fill=(200,200,200), stroke=None))
-		
+
 	else:
 		# represent homologies with a black rectangle
 		for i1 in hpSigns:
@@ -217,8 +216,8 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 					cy_s=i2*sizeCase
 					scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x,height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill=(0,0,0), fill_opacity=0.90))
 		print >> sys.stderr, "Warning : some supplementary informations are not displayed because one of the two dimension of the window is > 300"
-	 
-	
+
+
 	if outputFileName != None:
 	        scene.write_svg(filename=str(outputFileName))
 	#scene.display()
@@ -227,11 +226,11 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 def test(outFileName):
     scenario = arguments["scenario"]
     if scenario==1 :
-	nx=11 
-    	ny=7 
+	nx=11
+    	ny=7
     	homologySameStrand=[(1,1), (2,2), (3,3), (4,4), (5,5), (8,3), (9,4)]
     	homologyOppositeStrand=[]
-	diags=[[(1,1), (2,2), (3,3), (4,4), (5,5)],[(8,3), (9,4)]] 
+	diags=[[(1,1), (2,2), (3,3), (4,4), (5,5)],[(8,3), (9,4)]]
     elif scenario ==2:
     	nx=9
     	ny=9
@@ -261,7 +260,7 @@ def test(outFileName):
     	ny=13
     	homologySameStrand=[(1,6), (2,7), (4,8), (5,9), (6,10), (10,8), (11,9)]
     	homologyOppositeStrand=[(7,3),(8,2), (3,8)]
-    elif scenario == 7: 
+    elif scenario == 7:
     	# For the paper on the method to extract diagonals
     	nx=8
     	ny=9
@@ -282,14 +281,14 @@ def test(outFileName):
     	homologySameStrand=[(2,2)]
     	homologyOppositeStrand=[(1,3),(3,2),(4,2),(5,1)]
     	diags=[]
-    elif scenario == 10: 
+    elif scenario == 10:
     	# For the paper on the method to extract diagonals
     	nx=5
     	ny=5
     	homologySameStrand=[]
     	homologyOppositeStrand=[(1,3),(2,2),(3,1)]
     	diags=[]
-    elif scenario == 11: 
+    elif scenario == 11:
     	# For the paper on the method to extract diagonals (merge and probabilities)
     	nx=11
     	ny=8
@@ -334,7 +333,7 @@ def test(outFileName):
 
 	drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2), hpSigns, homologyGroupsInWindow, diagsIndices, outputFileName=outFileName, maxWidth=100, maxHeight=100 , symbolsInGenes=symbolsInGenes)
 
-if __name__ == '__main__': 
-	arguments = utils.myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__) 
+if __name__ == '__main__':
+	arguments = utils.myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
 	test(arguments['out:FileName'])
 

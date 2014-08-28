@@ -48,7 +48,7 @@ class Scene:
 		 '<g style="fill-opacity:1.0; stroke:black;\n',
 		  'stroke-width:0.25;">\n']
 
-        for item in self.items: var += item.strarray()            
+        for item in self.items: var += item.strarray()
         var += [" </g>\n","</svg>\n"]
         return var
 
@@ -64,8 +64,8 @@ class Scene:
 
     def display(self,prog=display_prog):
         #os.system("%s %s" % (prog,self.svgname))
-        return        
-        
+        return
+
 
 class Line:
     def __init__(self,start,end, width=0.03):
@@ -195,10 +195,10 @@ class Gene:
 	    points = [(i*scale+self.start[0],j*scale+self.start[1]) for (i,j) in points]
 	    #return Polygon(points,self.color,(0,0,0),1).strarray()
 	    if self.text == None:
-	 	    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray() 
+	 	    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray()
 	    else:
 		    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray() + Text((float(self.start[0]+self.end[0])/2,float(self.start[1]+self.end[1])/2), self.text,size=self.width*0.8, text_anchor="middle", fill=(0,0,0), stroke=None, fontWeight="800", fontFamily="Arial", transform="").strarray()
-        else: 
+        else:
 	    scale = sqrt((self.end[0]-self.start[0])**2 + (self.end[1]-self.start[1])**2)
 	    points = [(0.1,-0.5), (0.1,0.5), (0.9,0.5), (0.9, -0.5)] # Defines a rectangle for unoriented genes or TBs
 	    #rotation

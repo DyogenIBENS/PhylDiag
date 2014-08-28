@@ -37,7 +37,7 @@ def verbose(functionToExcecute):
 				res = functionToExcecute(*args, **kargs)
 				# **kargs still contains verbose
 			else:
-				sys.stderr = open(os.devnull, 'w')	
+				sys.stderr = open(os.devnull, 'w')
 				res = functionToExcecute(*args, **kargs)
 				# **kargs still contains verbose
 				sys.stderr = sys.__stderr__
@@ -228,7 +228,7 @@ class hashablelist(list):
 		return hash(tuple(self))
 
 # This class allows to group a list of elements.
-# From an initial list of elements, links are added between these elements. 
+# From an initial list of elements, links are added between these elements.
 # The class gathers elements that are linked.
 class myCombinator:
 
@@ -305,8 +305,8 @@ class FileList:
 		return '<FileList(%d)>' % self.minNbFiles
 
 
-# Parse arguments on the command line            
-#  1. requested arguments (name, builder)                          
+# Parse arguments on the command line
+#  1. requested arguments (name, builder)
 #  2. options in the form of -opt=val (name, builder, default_value)
 # If an error occurs, user's command line is printed as well as a short description of the bug and a brief manual of the script (info).
 def checkArgs(args, options, info, showArgs=True):
@@ -322,7 +322,6 @@ def checkArgs(args, options, info, showArgs=True):
 			if isinstance(t[1], enum.Enum):
 				print >> sys.stderr, "\t", "  -%s %s (%s)" % (t[0], t[1]._keys, t[2])
 			elif t[1] == bool:
-				invite = "+/-"
 				print >> sys.stderr, "\t", "+/-%s (%s)" % (t[0],t[2])
 			else:
 				print >> sys.stderr, "\t", "  -%s %s (%s)" % t
@@ -392,7 +391,6 @@ def checkArgs(args, options, info, showArgs=True):
 						if t[0] == '+':
 							try:
 								import psyco
-								from psyco.classes import __metaclass__
 								psyco.full()
 							except ImportError:
 								print >> sys.stderr, "Unable to load psyco !"

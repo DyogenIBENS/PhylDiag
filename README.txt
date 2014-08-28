@@ -21,7 +21,7 @@
 # Matthieu MUFFATO (EBI, Cambridge, United Kingdom, muffato@ebi.ac.uk)
 # Hugues ROEST CROLLIUS (IBENS, Paris, France, hrc@ens.fr)
 
-# This code uses personal libraries in src/utils: myTools, myGenomes, myMaths, myFile, myPhylTree, mySvgDrawer.py, myProbas.py and myDiags.py
+# This code uses personal libraries in src/utils: myTools, myGenomes, myMaths, myFile, myPhylTree, mySvgDrawer.py, myProbas.py, myProteinTree and myDiags.py
 
 ##################
 # PhylDiag v1.02 #
@@ -34,12 +34,12 @@
 From now on we consider that the user is in the root directory of the PhylDiag deposit 
 : cd <PhylDiagFolder>
 
-install PhylDiag
+Install PhylDiag
 -----------------
 install python 2.7 :
 : sudo apt-get install python2.7
 
-give excecution rights to scripts :
+Give excecution rights to scripts :
 : chmod +x src/*.py
 : chmod +x src/utils/*.py
 -----------------
@@ -48,16 +48,16 @@ give excecution rights to scripts :
 # preprocessing step : define gene families using gene trees #
 ##############################################################
 
-convert nhx (or .nwk, newick) gene trees to our tabular format (phylTree):
+Convert nhx (or .nwk, newick) gene trees to our tabular format (phylTree):
 : src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.phylTree
 
-convert a newick species tree into a phylTree species tree:
+Convert a newick species tree into a phylTree species tree:
 : src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree
 
-extract the ancestral gene content (ancGene) from the gene trees:
+Extract the ancestral gene content (ancGene) from the gene trees:
 : src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.phylTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.phylTree
 
-these ancGenes files can be used to define gene families
+These ancGenes files can be used to define gene families
 usually when two species Sa and Sb are compared, gene families are defined by ancGenes.<LCA(Sa,Sb)>
 
 ##########################
@@ -68,10 +68,10 @@ The core of PhylDiag is in src/utils/myDiags.py
 Probability calculations are in src/utils/myProbas.py
 The wrapper of PhylDiag is src/phylDiag.py
 
-access to the manual of PhylDiag :
+Access to the manual of PhylDiag :
 : src/phylDiag.py
 
-this returns :
+This returns :
 //////////////////////
 - ERROR - Not enough arguments
  Usage : src/phylDiag.py
@@ -93,11 +93,11 @@ this returns :
 
 	Wrapper for PhylDiag Library
 //////////////////////
-numbered parameters are required, 
+numbered parameters are required,
 other parameters are optional (the default value is between brackets)
 
-3 files are required : 
--2 genomes 
+3 files are required :
+-2 genomes
 -1 ancGene file (for gene family definitions)
 Examples are given in <PhylDiagRootPath>/data: human and mouse genomes and the anGene defining families from the Euarchontoglire ancestor (LCA(human,mouse))
 
@@ -106,19 +106,19 @@ The distance metric may be either the 'DPD', 'ED', 'MD' or 'CD'; the default val
 pThreshold is the p-value threshold for the statistical validation of synteny blocks
 to follow step 1 of PhylDiag as described in the article, users should add -filterType=InCommonAncestor to filter lineage specific gene apparitions
 
-other parameters are not explained in PhylDiag article and users should avoid changing them 
+Other parameters are not explained in PhylDiag article and users should avoid changing them 
 
 A standard way to launch PhylDiag is thus:
 : src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -filterType=InCommonAncestor > res/syntenyBlocks.txt
 (this way, the gapMax is set with the advised value. Take care that the default distance metric is the chebyshev distance metric (CD))
 
 A more customised way is for instance:
-: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks.txt
+: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks_MD11.txt
 
 Adding "+verbose" (set the verbose boolean to True) allows more informations in the error log, thus users willing to have more informations should launch PhylDiag like this:
-: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -distanceMetric=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks.txt 2> res/logErr
+: src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -distanceMetric=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks_DPD11.txt 2> res/logErr_DPD11.txt
 
-Adding the "-multiProcess" (set the multiProcess boolean to False) option allow to launch phylDiag in sequential mode on one process alone. This may be usefull for users that wants to launch phylDiag on a personal computer. Adding "nice -n 19" before the command line "phylDiag ..." may also be usefull in order to prevent any crash of the OS if the CPU or memory consuption becomes greedy
+Adding the "-multiProcess" (set the multiProcess boolean to False) option allow to launch phylDiag in sequential mode on one process alone. This may be useful for users that wants to launch phylDiag on a personal computer. Adding "nice -n 19" before the command line "phylDiag ..." may also be useful in order to prevent any crash of the OS if the CPU or memory consumption becomes greedy
 
 "-nbHpsRecommendedGap=X" sets the number of homologies to X for the target synteny block in the average MHP for the recommended gapMax type (the default value is 2) and "-targetProbaRecommendedGap" is the value of the p-value of this target synteny block of "nbHpsRecommendedGap" hps. See the Supp Data of PhylDiag for more explicit informations
 
@@ -128,10 +128,10 @@ Adding the "-multiProcess" (set the multiProcess boolean to False) option allow 
 # PhylDiag Viewer #
 ###################
 
-access to the manual of PhylDiag's viewer :
+Access to the manual of PhylDiag's viewer :
 : src/phylDiagHomologyMatrixViewer.py
 
-this returns :
+This returns :
 ////////////////////////////////
 - ERROR - Not enough arguments
  Usage : src/phylDiagHomologyMatrixViewer.py
@@ -155,7 +155,7 @@ this returns :
 	+/-verbose (True)
 
 
-	Show the homology matrix with coloured synteny blocks (also called diagonals). 
+	Show the homology matrix with coloured synteny blocks (also called diagonals).
 	- Each colour represents a synteny block.
 	- On the x-axis are the genes of the 1st genome in the desired window
 	- On the y-axis are the genes of the 2nd genome in the desired window
@@ -167,15 +167,15 @@ numbered parameters are required
 other parameters are optional  (the default value is between brackets)
 
 To see the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome, launch:
-: src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=5 -distanceMetric=MD -out:ImageName=res/MH.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH.txt
+: src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=5 -distanceMetric=MD -out:ImageName=res/MH_MD5.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_MD5.txt
 
 "X:1-~" means X chromosome from the 1st gene to the last gene
 For instance "4:45-80" means the 4th chromosome from the 45th gene to the 80th gene
 
-the image MH.svg be viewed with an internet browser as firefox 
+The image MH.svg can be viewed with an internet browser as firefox 
 
 It is also possible to draw the Matrix of Homology Packs (MHP):
-: src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -distanceMetric=MD -gapMax=5 -out:ImageName=./res/MHP.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP.txt
+: src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -distanceMetric=MD -gapMax=5 -out:ImageName=./res/MHP_MD5.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP_MD5.txt
 
 Many parameters can be customised, for instance a user can run:
 : Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && C2=X && R2="1-100" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001

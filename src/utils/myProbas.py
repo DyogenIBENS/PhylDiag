@@ -27,7 +27,7 @@
 # s : may refer to 'strand', the transcriptional orientation of a gene or a tb
 # hp : homology pack
 # sign : may refer to a sign of a homology pack
-# MH : matrix of homologies 
+# MH : matrix of homologies
 # MHP: matrix of homology packs
 # diagonal : synonym of a sb (a sb is roughly  a daigonal in the MHP)
 # diagonal type : either 'slash' ('/', bottom-left to top-right) or 'backslash' ('\', top-left to bottom-right)
@@ -62,7 +62,7 @@ def statsTbOrientation(genome_tb):
 				raise ValueError()
 		assert len(genome_tb[c]) == nbTb_plus + nbTb_minus + nbTb_None
 		p_tbO[c] = [float(v)/len(genome_tb[c]) for v in (nbTb_plus,nbTb_minus,nbTb_None)]
-		p_tbO[c] = dict(  ((+1,p_tbO[c][0]),(-1,p_tbO[c][1]),(None,p_tbO[c][2])) ) 
+		p_tbO[c] = dict(  ((+1,p_tbO[c][0]),(-1,p_tbO[c][1]),(None,p_tbO[c][2])) )
 		nbTb_plus_g += nbTb_plus
 		nbTb_minus_g += nbTb_minus
 		nbTb_None_g += nbTb_None
@@ -89,7 +89,7 @@ def statsHpSign(g1_tb, g2_tb, verbose=False):
 	print >> sys.stderr, "pairwise comparisons of chromosomes analysis for the calculation of the probabilities of hps signs",
 	for (i,(c1,c2)) in enumerate(itertools.product(g1_tb,g2_tb)):
 		comp = (c1,c2)
-		# Here we can use sets since a hp sign +1 in a comparison between ca on X vs cb on Y is still a hp sign +1 in a comparison between cb on X vs ca on Y 
+		# Here we can use sets since a hp sign +1 in a comparison between ca on X vs cb on Y is still a hp sign +1 in a comparison between cb on X vs ca on Y
 		p_hpSign[comp][+1] = sTbG1[c1][+1]*sTbG2[c2][+1] + sTbG1[c1][-1]*sTbG2[c2][-1]
 		p_hpSign[comp][-1] = sTbG1[c1][+1]*sTbG2[c2][-1] + sTbG1[c1][-1]*sTbG2[c2][+1]
 		p_hpSign[comp][None] = 	sTbG1[c1][+1]*sTbG2[c2][None] +  sTbG1[c1][None]*sTbG2[c2][+1] + \
@@ -118,12 +118,12 @@ def format_exception(e):
 	exception_list = exception_list[:-2]
 	exception_list.extend(traceback.format_tb(sys.exc_info()[2]))
 	exception_list.extend(traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1]))
-	
+
 	exception_str = "Traceback (most recent call last):\n"
 	exception_str += "".join(exception_list)
 	# Removing the last \n
 	exception_str = exception_str[:-1]
-	
+
 	return exception_str
 
 # probability that there are exactly k hps in the window Wab of width la and height lb in a mhp of width na height nb and containing nab hps
@@ -137,17 +137,17 @@ def p_d(k,la,lb,nab,na,nb):
 		return None
 	elif k > min([la, lb]):
 		print >> sys.stderr, "Warning: not able to compute p_d(k=%s,la=%s,lb=%s,nab=%s,na=%s,nb=%s) because there are too many dispersed paralogies in the window" % (k,la,lb,nab,na,nb)
-		return None 
+		return None
 	limSum = min(la-k,nab-k)
 	sum_ = 0
 	for i in range(0,limSum+1):
-		try:	
+		try:
 			foo = combinations(nab-k,i)*combinations(na-nab,la-(k+i))*combinations(nb-(k+i),lb-k)
 		except Exception as e:
 			print >> sys.stderr, "Warning: not able to compute p_d(k=%s,la=%s,lb=%s,nab=%s,na=%s,nb=%s) because %s" % (k,la,lb,nab,na,nb,e)
 			foo = 0
 		sum_ += foo
-	num = combinations(nab,k)*sum_ 
+	num = combinations(nab,k)*sum_
 	den = combinations(na,la)*combinations(nb,lb)
 	if den == float('inf') and num != float('inf'):
 		return 0.0
@@ -166,7 +166,7 @@ d_0 = lambda k,g,l : sum([((-1)**i)*combinations(k-1,i)*combinations(l-i*(g+1),k
 
 # probability that k marked tbs form a maxgap(g)-cluster in a sequence of l tbs
 def p_g_1D(k,g,l):
-	if k > l: 
+	if k > l:
 		print >> sys.stderr, "Warning: there are not %s tbs in the window of size %s" % (k,l)
 		return None
 	w = (k-1)*g+k
@@ -176,7 +176,7 @@ def p_g_1D(k,g,l):
 
 # probability that k marked hps form a maxgap(g)-cluster in both sequences of lengths la and lb
 def p_g_2D(k,g,la,lb):
-	if k > min(la,lb): 
+	if k > min(la,lb):
 		print >> sys.stderr, "Warning: there are not %s tbs in the window of size %sx%s" % (k,la,lb)
 	try:
 		return p_g_1D(k,g,la) * p_g_1D(k,g,lb)
@@ -233,12 +233,12 @@ def pValue(m,g,la,lb,nab,na,nb,p_hpSign,verbose=True):
 		print >> sys.stderr, "Warning: not able to compute pValue(%s,%s,%s,%s,%s,%s,%s) because there are too many dispersed paralogies in the window" % (m,g,la,lb,nab,na,nb)
 		return None
 	nw = float(na*nb)/float(la*lb)
-	try:	
+	try:
 		pVal = 1 - math.pow(1 - p_w(m,g,la,lb,nab,na,nb,p_hpSign), nw)
 	except:
 		if p_w < 0.01:
 			#here we consider that p_w is << 1, thus we can perform a linearistaion (see Taylor-Young formula "(1-u)^a ~= 1-a*u" when p_w -> 0)
-			try:	
+			try:
 				pVal = nw*p_w(m,g,la,lb,nab,na,nb,p_hpSign)
 			except:
 				pVal = None

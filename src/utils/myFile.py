@@ -89,7 +89,7 @@ class firstLineBuffer:
 		yield self.firstLine
 		while True:
 			yield self.next()
-	
+
 	def next(self):
 		while True:
 			l = self.f.next().replace('\n', '').replace('\r', '')
