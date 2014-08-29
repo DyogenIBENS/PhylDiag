@@ -53,6 +53,11 @@ Code refactoring:
 -----------------
 *Cut-paste the part of myDiags.py that manages the multiprocess into myTools.py
 
+Use the Cairo library to render svg graphics:
+---------------------------------------------
+Instead of using mySvgDrawer.py use Cairo, a widely used library to draw vectorial images (http://cairographics.org/)
+Use also Pango for text rendering inside Cairo, both libraries are working together (http://www.pango.org/)
+
 TODO:
 -----
 *Change the colors in the viewer (avoid yellow because there is not enough contrast on a white background)
