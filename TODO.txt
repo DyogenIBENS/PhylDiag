@@ -57,3 +57,4 @@ TODO:
 -----
 *Change the colors in the viewer (avoid yellow because there is not enough contrast on a white background)
 *Add red rectangles around diagonals that did not pass the statistical validation
+*Update src/newickSpeciesTree2phylTreeSpeciesTree.py to tackle branch lengths

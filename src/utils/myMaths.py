@@ -254,6 +254,9 @@ class myInterpolator:
 ####################################
 class randomValue:
 
+	import bisect
+	import random
+
 	# Renvoie un indice au hasard dans l, compte tenu des valeurs de l, qui indiquent une frequence d'apparition
 	#############################################################################################################
 	@staticmethod
