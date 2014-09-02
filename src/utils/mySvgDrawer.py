@@ -35,18 +35,18 @@ class Scene:
         #       "<svg height=\"%d\" width=\"%d\" >\n" % (self.height,self.width),
         #       " <g style=\"fill-opacity:1.0; stroke:black;\n",
         #       "  stroke-width:1;\">\n"]
-	var= ['<?xml version="1.0" encoding="utf-8" standalone="no"?>\n',
-		'<?xml-stylesheet type="text/css" href="drawHomologyMatrix.css" ?>\n', #Attention, necessite le fichier css avec la charte graphique de genomicus
-		'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n',
-		#"<svg height=\"%spt\" version=\"1.1\" viewBox=\"0 0 %s %s\" width=\"%spt\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" % (self.height, self.width, self.height, self.width),
-		"<svg height=\"100%%\" version=\"1.1\" viewBox=\"0 0 %s %s\" width=\"100%%\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" % (self.width, self.height),
-		 '<defs>\n',
-		  '<style type="text/css">\n',
-			'*{stroke-linecap:square;stroke-linejoin:round;}\n',
-		  '</style>\n',
-		 '</defs>\n'
-		 '<g style="fill-opacity:1.0; stroke:black;\n',
-		  'stroke-width:0.25;">\n']
+        var= ['<?xml version="1.0" encoding="utf-8" standalone="no"?>\n',
+                '<?xml-stylesheet type="text/css" href="drawHomologyMatrix.css" ?>\n', #Attention, necessite le fichier css avec la charte graphique de genomicus
+                '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n',
+                #"<svg height=\"%spt\" version=\"1.1\" viewBox=\"0 0 %s %s\" width=\"%spt\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" % (self.height, self.width, self.height, self.width),
+                "<svg height=\"100%%\" version=\"1.1\" viewBox=\"0 0 %s %s\" width=\"100%%\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" % (self.width, self.height),
+                 '<defs>\n',
+                  '<style type="text/css">\n',
+                        '*{stroke-linecap:square;stroke-linejoin:round;}\n',
+                  '</style>\n',
+                 '</defs>\n'
+                 '<g style="fill-opacity:1.0; stroke:black;\n',
+                  'stroke-width:0.25;">\n']
 
         for item in self.items: var += item.strarray()
         var += [" </g>\n","</svg>\n"]
@@ -75,8 +75,8 @@ class Line:
         return
 
     def strarray(self):
-	    return ["  <line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" style=\"stroke-width:%f\" />\n" %\
-                (self.start[0],self.start[1],self.end[0],self.end[1],self.width)]
+        return ["  <line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" style=\"stroke-width:%f\" />\n" %\
+            (self.start[0],self.start[1],self.end[0],self.end[1],self.width)]
 
 
 class Circle:
@@ -97,47 +97,47 @@ class Rectangle:
         self.height = height
         self.width = width
         self.fill_opacity = fill_opacity #value of alpha between 0.0 and 1.0
-	self.stroke = stroke
-	self.strokeWidth = strokeWidth
-	if svgClass == None:
-		self.fill = fill
-		self.svgClass = None
-	else:
-		self.fill = None
-		self.svgClass = svgClass
+        self.stroke = stroke
+        self.strokeWidth = strokeWidth
+        if svgClass == None:
+            self.fill = fill
+            self.svgClass = None
+        else:
+            self.fill = None
+            self.svgClass = svgClass
         return
 
     def strarray(self):
-	if self.svgClass == None:
-		return ["  <rect x=\"%f\" y=\"%f\" height=\"%f\"\n" %\
-        	       	(self.origin[0],self.origin[1],self.height),
-			"    width=\"%f\" style=\"fill:%s;fill-opacity:%f;stroke:%s;stroke-width:%s\"/>\n" %\
-               		(self.width,colorstr(self.fill), self.fill_opacity, self.stroke, self.strokeWidth)]
-	else:
-		return 	["  <rect x=\"%f\" y=\"%f\" height=\"%f\"\n" %\
-        	       	(self.origin[0],self.origin[1],self.height),
-			"    width=\"%f\" style=\"fill-opacity:%f;stroke:%s\"\n" %\
-	               	(self.width, self.fill_opacity, self.stroke),\
-			"    class=\"%s\"/>\n" % self.svgClass ]
+        if self.svgClass == None:
+            return ["  <rect x=\"%f\" y=\"%f\" height=\"%f\"\n" %\
+                    (self.origin[0],self.origin[1],self.height),
+                    "    width=\"%f\" style=\"fill:%s;fill-opacity:%f;stroke:%s;stroke-width:%s\"/>\n" %\
+                    (self.width,colorstr(self.fill), self.fill_opacity, self.stroke, self.strokeWidth)]
+        else:
+            return  ["  <rect x=\"%f\" y=\"%f\" height=\"%f\"\n" %\
+                    (self.origin[0],self.origin[1],self.height),
+                    "    width=\"%f\" style=\"fill-opacity:%f;stroke:%s\"\n" %\
+                    (self.width, self.fill_opacity, self.stroke),\
+                    "    class=\"%s\"/>\n" % self.svgClass ]
 
 class Text:
     def __init__(self,origin, text,size=24, text_anchor="start", fill=(0,0,0), stroke=None, fontWeight="800", fontFamily="Arial", transform=""): # font-family does not work
         self.origin = origin
         self.text = text
         self.size = size
-	self.text_anchor = text_anchor #specify where is the anchor : "start" (left), "middle" (center), ...
-	self.fill = fill
-	self.stroke = stroke
-	self.fontWeight = fontWeight
-	self.fontFamily = fontFamily
-	self.tansform = transform
+        self.text_anchor = text_anchor #specify where is the anchor : "start" (left), "middle" (center), ...
+        self.fill = fill
+        self.stroke = stroke
+        self.fontWeight = fontWeight
+        self.fontFamily = fontFamily
+        self.tansform = transform
         return
 
     def strarray(self):
-	    return ["  <text x=\"%f\" y=\"%f\" font-size=\"%f\" text-anchor=\"%s\" fill=\"%s\" stroke=\"%s\" font-weight=\"%s\" font-family=\"%s\" transform=\"%s\" >\n" %\
-                (self.origin[0],self.origin[1]+0.5*self.size,self.size, self.text_anchor, colorstr(self.fill), 'none' if self.stroke == None else colorstr(self.stroke), self.fontWeight, self.fontFamily, self.tansform),
-                "   %s\n" % self.text,
-                "  </text>\n"]
+        return ["  <text x=\"%f\" y=\"%f\" font-size=\"%f\" text-anchor=\"%s\" fill=\"%s\" stroke=\"%s\" font-weight=\"%s\" font-family=\"%s\" transform=\"%s\" >\n" %\
+            (self.origin[0],self.origin[1]+0.5*self.size,self.size, self.text_anchor, colorstr(self.fill), 'none' if self.stroke == None else colorstr(self.stroke), self.fontWeight, self.fontFamily, self.tansform),
+            "   %s\n" % self.text,
+            "  </text>\n"]
 
 
 class Ellipse:
@@ -161,8 +161,8 @@ class Polygon:
     #    self.line_width = line_width
     def __init__(self,points,stroke_width=0.1, SVGclass=None): #fill color peut varier entre 0 et 44 (compris)
         self.points = points
-	self.stroke_width = stroke_width
-	self.SVGclass = SVGclass
+        self.stroke_width = stroke_width
+        self.SVGclass = SVGclass
     def strarray(self):
         polygon="<polygon points=\""
         for point in self.points:
@@ -171,46 +171,46 @@ class Polygon:
         #       "\" \nstyle=\"fill:%s;stroke:%s;stroke-width:%f\"/>\n" %\
         #       (colorstr(self.fill_color),colorstr(self.line_color),self.line_width)]
         return [polygon,"\"\n",\
-			"class=\"%s\" style=\"stroke-width:%s\"" % (self.SVGclass,self.stroke_width) , "/>\n"]
+                        "class=\"%s\" style=\"stroke-width:%s\"" % (self.SVGclass,self.stroke_width) , "/>\n"]
 
 class Gene:
     def __init__(self, start, end, width=0.4, strand=+1, stroke_width=0.1, SVGclass = None, text=None):
-	self.start = start
-	self.end = end
-	self.width = width
-	self.strand = strand
-	self.stroke_width = stroke_width
-	self.SVGclass = SVGclass
-	self.text = text
-	return
+        self.start = start
+        self.end = end
+        self.width = width
+        self.strand = strand
+        self.stroke_width = stroke_width
+        self.SVGclass = SVGclass
+        self.text = text
+        return
 
     def strarray(self):
-	if self.strand != None:
-	    scale = sqrt((self.end[0]-self.start[0])**2 + (self.end[1]-self.start[1])**2)
-	    points = [(0.1,-0.5), (0.1,0.5), (0.75,0.5), (0.9, 0), (0.75, -0.5)] if self.strand == +1 else [(0.1,0), (0.25, 0.5), (0.9,0.5), (0.9,-0.5), (0.25, -0.5)] # Defines a gene symbol
-	    #rotation
-	    theta = acos(float(self.end[0]-self.start[0])/scale) if self.end[1]>self.start[1] else -acos(float(self.end[0]-self.start[0])/scale)
-	    points = [(i,float(j*float(self.width))/scale) for (i,j) in points]
-	    points = [(i*cos(-theta)+j*sin(-theta), -i*sin(-theta)+j*cos(-theta)) for (i,j) in points]
-	    points = [(i*scale+self.start[0],j*scale+self.start[1]) for (i,j) in points]
-	    #return Polygon(points,self.color,(0,0,0),1).strarray()
-	    if self.text == None:
-	 	    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray()
-	    else:
-		    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray() + Text((float(self.start[0]+self.end[0])/2,float(self.start[1]+self.end[1])/2), self.text,size=self.width*0.8, text_anchor="middle", fill=(0,0,0), stroke=None, fontWeight="800", fontFamily="Arial", transform="").strarray()
+        if self.strand != None:
+            scale = sqrt((self.end[0]-self.start[0])**2 + (self.end[1]-self.start[1])**2)
+            points = [(0.1,-0.5), (0.1,0.5), (0.75,0.5), (0.9, 0), (0.75, -0.5)] if self.strand == +1 else [(0.1,0), (0.25, 0.5), (0.9,0.5), (0.9,-0.5), (0.25, -0.5)] # Defines a gene symbol
+            #rotation
+            theta = acos(float(self.end[0]-self.start[0])/scale) if self.end[1]>self.start[1] else -acos(float(self.end[0]-self.start[0])/scale)
+            points = [(i,float(j*float(self.width))/scale) for (i,j) in points]
+            points = [(i*cos(-theta)+j*sin(-theta), -i*sin(-theta)+j*cos(-theta)) for (i,j) in points]
+            points = [(i*scale+self.start[0],j*scale+self.start[1]) for (i,j) in points]
+            #return Polygon(points,self.color,(0,0,0),1).strarray()
+            if self.text == None:
+                return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray()
+            else:
+                return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray() + Text((float(self.start[0]+self.end[0])/2,float(self.start[1]+self.end[1])/2), self.text,size=self.width*0.8, text_anchor="middle", fill=(0,0,0), stroke=None, fontWeight="800", fontFamily="Arial", transform="").strarray()
         else:
-	    scale = sqrt((self.end[0]-self.start[0])**2 + (self.end[1]-self.start[1])**2)
-	    points = [(0.1,-0.5), (0.1,0.5), (0.9,0.5), (0.9, -0.5)] # Defines a rectangle for unoriented genes or TBs
-	    #rotation
-	    theta = acos(float(self.end[0]-self.start[0])/scale) if self.end[1]>self.start[1] else -acos(float(self.end[0]-self.start[0])/scale)
-	    points = [(i,float(j*float(self.width))/scale) for (i,j) in points]
-	    points = [(i*cos(-theta)+j*sin(-theta), -i*sin(-theta)+j*cos(-theta)) for (i,j) in points]
-	    points = [(i*scale+self.start[0],j*scale+self.start[1]) for (i,j) in points]
-	    #return Polygon(points,self.color,(0,0,0),1).strarray()
-	    if self.text == None:
-		    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray()
-	    else:
-		    return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray() + Text((float(self.start[0]+self.end[0])/2,float(self.start[1]+self.end[1])/2), self.text,size=self.width*0.8, text_anchor="middle", fill=(0,0,0), stroke=None, fontWeight="800", fontFamily="Arial", transform="").strarray()
+            scale = sqrt((self.end[0]-self.start[0])**2 + (self.end[1]-self.start[1])**2)
+            points = [(0.1,-0.5), (0.1,0.5), (0.9,0.5), (0.9, -0.5)] # Defines a rectangle for unoriented genes or TBs
+            #rotation
+            theta = acos(float(self.end[0]-self.start[0])/scale) if self.end[1]>self.start[1] else -acos(float(self.end[0]-self.start[0])/scale)
+            points = [(i,float(j*float(self.width))/scale) for (i,j) in points]
+            points = [(i*cos(-theta)+j*sin(-theta), -i*sin(-theta)+j*cos(-theta)) for (i,j) in points]
+            points = [(i*scale+self.start[0],j*scale+self.start[1]) for (i,j) in points]
+            #return Polygon(points,self.color,(0,0,0),1).strarray()
+            if self.text == None:
+                return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray()
+            else:
+                return Polygon(points, stroke_width=self.stroke_width, SVGclass=self.SVGclass).strarray() + Text((float(self.start[0]+self.end[0])/2,float(self.start[1]+self.end[1])/2), self.text,size=self.width*0.8, text_anchor="middle", fill=(0,0,0), stroke=None, fontWeight="800", fontFamily="Arial", transform="").strarray()
 
 #drawHomologyMatrix.css
 """

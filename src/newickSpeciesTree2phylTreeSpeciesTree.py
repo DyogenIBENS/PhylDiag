@@ -19,26 +19,25 @@ phylTree = utils.myPhylTree.PhylogeneticTree(arguments["phylTree.conf"])
 
 if arguments["fromNewick"]:
 
-	# print into phylTree format, with tabulations
-	def do(node, indent):
-		node = node.replace("*", "")
-		node = node.replace("."," ")
-		names = utils.myFile.myTSV.printLine([node] + [x for x in phylTree.commonNames.get(node,"") if isinstance(x, str) and (x != node)], delim="|")
-		print ("\t" * indent) + "%s" % names
-		if node in phylTree.items:
-			for (f,_) in phylTree.items[node]:
-				do(f, indent+1)
+    # print into phylTree format, with tabulations
+    def do(node, indent):
+        node = node.replace("*", "")
+        node = node.replace("."," ")
+        names = utils.myFile.myTSV.printLine([node] + [x for x in phylTree.commonNames.get(node,"") if isinstance(x, str) and (x != node)], delim="|")
+        print ("\t" * indent) + "%s" % names
+        if node in phylTree.items:
+            for (f,_) in phylTree.items[node]:
+                do(f, indent+1)
 
-	do(phylTree.root, 0)
+    do(phylTree.root, 0)
 
 else:
-	# return the tree into the newick tree
-	def convertToFlatFile(anc):
+    # return the tree into the newick tree
+    def convertToFlatFile(anc):
 
-		a = phylTree.fileName[anc] # anc.replace(' ', '.')
-		if anc in phylTree.listSpecies:
-			return a
-		else:
-			return "(" + ",".join([convertToFlatFile(e) + ":" + str(l) for (e,l) in phylTree.items[anc]]) + ")%s|%d" % (a,phylTree.ages[anc])
-	print convertToFlatFile(phylTree.root), ";"
-
+        a = phylTree.fileName[anc] # anc.replace(' ', '.')
+        if anc in phylTree.listSpecies:
+            return a
+        else:
+            return "(" + ",".join([convertToFlatFile(e) + ":" + str(l) for (e,l) in phylTree.items[anc]]) + ")%s|%d" % (a,phylTree.ages[anc])
+    print convertToFlatFile(phylTree.root), ";"

@@ -21,23 +21,23 @@ import utils.myDiags
 # Arguments
 modesOrthos = list(utils.myDiags.FilterType._keys)
 arguments = utils.myTools.checkArgs( \
-		[("genome1",file), ("genome2",file), ("ancGenes",file)], \
-		[("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
-		('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
-		('validateImpossToCalc_mThreshold',int,3),\
-		('multiProcess',bool,True),\
-		('verbose',bool,False)], \
-		#, ("computeDiagsWithoutGenesOnlyImplyedInDiagsOfLengthSmallerOrEqualTo",int,-1)], \
-		__doc__ \
-		)
+                [("genome1",file), ("genome2",file), ("ancGenes",file)], \
+                [("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
+                ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
+                ('validateImpossToCalc_mThreshold',int,3),\
+                ('multiProcess',bool,True),\
+                ('verbose',bool,False)], \
+                #, ("computeDiagsWithoutGenesOnlyImplyedInDiagsOfLengthSmallerOrEqualTo",int,-1)], \
+                __doc__ \
+                )
 
 if arguments['gapMax'] == 'None':
-	arguments['gapMax']=None
+    arguments['gapMax']=None
 else:
-	try:
-		arguments['gapMax']=int(arguments['gapMax'])
-	except:
-		raise TypeError('gapMax is either an int or None')
+    try:
+        arguments['gapMax']=int(arguments['gapMax'])
+    except:
+        raise TypeError('gapMax is either an int or None')
 
 genome1 = utils.myGenomes.Genome(arguments["genome1"])
 print >> sys.stderr, "Genome1"
@@ -57,26 +57,26 @@ lenListOfDiags = len(listOfDiags)
 
 for ((c1,d1),(c2,d2),daa,pVal) in listOfDiags:
 
-	l = len(daa)
-	if l < arguments["minChromLength"]:
-		continue
-	statsDiags.append(l)
+    l = len(daa)
+    if l < arguments["minChromLength"]:
+        continue
+    statsDiags.append(l)
 
-	res = [l, \
-		c1," ".join(genome1.lstGenes[c1][i1].names[0] for (i1,_) in d1), \
-		c2," ".join(genome2.lstGenes[c2][i2].names[0] for (i2,_) in d2) ]
-	# The ancestral orientation, width and high of the homology packs are removed to fit Matthieu's format
-	res.append(utils.myFile.myTSV.printLine([a[0] for a in daa], " "))
-	res.append(utils.myFile.myTSV.printLine([a[2] for a in daa], " "))
-	res.append(utils.myFile.myTSV.printLine([a[3] for a in daa], " "))
+    res = [l, \
+            c1," ".join(genome1.lstGenes[c1][i1].names[0] for (i1,_) in d1), \
+            c2," ".join(genome2.lstGenes[c2][i2].names[0] for (i2,_) in d2) ]
+    # The ancestral orientation, width and high of the homology packs are removed to fit Matthieu's format
+    res.append(utils.myFile.myTSV.printLine([a[0] for a in daa], " "))
+    res.append(utils.myFile.myTSV.printLine([a[2] for a in daa], " "))
+    res.append(utils.myFile.myTSV.printLine([a[3] for a in daa], " "))
 
-	if arguments["sameStrand"]:
-		# orientation of the hp sign
-		res.append(utils.myFile.myTSV.printLine([a[1] for a in daa], " "))
+    if arguments["sameStrand"]:
+        # orientation of the hp sign
+        res.append(utils.myFile.myTSV.printLine([a[1] for a in daa], " "))
 
-	# We add the pValue
-	res.append(utils.myFile.myTSV.printLine([pVal], " "))
+    # We add the pValue
+    res.append(utils.myFile.myTSV.printLine([pVal], " "))
 
-	print utils.myFile.myTSV.printLine(res)
+    print utils.myFile.myTSV.printLine(res)
 
 print >> sys.stderr, "Distribution of the synteny block lengths", utils.myMaths.myStats.txtSummary(statsDiags)
