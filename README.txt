@@ -49,13 +49,13 @@ Give excecution rights to scripts :
 ##############################################################
 
 Convert nhx (or .nwk, newick) gene trees to our tabular format (phylTree):
-: src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.phylTree
+: src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree
 
 Convert a newick species tree into a phylTree species tree:
 : src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree
 
 Extract the ancestral gene content (ancGene) from the gene trees:
-: src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.phylTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.phylTree
+: src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree
 
 These ancGenes files can be used to define gene families
 usually when two species Sa and Sb are compared, gene families are defined by ancGenes.<LCA(Sa,Sb)>

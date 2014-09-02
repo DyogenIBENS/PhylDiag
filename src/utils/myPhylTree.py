@@ -13,7 +13,6 @@ import myFile
 
 GeneSpeciesPosition = collections.namedtuple("GeneSpeciesPosition", ['species', 'chromosome', 'index'])
 
-
 # class mother of all types of trees
 class PhylogeneticTree:
 
@@ -37,7 +36,7 @@ class PhylogeneticTree:
                 self.name = file
 
             f = myFile.firstLineBuffer(f)
-            if (';' in f.firstLine) or ('(' in f.firstLine):
+            if ( ';' in f.firstLine) or ('(' in f.firstLine):
                 self.__loadFromNewick__(' '.join(f).replace('\n','') + " ;")
             else:
                 self.__loadFromMyFormat__(f)
@@ -463,7 +462,8 @@ class PhylogeneticTree:
                     indent += 1
 
                 # the triplet (indentation,names,age) is recorded
-                names = [x.strip() for x in l[indent].split('|')]
+                assert l[indent] == x
+                names = [xx.strip() for xx in x.split('|')]
                 if len(l) > (indent+1):
                     age = int(l[indent+1])
                 else:
@@ -554,17 +554,17 @@ class PhylogeneticTree:
             keepWhile(' ')
 
             if s[self.pos] == '(':
-                items = []
+                children = []
                 # '(' the first time, then some ',' untill the final ')'
                 while readStr(1) != ')':
-                    items.append( readTree() )
+                    children.append( readTree() )
                     keepWhile(' ')
                 keepWhile(' ')
                 # the result is the list of children + the name
-                elt = (items, keepUntil("),:;[ "))
+                elt = (children, keepUntil("),:;[ "))
             else:
-                # the result is a name
-                elt = keepUntil("),:;[ ")
+                # the result is a name, for leaves, no children
+                elt = ([],keepUntil("),:;[ "))
 
             keepWhile(' ')
 
@@ -590,33 +590,45 @@ class PhylogeneticTree:
 
             return (elt,length,info)
 
+        def calcAges(data):
+            ((children,name),_,_) = data
+            if len(children) == 0:
+                res = 0
+            else:
+                ress = []
+                for child in children:
+                    (eltt,length,_) = child
+                    ress.append(length + calcAges((eltt,_,_)))
+                #FIXME, this is false for gene trees of ensembl
+                #assert all([foo == ress[0] for foo in ress]) # all the children + branch lengths to the parent should have the same age
+                res = max(ress)
+            self.ages[name] = res
+            return res
+
         # fill the variables of a GenericTree
         def storeTree(data):
-            (elt,length,info) = data
+            ((children,name),length,info) = data
 
-            if type(elt) == tuple:
-                (children,nom) = elt
-            else:
-                children = []
-                nom = elt
-
-            if (nom == '') or (nom in self.officialName):
-                nom = "NAME_%d" % self.pos
-                self.pos += 1
-            self.officialName[nom] = nom
-            self.info[nom] = info
+            if (name == '') or (name in self.officialName): #FIXME for rare cases
+                name = "NAME_%d" % self.pos #FIXME ??
+                self.pos += 1 #FIXME ??
+            self.officialName[name] = name
+            self.info[name] = info
 
             if len(children) > 0:
                 items = []
                 for arbre in children:
                     items.append( storeTree(arbre) )
-                self.items.setdefault(nom, items)
+                self.items.setdefault(name, items)
 
-            self.root = nom
-            return (nom,length)
+            self.root = name
+            return (name,length)
 
+        #FIXME add the age of ancestors for an easier conversion into myFormat
         self.pos = 0
         data = readTree()
         self.pos = 0
         self.info = {}
         storeTree(data)
+        self.ages = self.newCommonNamesMapperInstance()
+        calcAges(data)

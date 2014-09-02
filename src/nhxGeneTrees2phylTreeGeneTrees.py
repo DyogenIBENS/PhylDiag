@@ -7,7 +7,7 @@
 # This is free software; you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 or later and the CeCiLL v2 license in France
 
 __doc__ = """
-        Convert Newick and NHX tree to phylTree
+        Convert gene trees from NHX to my protTree
 """
 
 
