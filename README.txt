@@ -2,24 +2,39 @@
 # python 2.7 at least is needed
 #
 #                   PhylDiag v1.02
-# 
+#
 # This code may be freely distributed and modified under the terms of the GNU General Public License version 3 or later and CeCILL. This should be distributed with the code. If you do not have a copy, see:
-# 
+#
 #      http://www.gnu.org/licenses/gpl-3.0-standalone.html
 #      http://www.cecill.info/licences/Licence_CeCILL_V2-en.html
-# 
+#
 # Copyright for this code is held jointly by the Dyogen (DYnamic and Organisation of GENomes) team of the Institut de Biologie de l'Ecole Normale Supérieure and the individual authors. 
-# 
+#
 # Copyright © 2013 IBENS/Dyogen Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
 # This is free software, you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 (GPL v3) or later and the CeCiLL v2 license in France
 #
-# This code is based on 
-# ``PhylDiag : identifying complex cases of conserved synteny that include tandem duplications''
-# authors :
+# This code is based on
+# Title:
+# ``PhylDiag : identifying complex synteny blocks that include tandem
+# duplications using phylogenetic gene trees''
+# Authors :
 # Joseph LUCAS (IBENS, Paris, France, jlucas@ens.fr)
 # Matthieu MUFFATO (EBI, Cambridge, United Kingdom, muffato@ebi.ac.uk)
 # Hugues ROEST CROLLIUS (IBENS, Paris, France, hrc@ens.fr)
+# Published in BMC Bioinformatics, August 2014
+#
+# This article is in the doc/ folder, and it can be downloaded at the next urls:
+# Pdf version:
+# http://www.biomedcentral.com/content/pdf/1471-2105-15-268.pdf
+# http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4155083/pdf/12859_2014_Article_6554.pdf
+# Online article:
+# http://www.ncbi.nlm.nih.gov/pubmed/?term=phyldiag
+# http://www.biomedcentral.com/1471-2105/15/268
+# http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4155083/
+#
+# Supplementary data are also in the doc/ folder or can be accessed at the next url:
+# http://www.biomedcentral.com/content/supplementary/1471-2105-15-268-S1.pdf
 
 # This code uses personal libraries in src/utils: myTools, myGenomes, myMaths, myFile, myPhylTree, mySvgDrawer.py, myProbas.py, myProteinTree and myDiags.py
 
