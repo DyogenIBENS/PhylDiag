@@ -12,15 +12,13 @@ Wrapper for PhylDiag Library
 
 import sys
 
-import utils.myGenomes
-import utils.myFile
-import utils.myTools
-import utils.myMaths
-import utils.myDiags
+import libs.utils.myGenomes as myGenomes
+import libs.utils.myTools as myTools
+import libs.utils.myDiags as myDiags
 
 # Arguments
-modesOrthos = list(utils.myDiags.FilterType._keys)
-arguments = utils.myTools.checkArgs( \
+modesOrthos = list(myDiags.FilterType._keys)
+arguments = myTools.checkArgs( \
                 [("genome1",file), ("genome2",file), ("ancGenes",file)], \
                 [("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
                 ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
@@ -39,44 +37,19 @@ else:
     except:
         raise TypeError('gapMax is either an int or None')
 
-genome1 = utils.myGenomes.Genome(arguments["genome1"])
+genome1 = myGenomes.Genome(arguments["genome1"])
 print >> sys.stderr, "Genome1"
-print >> sys.stderr, "nb of Chr = ", len(genome1.chrList[utils.myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome1.chrList[utils.myGenomes.ContigType.Scaffold])
-genome2 = utils.myGenomes.Genome(arguments["genome2"])
+print >> sys.stderr, "nb of Chr = ", len(genome1.chrList[myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome1.chrList[myGenomes.ContigType.Scaffold])
+genome2 = myGenomes.Genome(arguments["genome2"])
 print >> sys.stderr, "Genome2"
-print >> sys.stderr, "nb of Chr = ", len(genome2.chrList[utils.myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome2.chrList[utils.myGenomes.ContigType.Scaffold])
-ancGenes = utils.myGenomes.Genome(arguments["ancGenes"])
-filterType = utils.myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
+print >> sys.stderr, "nb of Chr = ", len(genome2.chrList[myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome2.chrList[myGenomes.ContigType.Scaffold])
+ancGenes = myGenomes.Genome(arguments["ancGenes"])
+filterType = myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-listOfDiags = list(utils.myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minChromLength"], consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
+listOfSbs = list(myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minChromLength"], consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
 print >> sys.stderr, "End of the synteny block research"
-listOfDiags.sort(key=lambda x: len(x[2]))
-lenListOfDiags = len(listOfDiags)
+listOfSbs.sort(key=lambda x: len(x[2]))
 
-for ((c1,d1),(c2,d2),daa,pVal) in listOfDiags:
-
-    l = len(daa)
-    if l < arguments["minChromLength"]:
-        continue
-    statsDiags.append(l)
-
-    res = [l, \
-            c1," ".join(genome1.lstGenes[c1][i1].names[0] for (i1,_) in d1), \
-            c2," ".join(genome2.lstGenes[c2][i2].names[0] for (i2,_) in d2) ]
-    # The ancestral orientation, width and high of the homology packs are removed to fit Matthieu's format
-    res.append(utils.myFile.myTSV.printLine([a[0] for a in daa], " "))
-    res.append(utils.myFile.myTSV.printLine([a[2] for a in daa], " "))
-    res.append(utils.myFile.myTSV.printLine([a[3] for a in daa], " "))
-
-    if arguments["sameStrand"]:
-        # orientation of the hp sign
-        res.append(utils.myFile.myTSV.printLine([a[1] for a in daa], " "))
-
-    # We add the pValue
-    res.append(utils.myFile.myTSV.printLine([pVal], " "))
-
-    print utils.myFile.myTSV.printLine(res)
-
-print >> sys.stderr, "Distribution of the synteny block lengths", utils.myMaths.myStats.txtSummary(statsDiags)
+myDiags.printSbsFile(listOfSbs, genome1, genome2)

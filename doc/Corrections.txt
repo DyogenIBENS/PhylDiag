@@ -1,0 +1,7 @@
+1) "European Molecular Biology Laboratory" should be used instead of "EMBL"
+2) "Düsternbrooker Weg 20" should be removed 
+3) In equation 4, over the sum, the absolute brakets-like-symbols must replaced 
+		by closest smallest integer. I.e. :
+
+						|(l-k)/(g+1)| must be replaced by  | (l-k)/(g+1) |
+																							 |_           _|

@@ -33,8 +33,8 @@
 # diagonal type : either 'slash' ('/', bottom-left to top-right) or 'backslash' ('\', top-left to bottom-right)
 # consistent diagonal : either a slash diagonal with hps signs = (+1 or None) or a backslash diagonal with hps signs = (-1 or None)
 
-from utils.myMaths import combinations
-import utils.myTools
+from myMaths import combinations
+import myTools
 import collections
 import itertools
 import math
@@ -76,8 +76,8 @@ def statsTbOrientation(genome_tb):
 
 # returns p_hpSign_g {+1:%+1, -1:%-1, None:%None}, percentages of each hp sign in the 'global' mhp of the pairwise comparison of the two genomes
 # p_hpSign is a dict containing the stats for each pairwise comparisons of chromosomes
-@utils.myTools.tictac
-@utils.myTools.verbose
+@myTools.tictac
+@myTools.verbose
 def statsHpSign(g1_tb, g2_tb, verbose=False):
     # compute statistics on tandem blocks orientations
     sTbG1, sTbG1_g = statsTbOrientation(g1_tb)
@@ -221,7 +221,7 @@ def p_w(m,g,la,lb,nab,na,nb,p_hpSign):
 
 # probability that in a MHP of width na and height nb, containing nab hps, at least one window Wab of width la and height lb contains a sb of at least k hps can be approximated by:
 # considered as the p-value of a sb
-@utils.myTools.verbose
+@myTools.verbose
 def pValue(m,g,la,lb,nab,na,nb,p_hpSign,verbose=True):
     if nab > min(na,nb):
         print >> sys.stderr, "Warning: during the computation of pValue(m=%s,g=%s,la=%s,lb=%s,nab=%s,na=%s,nb=%s), there was too many dispersed paralogies in the MHP, thus for the calculation we chose nab=min(na,nb)=%s" % (m,g,la,lb,nab,na,nb,min(na,nb))
@@ -232,18 +232,18 @@ def pValue(m,g,la,lb,nab,na,nb,p_hpSign,verbose=True):
     elif m > min([la, lb]):
         print >> sys.stderr, "Warning: not able to compute pValue(%s,%s,%s,%s,%s,%s,%s) because there are too many dispersed paralogies in the window" % (m,g,la,lb,nab,na,nb)
         return None
+
     nw = float(na*nb)/float(la*lb)
     try:
-        pVal = 1 - math.pow(1 - p_w(m,g,la,lb,nab,na,nb,p_hpSign), nw)
+        pw = p_w(m, g, la, lb, nab, na, nb, p_hpSign)
     except:
-        if p_w < 0.01:
-            #here we consider that p_w is << 1, thus we can perform a linearistaion (see Taylor-Young formula "(1-u)^a ~= 1-a*u" when p_w -> 0)
-            try:
-                pVal = nw*p_w(m,g,la,lb,nab,na,nb,p_hpSign)
-            except:
-                pVal = None
-        else:
-            pVal = None
+        print >> sys.stderr, "Warning: not able to compute pValue(%s,%s,%s,%s,%s,%s,%s) for unknown reasons" % (m,g,la,lb,nab,na,nb)
+        return None
+    if p_w >= 0.01:
+        pVal = 1 - math.pow(1 - pw, nw)
+    else:
+        #here we consider that p_w is << 1, thus we can perform a linearistaion (see Taylor-Young formula "(1-u)^a ~= 1-a*u" when p_w -> 0)
+        pVal = nw*pw
     return pVal
 
 #from operator import mul    # or mul=lambda x,y:x*y

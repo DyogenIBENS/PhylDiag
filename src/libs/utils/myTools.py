@@ -7,14 +7,14 @@
 
 import os
 import sys
-import enum
+# FIXME not the good way to import
+from .. import enum
 import itertools
 import time
 import warnings
 from functools import wraps
 
 import myFile
-
 null = open('/dev/null', 'w')
 
 debug = null

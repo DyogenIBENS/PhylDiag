@@ -9,7 +9,8 @@ import sys
 import itertools
 import collections
 
-import enum
+# FIXME not the good way to import
+from .. import enum
 
 import myFile
 
@@ -59,10 +60,10 @@ class myFASTA:
             ligne = ligne.replace('\n', '').strip()
             # chevrons indicate the beginning of a new sequence
             if ligne.startswith('>'):
+                tmp = []
                 if name != None:
                     yield (name, "".join(tmp))
                 name = ligne[1:].strip()
-                tmp = []
             # lines must be concatenated
             elif name != None:
                 tmp.append(ligne.upper())

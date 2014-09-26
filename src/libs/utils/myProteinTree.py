@@ -8,7 +8,8 @@
 import sys
 import collections
 
-import utils.myTools
+import myTools
+import myFile
 
 # Manage gene trees in the form of (data,info)
 
@@ -323,7 +324,7 @@ class ProteinTree:
 
 nextNodeID = -1
 
-@utils.myTools.deprecated
+@myTools.deprecated
 def printTree(ft, data, info, root):
     ProteinTree(data, info, root).printTree(ft)
 
@@ -343,8 +344,7 @@ def getDupSuffix(n, upper):
 # load the tree from a file
 def loadTree(name):
 
-    import utils.myTools
-    ns = utils.myTools.Namespace()
+    ns = myTools.Namespace()
 
     # read the next line of the file (and bufferise the next one)
     def nextLine():
@@ -379,10 +379,9 @@ def loadTree(name):
 
         return currID
 
-    import utils.myFile
 
     print >> sys.stderr, "Loading the forest of gene trees %s ..." % name,
-    f = utils.myFile.openFile(name, "r") if isinstance(name, str) else name
+    f = myFile.openFile(name, "r") if isinstance(name, str) else name
     ns.curr = None
     nextLine()
     n = (0,0,0)

@@ -13,15 +13,15 @@ __doc__ = """
 import sys
 import collections
 
-import utils.myFile
-import utils.myTools
-import utils.myPhylTree
-import utils.myProteinTree
+import libs.utils.myFile as myFile
+import libs.utils.myTools as myTools
+import libs.utils.myPhylTree as myPhylTree
+import libs.utils.myProteinTree as myProteinTree
 
 # arguments
-arguments = utils.myTools.checkArgs( [("speciesTree",file), ("geneTreeForest",file)], [("out:ancGenes",str,""), ("reuseNames",bool,False)], __doc__ )
+arguments = myTools.checkArgs( [("speciesTree",file), ("geneTreeForest",file)], [("out:ancGenes",str,""), ("reuseNames",bool,False)], __doc__ )
 
-speciesTree = utils.myPhylTree.PhylogeneticTree(arguments["speciesTree"])
+speciesTree = myPhylTree.PhylogeneticTree(arguments["speciesTree"])
 
 # duplication counter
 dupCount = collections.defaultdict(int)
@@ -29,7 +29,7 @@ def futureName(name, dup):
     if dup >= 2:
         dupCount[name] += 1
         # if there is a duplication we need to add a suffix
-        return name + utils.myProteinTree.getDupSuffix(dupCount[name], False)
+        return name + myProteinTree.getDupSuffix(dupCount[name], False)
     else:
         return name
 
@@ -39,7 +39,7 @@ def getRoots(node, previousAnc, lastWrittenAnc):
     newAnc = tree.info[node]['taxon_name']
 
     # names of the ancestors since the last read, here only newLastWritten is kept
-    (_,newLastWritten,isroot) = utils.myProteinTree.getIntermediateAnc(speciesTree, previousAnc, lastWrittenAnc, newAnc, tree.info[node]['Duplication'] >=2)
+    (_,newLastWritten,isroot) = myProteinTree.getIntermediateAnc(speciesTree, previousAnc, lastWrittenAnc, newAnc, tree.info[node]['Duplication'] >=2)
 
     if isroot:
         return [node]
@@ -57,13 +57,13 @@ def extractGeneFamilies(node, baseName, previousAnc, lastWrittenAnc):
 
     newAnc = tree.info[node]['taxon_name']
 
-    (toWrite,newLastWritten,isroot) = utils.myProteinTree.getIntermediateAnc(speciesTree, previousAnc, lastWrittenAnc, newAnc, tree.info[node]['Duplication'] >= 2)
+    (toWrite,newLastWritten,isroot) = myProteinTree.getIntermediateAnc(speciesTree, previousAnc, lastWrittenAnc, newAnc, tree.info[node]['Duplication'] >= 2)
 
     if isroot and (previousAnc != None): # previousAnc != None avoid the root of the gene tree. isroot is true for the speciation nodes of the first ancestor, or the duplication nodes just after the first ancestor
         if not arguments["reuseNames"]:
             baseName = baseName.split(".")[0]
         count[baseName] += 1
-        currName = baseName + utils.myProteinTree.getDupSuffix(count[baseName], True)
+        currName = baseName + myProteinTree.getDupSuffix(count[baseName], True)
     else:
         currName = baseName
     tree.info[node]['family_name'] = currName #FIXME ! 'family name' of 'tree' is modified whereas it is not even one of the parameter of the function...
@@ -84,13 +84,13 @@ def extractGeneFamilies(node, baseName, previousAnc, lastWrittenAnc):
     return allGenes # for the recurrence
 
 geneFamilies = collections.defaultdict(list)
-for tree in utils.myProteinTree.loadTree(arguments["geneTreeForest"]): # for all gene trees in the forest
+for tree in myProteinTree.loadTree(arguments["geneTreeForest"]): # for all gene trees in the forest
     extractGeneFamilies(tree.root, tree.info[tree.root]["tree_name"], None, None) # FIXME this function modifies tree and geneFamilies even if tree and gene families are not parameters
     tree.printTree(sys.stdout)
 
 for (anc,lst) in geneFamilies.iteritems():
     print >> sys.stderr, "Write %s family ..." % anc,
-    f = utils.myFile.openFile(arguments["out:ancGenes"] % speciesTree.fileName[anc], "w")
+    f = myFile.openFile(arguments["out:ancGenes"] % speciesTree.fileName[anc], "w")
     for gg in lst:
         print >> f, " ".join(gg)
     f.close()

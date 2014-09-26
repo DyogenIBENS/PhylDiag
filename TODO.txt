@@ -1,5 +1,6 @@
-Add the publication and the supplementary data in the deposit once it has been published by BMC :
--------------------------------------------------------------------------------------------------
+Add the source *.tex files of the article and supp data
+-------------------------------------------------
+Even figures and the excel file with all the bibliography and comparison of state of the art concerning synteny block prediction.
 
 Merging Process:
 ----------------
@@ -60,6 +61,9 @@ Use also Pango for text rendering inside Cairo, both libraries are working toget
 
 TODO:
 -----
+*Create a class for synteny blocks ?
 *Change the colors in the viewer (avoid yellow because there is not enough contrast on a white background)
 *Add red rectangles around diagonals that did not pass the statistical validation
 *Update src/newickSpeciesTree2phylTreeSpeciesTree.py to tackle branch lengths
+*verify comments after the change of format of diags/sbs 
+	la=[...(aGIdx,aGs,dist)...], lX=[...[...i1...]...] and the output format

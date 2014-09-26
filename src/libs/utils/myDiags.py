@@ -39,12 +39,14 @@ import math
 import copy
 import itertools
 import collections
+# FIXME not the good way to import
+from .. import enum
 
-import enum
-
-import utils.myTools
-import utils.myGenomes
-import utils.myProbas
+import myTools
+import myGenomes
+import myProbas
+import myFile
+import myMaths
 
 # For parallel computation
 from multiprocessing import Queue, Process, Manager, Lock
@@ -123,20 +125,22 @@ class queueWithBackup:
 # Merge diagonals if they are separated by a gap less long than 'gapMax' relatively to a distance metric
 # inputs:
 # listOfDiags : a list containing elements as (l1, l2, la)
-#       l1 = [ (i12,s12), (i12,s12), ....] with i1x < i1y for all x<y
-#               i1 : gene index in the genome i1
-#       l2 : [..., (i2,s2), ...]
-#               i2 : gene index in the genome i2
-#       la : [..., j1,...]
-#               j1 is the ancGene number (corresponds to the line index of the gene)
+#       l1 = [ ..., [i11, i12...], ....] with i1x < i1y for all x<y
+#               i1 : gene index of the corresponding tb in the genome 1
+#       l2 : [..., [...,ix2...], ...]
+#               ix2 : gene index in the genome 2
+#       la : [..., (ancGeneIdx,aGs),...]
+#               ancGeneIdx is the ancGene number (corresponds to the line index of the gene)
+#               aGs is the orientation of the ancetsral gene (usually the same
+#               as the corresponding tb in the genome1)
 # gapMax : the maximum allowed gap between merged diagonals
 # distanceMetric : the metric used for the gap calculation
 # outputs:
 #       listOfSortedAndMergedDiagonals : same structure than listOfDiags
 ########################################################################################
 # TODO : optimize the search of diags by avoiding considering diags that are on the left of diagA
-@utils.myTools.verbose
-def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
+@myTools.verbose
+def mergeSbs(listOfDiags, gapMax, gc2, distanceMetric = 'DPD', verbose = True):
     assert gapMax>=0
 
     if distanceMetric == 'DPD':
@@ -158,15 +162,21 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
     diagGen = []
     listOfFinishedDiags = []
     nbFusion = 0
-    listOfDiags = [(s,l1,l2,la,(l1[0][0],l2[0][0]), (l1[-1][0],l2[-1][0])) for (s,l1,l2,la) in listOfDiags]
+    # Add the distance in la : [(ag1,ags1,dist1=0), (ag2,ags2,dist2=1), (ag2,ags3,dist3=3), ...]
+    # means that between ag1 and ag2 there is no 2Dgap but between ag2 and ag3
+    # there is a gap of 1. The gap depends on the distance metric chosen.
+    # This gap gives us an information on the relevance of this adjacency in th
+    # synteny block.
+    listOfDiags = [(diagType,l1,l2,[(aGn, aGs, dist) for (dist, (aGn, aGs)) in enumerate(la)]) for (diagType,l1,l2,la) in listOfDiags]
+    listOfDiags = [(diagType,l1,l2,la,(l1[0],l2[0]), (l1[-1],l2[-1])) for (diagType,l1,l2,la) in listOfDiags]
     for currGap in range(0,gapMax+1):
         nbFusionCurrGap = 0
         # Sort diagonals by increasing index on the genome A (i.e. by increasing x coordinate of the leftmost hp of the diagonal)
         # This is a key part of the algorithm ! During the whole process we need to keep diagonals sorted by increasing index on the genome A
         if currGap > 0: #After initialisation
-            listOfDiags = sorted(list(diagGen) + listOfFinishedDiags, key=lambda x:x[1][0])
+            listOfDiags = sorted(list(diagGen) + listOfFinishedDiags, key=lambda x:x[1])
             listOfFinishedDiags=[]
-        # assert all([l1_1[0][0] <= l1_2[0][0] for ((_,l1_1,_,_,_,_),(_,l1_2,_,_,_,_)) in utils.myTools.myIterator.slidingTuple(listOfDiags)])
+        # assert all([l1_1[0][0] <= l1_2[0][0] for ((_,l1_1,_,_,_,_),(_,l1_2,_,_,_,_)) in myTools.myIterator.slidingTuple(listOfDiags)])
         # assert all([l1[0][0] == min(l1)[0] for (_,l1,_,_,_,_) in listOfDiags])
         # assert all([l1[-1][0] == max(l1)[0] for (_,l1,_,_,_,_) in listOfDiags])
         diagGen = queueWithBackup( d for d in listOfDiags )
@@ -219,7 +229,7 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
 
             if len(fusionableDiags) > 0 :
                 #assert all(x[4][0] >= endA[0] for x in fusionableDiags)
-                #if dTa == '/':
+                #if dTa == '/':len(la)
                 #       assert all( (x[0] == '/' or  x[0] == None ) for x in fusionableDiags)
                 #       assert all(x[4][1]-endA[1] >= 0 for x in fusionableDiags), [(x[4][1],endA[1]) for x in fusionableDiags]
                 #elif dTa == '\\':
@@ -266,7 +276,22 @@ def mergeSbs(listOfDiags, gapMax, distanceMetric = 'DPD', verbose = True):
                     dt_res = '/' if endA[1] < start[1] else '\\'
                 la1.extend(l1)
                 la2.extend(l2)
+                # Compute the new dist with currGap
+                la = [(aGN, aGs, dist+laa[-1][2]+currGap) for (aGN, aGs, dist) in la]
                 laa.extend(la)
+                # Previous diagonals without diagTypes have now a diagType and
+                # all ancestral genes can now be oriented.
+                for (i, (aGN, aGs, dist)) in enumerate(laa):
+                    if aGs == None:
+                        if dt_res == '/':
+                            aGs = gc2[la2[i]][1]
+                        else:
+                            assert dt_res == '\\'
+                            s_tb2 = gc2[la2[i]][1]
+                            aGs = - s_tb2 if s_tb2 != None else None
+                    # update the orientation
+                    laa[i] = (aGN, aGs, dist)
+
                 endA = end
                 diagA = (dt_res,la1,la2,laa,startA,endA)
                 nbFusion += 1
@@ -382,7 +407,7 @@ def findDiagType(i1,i2,M,consistentSwDType):
 #
 # Extract sbs in a pairwise comparison of two chromosomes
 ############################################################
-@utils.myTools.verbose
+@myTools.verbose
 def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', consistentSwDType=True, verbose = True):
     print >> sys.stderr, "(PPID = %s, PID = %s) start to extract diagonals on G1[%s]_vs_G2[%s]" % (os.getppid(), os.getpid(), c1, c2)
     listOfDiags = []
@@ -426,8 +451,8 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
                         ancestralStrand = None
 
                     la.append((f,ancestralStrand))
-                    l1.append((i1,gc1[i1][1]))
-                    l2.append((i2,gc2[i2][1]))
+                    l1.append(i1)
+                    l2.append(i2)
                     del M[i1][i2]
                     if len(M[i1].keys()) == 0:
                         del M[i1]
@@ -436,15 +461,15 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
                     if diagType == "/" and i1+1 in M and i2+1 in M[i1+1] and ((M[i1+1][i2+1] in [+1,None]) if consistentSwDType else True):
                         i1=i1+1
                         i2=i2+1
-                        #assert i2-l2[-1][0] == +1
-                        #assert i1-l1[-1][0] == +1
+                        #assert i2-l2[-1] == +1
+                        #assert i1-l1[-1] == +1
                         #assert i2 in M[i1]
 
                     elif diagType=="\\" and i1+1 in M and i2-1 in M[i1+1] and ((M[i1+1][i2-1] in [-1,None]) if consistentSwDType else True):
                         i1=i1+1
                         i2=i2-1
-                        #assert i2-l2[-1][0] == -1
-                        #assert i1-l1[-1][0] == +1
+                        #assert i2-l2[-1] == -1
+                        #assert i1-l1[-1] == +1
                         #assert i2 in M[i1]
                     else:
                         # Since no more hps can be added to the current diagonal, the diagonal is recorded
@@ -457,7 +482,7 @@ def extractSbsInPairCompChr(c1, c2, gc1, gc2, gapMax=0, distanceMetric = 'DPD', 
                         break # exit the while loop and iter the for loop
     # merging process, fuse diagonals
     if len(listOfDiags) > 0 and gapMax >= 0 :
-        listOfDiags = mergeSbs(listOfDiags, gapMax, distanceMetric=distanceMetric, verbose=verbose)
+        listOfDiags = mergeSbs(listOfDiags, gapMax, gc2, distanceMetric=distanceMetric, verbose=verbose)
     listOfDiags = [((c1, diag[1]), (c2, diag[2]), diag[3]) for diag in listOfDiags] #FIXME diagType=diag[0] could be added as an information on the diagonal here
     return listOfDiags
 
@@ -478,7 +503,7 @@ def wrapper_extractSbsPairCompChr(input, kwargs, output, NbOfTasks, listOfPercen
 # FIXME : cut and paste into myTools the part corresponding to the management of the multiprocess
 # Multiprocess queue
 #####################
-@utils.myTools.verbose
+@myTools.verbose
 def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='DPD', consistentSwDType=True, verbose=True):
     manager = Manager()
     lock = Lock() # Lock is used to give priority to one process in order that it is not disturbed by other process
@@ -517,7 +542,7 @@ def extractSbsInPairCompGenomesMultiprocess(g1 , g2, gapMax=-1 ,distanceMetric='
 
 # Rewrite genomes as a list of ancGeneIds
 # ancGeneId can be considered as a family name
-def rewriteWithAncGeneID(genome, ancGenes):
+def labelWithAncGeneID(genome, ancGenes):
     newGenome = {}
     for c in genome.keys():
         #assert len(genome[c]) >=1
@@ -682,7 +707,7 @@ def rewriteInTb(genome_aID):
 
 def convertGenomeIntoDicOfChromOfOrderedGenes(genome):
     newGenome = {} # Warning : it is important to use a dict since there are sometimes a jump in the numerotation of chromosomes in a genome
-    for c in genome.chrList[utils.myGenomes.ContigType.Chromosome] + genome.chrList[utils.myGenomes.ContigType.Scaffold]:
+    for c in genome.chrList[myGenomes.ContigType.Chromosome] + genome.chrList[myGenomes.ContigType.Scaffold]:
         assert len(genome.lstGenes[c]) >=1
         newGenome[c] = [(g.names[0],g.strand) for g in genome.lstGenes[c]]
     return newGenome
@@ -690,13 +715,13 @@ def convertGenomeIntoDicOfChromOfOrderedGenes(genome):
 # compute the adviced maximal gap length (in genes) for the diagonal merger
 # We compute the gap that gives the closest probability p-value(sb(nbHps,gap,N12,N1,N2)) to targetProba in an a MHP(N1,N2,N12).
 # Usually this MHP is an average of all the MHPs of the whole genome comparison. Even if considering this average MHP is not very rigorous, we only need reasonable rather than optimal values for recommendedGap.
-@utils.myTools.verbose
+@myTools.verbose
 def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThreshold=20, verbose=False):
     firstPrint=True
     tries = []
     for g in range(0,maxGapThreshold+1):
         L = (nbHps-1)*g+nbHps # lengths of the chromosomal windows
-        pVal = utils.myProbas.pValue(nbHps,g,L,L,N12,N1,N2,p_hpSign,verbose=verbose)
+        pVal = myProbas.pValue(nbHps,g,L,L,N12,N1,N2,p_hpSign,verbose=verbose)
         if firstPrint == True:
             print >> sys.stderr, "P-values of sbs of %s hps (nbHpsRecommendedGap) hps spaced by a gap 'g' in an average MHP(N1=%s, N2=%s, N12=%s) over all MHPs involved in the whole genome comparison.:" % (nbHps,N1,N2,N12)
             firstPrint=False
@@ -716,8 +741,8 @@ def recommendedGap(nbHps, targetProba, N12, N1, N2, p_hpSign=None, maxGapThresho
     #return g
 
 # Number of non-empty value in the mh or the mhp
-@utils.myTools.tictac
-@utils.myTools.verbose
+@myTools.tictac
+@myTools.verbose
 def numberOfHomologies(g1,g2,verbose=True):
     nbHomologies = {}
     listOfPercentage = range(0,101,5)[1:]
@@ -745,10 +770,10 @@ def max_g_of(diag):
         ((c1,l1_tb),(c2,l2_tb),la_tb) = diag
     elif len(diag) == 4:
         ((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
-    l1s = [(l1_tb[i1][0],l1_tb[i1+1][0]) for i1,_ in enumerate(l1_tb[:-1])]
+    l1s = [(l1_tb[i1],l1_tb[i1+1]) for i1,_ in enumerate(l1_tb[:-1])]
     max_g1 = max(l1s,key=lambda x:abs(x[1]-x[0]))
     max_g1 = abs(max_g1[0]-max_g1[1]) - 1 #do not forget the -1
-    l2s = [(l2_tb[i2][0],l2_tb[i2+1][0]) for i2,_ in enumerate(l2_tb[:-1])]
+    l2s = [(l2_tb[i2],l2_tb[i2+1]) for i2,_ in enumerate(l2_tb[:-1])]
     max_g2 = max(l2s,key=lambda x:abs(x[1]-x[0]))
     max_g2 = abs(max_g2[0]-max_g2[1]) - 1 #do not forget the -1
     max_g = max(max_g1,max_g2)
@@ -756,8 +781,8 @@ def max_g_of(diag):
 
 # Statistical validation of synteny blocks
 # because of collections.Counter
-@utils.myTools.minimalPythonVersion((2,7))
-@utils.myTools.verbose
+@myTools.minimalPythonVersion((2,7))
+@myTools.verbose
 def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThreshold=0.001, NbOfHomologiesThreshold=50, validateImpossToCalc_mThreshold=3, verbose=True):
     def  calculateCharacteristics(diag):
         if len(diag) == 3:
@@ -765,25 +790,25 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
         elif len(diag) == 4:
             ((c1,l1_tb),(c2,l2_tb),la_tb,p) = diag
         m = len(la_tb) # number of homologies in the sb
-        #(x0,y0) = (l1_tb[0][0],l2_tb[0][0])
-        #(x1,y1) = (l1_tb[1][0],l2_tb[1][0])
+        #(x0,y0) = (l1_tb[0],l2_tb[0])
+        #(x1,y1) = (l1_tb[1],l2_tb[1])
         #diagType = '/' if (x1 - x0)*(y1 - y0) else '\\'
-        lw1=[sys.maxint,-sys.maxint]
-        lw2=[sys.maxint,-sys.maxint]
+        lw1 = [sys.maxint,-sys.maxint]
+        lw2 = [sys.maxint,-sys.maxint]
         for tb1 in l1_tb:
-            lw1[0] = tb1[0] if  tb1[0] < lw1[0] else lw1[0]
-            lw1[1] = tb1[0] if  tb1[0] > lw1[1] else lw1[1]
+            lw1[0] = tb1 if  tb1 < lw1[0] else lw1[0]
+            lw1[1] = tb1 if  tb1 > lw1[1] else lw1[1]
         for tb2 in l2_tb:
-            lw2[0] = tb2[0] if  tb2[0] < lw2[0] else lw2[0]
-            lw2[1] = tb2[0] if  tb2[0] > lw2[1] else lw2[1]
+            lw2[0] = tb2 if  tb2 < lw2[0] else lw2[0]
+            lw2[1] = tb2 if  tb2 > lw2[1] else lw2[1]
         lw1 = lw1[1]-lw1[0]+1 # +1 in order to have the nb of genes in the W1
         lw2 = lw2[1]-lw2[0]+1 # +1 --------------------------------------- W2
         assert lw1 >= 0, lw1
         assert lw2 >= 0, lw2
-        l1_min=min(l1_tb,key=lambda x:x[0])[0]
-        l1_max=max(l1_tb,key=lambda x:x[0])[0]
-        l2_min=min(l2_tb,key=lambda x:x[0])[0]
-        l2_max=max(l2_tb,key=lambda x:x[0])[0]
+        l1_min = min(l1_tb)
+        l1_max = max(l1_tb)
+        l2_min = min(l2_tb)
+        l2_max = max(l2_tb)
         if m > 1:
             assert l1_tb[1] >=  l1_tb[0] # Because of the scanning process
             max_g = max_g_of(diag)
@@ -814,10 +839,10 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
             listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
             continue
 
-        if m > NbOfHomologiesThreshold: # This is to avoid too time consuming computations
+        if m > NbOfHomologiesThreshold: # This is to avoid excessive time consuming computations
             p=0
         else:
-            p = utils.myProbas.pValue(m, max_g, lw1, lw2, nab, na, nb, p_hpSign[comp], verbose=True)
+            p = myProbas.pValue(m, max_g, lw1, lw2, nab, na, nb, p_hpSign[comp], verbose=True)
         if p == None:
             listOfImpossibleToCalcProbaDiags.append((diag[0],diag[1],diag[2],None))
         elif p < pThreshold:
@@ -913,7 +938,7 @@ def filterStatisticalValidation(listOfDiags, g1_tb, g2_tb, N12s, p_hpSign, pThre
     return listOfStatValDiags
 
 # because of collections.Counter
-@utils.myTools.minimalPythonVersion((2,7))
+@myTools.minimalPythonVersion((2,7))
 def numberOfDuplicates(g_aID_filt):
     # create a long chromosome with all the chromosome genes
     newG=[]
@@ -923,11 +948,11 @@ def numberOfDuplicates(g_aID_filt):
     N_GD_g = sum([duplicates-1 for duplicates in collections.Counter(newG).values()])
     return (N_GD_g)
 
-#
+
 # Complete procedure to compute synteny blocks (sbs) between 2 genomes, using homology relationships contained in ancGenes
 # Inputs:
-#       g1, g2 : utils.myGenomes.Genome (or dict : {...c:[..., (g,s), ...]}) of the two compared species
-#       ancGenes : utils.myGenomes.Genome define the homology relationships (usually the ancGenes of the LCA of the two compared species)
+#       g1, g2 : myGenomes.Genome (or dict : {...c:[..., (g,s), ...]}) of the two compared species
+#       ancGenes : myGenomes.Genome define the homology relationships (usually the ancGenes of the LCA of the two compared species)
 #       consistentSwDType :     True  => gene transcription orientations must be consistent with diagonal types ('/' or '\')
 #                               False => Do not take care of gene orientation
 #       gapMax : distance (in tandemblocks) allowed between two diagonals to be merged together. This allows to go over wrong  annotations. But it can also introduce some Fp
@@ -942,25 +967,28 @@ def numberOfDuplicates(g_aID_filt):
 #       synteny blocks are yielded as (strand,(c1,l1),(c2,l2),la)
 #       c1 : chromosomes of genome 'g1' where there is a synteny block corresponding to the diagonal
 #       l1 : the synteny block on genome 'g1'
-#       l1 = [...,(i,s),...] with 'i' the index of the gene and 's' its strand in the genome 1 without species specific genes
-#
+#       l1 = [..., (i,s), ...] with 'i' the index of the gene and 's' its strand in the genome 1 without species specific genes
+#       la = [..., (ancGeneName, ancGeneOrientation, tb width, tb height), ...]]
+#           tb -> tandem block associated with the ancGene in this synteny block
+#           width : length in tandem duplicates on the 1st genome
+#           height: length in tandem duplicates on ths 2nd genome
 #########################################################################################################################
-@utils.myTools.tictac
-@utils.myTools.verbose
+@myTools.tictac
+@myTools.verbose
 def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='DPD', pThreshold=0.001, filterType=FilterType.None, consistentSwDType=True, minChromLength=0, nbHpsRecommendedGap=2, targetProbaRecommendedGap=0.01, validateImpossToCalc_mThreshold=3, multiProcess=True, verbose=True):
 
-    if isinstance(g1,utils.myGenomes.Genome) and isinstance(g2,utils.myGenomes.Genome):
+    if isinstance(g1,myGenomes.Genome) and isinstance(g2,myGenomes.Genome):
         g1 = convertGenomeIntoDicOfChromOfOrderedGenes(g1)
         g2 = convertGenomeIntoDicOfChromOfOrderedGenes(g2)
     elif isinstance(g1,dict) and isinstance(g2,dict):
         pass
     else:
-        raise TypeError('g1 and/or g2 must be either utils.myGenomes.Genome or dict')
+        raise TypeError('g1 and/or g2 must be either myGenomes.Genome or dict')
     #step 1 : remove genes specific to each lineage
     ################################################
     # rewrite genomes by family names (ie ancGene names)
-    g1_aID = rewriteWithAncGeneID(g1, ancGenes)
-    g2_aID = rewriteWithAncGeneID(g2, ancGenes)
+    g1_aID = labelWithAncGeneID(g1, ancGenes)
+    g2_aID = labelWithAncGeneID(g2, ancGenes)
     # genes that are not in ancGene have a aID=-1
     print >> sys.stderr, "genome 1 initially contains %s genes" %  sum([len(g1[c1]) for c1 in g1])
     print >> sys.stderr, "genome 2 initially contains %s genes" %  sum([len(g2[c2]) for c2 in g2])
@@ -990,16 +1018,16 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
 
     # compute the recommended gapMax parameter
     #########################################
-    (p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = utils.myProbas.statsHpSign(g1_tb,g2_tb,verbose=verbose2)
-    print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
-    print >> sys.stderr, "genome 2 tb orientation proba = {+1=%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG2_g[+1], sTBG2_g[-1], sTBG2_g[None])
-    print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%s,-1:%s,None:%s) (probabilities are also calculated for pairwise mhp)" % (p_hpSign_g[+1], p_hpSign_g[-1], p_hpSign_g[None])
+    (p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = myProbas.statsHpSign(g1_tb,g2_tb,verbose=verbose2)
+    print >> sys.stderr, "genome 1 tb orientation proba = {+1:%.2f%%,-1:%.2f%%,None:%.2f%%} (stats are also calculated for each chromosome)" % (sTBG1_g[+1]*100, sTBG1_g[-1]*100, sTBG1_g[None]*100)
+    print >> sys.stderr, "genome 2 tb orientation proba = {+1=%.2f%%,-1:%.2f%%,None:%.2f%%} (stats are also calculated for each chromosome)" % (sTBG2_g[+1]*100, sTBG2_g[-1]*100, sTBG2_g[None]*100)
+    print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%.2f%%,-1:%.2f%%,None:%.2f%%) (probabilities are also calculated for pairwise mhp)" % (p_hpSign_g[+1]*100, p_hpSign_g[-1]*100, p_hpSign_g[None]*100)
     N1_g=sum([len(g1_tb[c1]) for c1 in g1_tb])
     N2_g=sum([len(g2_tb[c2]) for c2 in g2_tb])
     #Build an average MHP
     #N50 is better than the mean of the chromosome lengths, since it is less sensitive to numerous and very small chromosome lengths
-    #N1_N50 = utils.myMaths.myStats.getValueNX(sorted([len(g1_tb[c1]) for c1 in g1_tb]),50) # calculate the N50
-    #N2_N50 = utils.myMaths.myStats.getValueNX(sorted([len(g2_tb[c2]) for c2 in g2_tb]),50) # calculate the N50
+    #N1_N50 = myMaths.myStats.getValueNX(sorted([len(g1_tb[c1]) for c1 in g1_tb]),50) # calculate the N50
+    #N2_N50 = myMaths.myStats.getValueNX(sorted([len(g2_tb[c2]) for c2 in g2_tb]),50) # calculate the N50
     #weightedAverage is even better than N50 since it returns a more stable value, not a length of a chromosome of the karyotype, it better reflects the global distribution
     def weightedAverage(listOfChrLengths):
         sumLengths = sum(listOfChrLengths)
@@ -1063,16 +1091,107 @@ def extractSbsInPairCompGenomes(g1, g2, ancGenes, gapMax=None, distanceMetric='D
         # convert diags from tb to genes before yielding them
         # each hp corresponds to an ancestral gene
         for (indx_HP,aGene) in enumerate(la_tb):
-            (indx_tb_g1,_) = l1_tb[indx_HP]
-            l1.extend([(indx,gc1_aID_filt[indx][1]) for indx in tb2gc1[indx_tb_g1]])
-            (indx_tb_g2,_) = l2_tb[indx_HP]
-            l2.extend([(indx,gc2_aID_filt[indx][1]) for indx in tb2gc2[indx_tb_g2]])
-            la.append((ancGenes.lstGenes[None][aGene[0]].names[0], aGene[1], len(tb2gc1[indx_tb_g1]), len(tb2gc2[indx_tb_g2]))) # add informations on the size of the HP.
+            indx_tb_g1 = l1_tb[indx_HP]
+            l1.append([indx for indx in tb2gc1[indx_tb_g1]])
+            indx_tb_g2 = l2_tb[indx_HP]
+            l2.append([indx for indx in tb2gc2[indx_tb_g2]])
+            la.append((ancGenes.lstGenes[None][aGene[0]].names[0], aGene[1], aGene[2]))
         if filterType != FilterType.None:
-            sbsGenSV[i] = ((c1,[(filt2originc1[i1],s1) for (i1,s1) in l1]), (c2,[(filt2originc2[i2],s2) for (i2,s2) in l2]), la, pVal)
+            sbsGenSV[i] = ((c1, [[filt2originc1[i1] for i1 in tb1] for tb1 in l1]),
+                           (c2, [[filt2originc2[i2] for i2 in tb2] for tb2 in l2]), la, pVal)
         else:
-            sbsGenSV[i] = ((c1,l1), (c2,l2), la, pVal)
+            sbsGenSV[i] = ((c1, l1), (c2, l2), la, pVal)
     return sbsGenSV
+
+
+#################
+# Print function
+#################
+# Print diags into [nbHps, c1, c2, la, l1, l2)]
+# With:
+# c1 and c2 the chromosomes of the pairwise comparison in which the synteny block has been found
+# la = [..., (aGName, strand, dist), ...]
+# l1 = [..., [g1, ...gN], ...] with [g1, ..., gN] the child tb of the corresponding aG
+def printSbsFile(listOfSbs, genome1, genome2):
+    print >> sys.stderr, "Print synteny blocks"
+
+    def foo(genomeX, cX, lX, idxHp):
+        gXs = [genomeX.lstGenes[cX][gIdx].names[0] for gIdx in lX[idxHp]]
+        gXs = ' '.join(gXs)
+        sXs = [genomeX.lstGenes[cX][gIdx].strand for gIdx in lX[idxHp]]
+        for (i, s) in enumerate(sXs):
+            if s == +1:
+                sXs[i] = '+'
+            elif s == -1:
+                sXs[i] = '-'
+            else:
+                raise
+        sXs = ''.join(sXs)
+        return (gXs, sXs)
+
+    statsSbs = []
+    for (idSb, sb) in enumerate(listOfSbs):
+        ((c1, l1), (c2, l2), la, pVal) = sb
+        assert len(la) == len(l1) == len(l2), "len(l1)=%s, len(l2)=%s, len(la)=%s\nl1=%s\nl2=%s\nla=%s" % (len(l1), len(l2), len(la), l1, l2, la)
+        nbHps = len(la)
+        statsSbs.append(nbHps)
+        for (idxHp, (aGname, aGstrand, dist)) in enumerate(la):
+            (g1s, s1s) = foo(genome1, c1, l1, idxHp)
+            (g2s, s2s) = foo(genome2, c2, l2, idxHp)
+            print myFile.myTSV.printLine([idSb, aGname, aGstrand, dist, c1, c2, s1s, s2s, g1s, g2s])
+
+    print >> sys.stderr, "Distribution of the synteny block lengths", myMaths.myStats.txtSummary(statsSbs)
+
+
+#################################
+# Parser function
+#################################
+def parseSbsFile(fileName, genome1, genome2):
+
+    def foo(gXs, sXs, genome, chr):
+        gXs = gXs.split(' ')
+        nbTandemDup = len(gXs)
+        assert len(sXs) == len(gXs) == nbTandemDup
+        for i in range(nbTandemDup):
+            gN = gXs[i]
+            gXs[i] = genome.getPosition([gN])
+            s = sXs[i]
+            if s == '+':
+                sXs[i] = +1
+            elif s == '-':
+                sXs[i] = -1
+            else:
+                raise
+            assert genome.lstGenes[chr][gXs[i]].strand == sXs[i]
+        return (gXs, sXs)
+
+    sbsReader =\
+        myFile.myTSV.readTabular(fileName,
+                                 [int, str, int, int, str, str, str, str, str, str],
+                                 delim='\t')
+    listOfSbs = []
+    pVal = 0
+    idSb_old = 0
+    l1 = []
+    l2 = []
+    la = []
+    for (idSb, aGname, aGstrand, dist, c1, c2, s1s, s2s, g1s, g2s) in sbsReader:
+        dist = int(dist) if dist != 'None' else None
+        (g1s, s1s) = foo(g1s, s1s, genome1, c1)
+        (g2s, s2s) = foo(g2s, s2s, genome2, c2)
+        if idSb == idSb_old:
+            l1.append(zip(g1s, s1s))
+            l2.append(zip(g2s, s2s))
+            la.append((aGname, aGstrand, dist))
+            pVal = 0
+        else:
+            listOfSbs.append(((c1, l1), (c2, l2), la, pVal))
+            l1 = []
+            l2 = []
+            la = []
+            idSb_old = idSb
+    return listOfSbs
+
 
 #################################
 # Post processing of diags
@@ -1101,7 +1220,7 @@ def buildGenomeFromSbs(listOfSbs, sbLengthThreshold):
         cptSb = cptSb+1
     return ancSbGenome
 
-@utils.myTools.verbose
+@myTools.verbose
 def computeAncestralCoverageBySbs(g1_tb, g2_tb, ancSbGenome, verbose = True):
     ancGenesInSbs=set([])
     for ancSb in ancSbGenome.values():

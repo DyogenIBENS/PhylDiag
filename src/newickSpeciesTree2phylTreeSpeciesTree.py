@@ -8,15 +8,15 @@
 
 __doc__ = """ convert species tree (newick to phylTree) or (phylTree to newick) """
 
-import utils.myFile
-import utils.myTools
-import utils.myPhylTree
+import libs.utils.myFile as myFile
+import libs.utils.myTools as myTools
+import libs.utils.myPhylTree as myPhylTree
+#import sys
 
-arguments = utils.myTools.checkArgs([("phylTree.conf",file)], [("fromNewick",bool,True)], __doc__)
+arguments = myTools.checkArgs([("phylTree.conf",file)], [("fromNewick",bool,True)], __doc__)
 
-phylTree = utils.myPhylTree.PhylogeneticTree(arguments["phylTree.conf"])
+phylTree = myPhylTree.PhylogeneticTree(arguments["phylTree.conf"])
 
-import sys
 
 if arguments["fromNewick"]:
 
@@ -24,7 +24,7 @@ if arguments["fromNewick"]:
     def do(node, indent):
         node = node.replace("*", "")
         node = node.replace(".", " ")
-        names = utils.myFile.myTSV.printLine([node] + [x for x in phylTree.commonNames.get(node,"") if isinstance(x, str) and (x != node)], delim="|")
+        names = myFile.myTSV.printLine([node] + [x for x in phylTree.commonNames.get(node,"") if isinstance(x, str) and (x != node)], delim="|")
         if node.replace(" ",".") in phylTree.listSpecies :
             print ("\t" * indent) + str(names)
         elif node in phylTree.items:

@@ -11,11 +11,11 @@ import sys
 import itertools
 import collections
 
-import utils.myGenomes
-import utils.myTools
+import libs.utils.myGenomes as myGenomes
+import libs.utils.myTools as myTools
 # PhylDiag core algorithm
-import utils.myDiags as mD
-import utils.myProbas
+import libs.utils.myDiags as myDiags
+import libs.utils.myProbas as myProbas
 
 import drawHomologyMatrixWithSBs
 
@@ -73,7 +73,7 @@ def TbComputeHomologyInformations(chromosome1_tb, chromosome2_tb):
                     TbHpSign2[i2_tb] = None # Just to perform a search after
                     s1 = chromosome1_tb[i1_tb][1]
                     s2 = chromosome2_tb[i2_tb][1]
-                    TbHpSign[i1_tb][i2_tb] = mD.strandProduct(s1,s2)
+                    TbHpSign[i1_tb][i2_tb] = myDiags.strandProduct(s1,s2)
     ###
     # Build TBNoHomologiesInWindowX = [..., i_tb, ... ] with i_tb the index of the tb of chromosomeX_tb with no homology in the window
     ###
@@ -126,16 +126,16 @@ def TbComputeDiagIndices(TbListOfDiags):
     for TbDiag in TbListOfDiags:
         ((c1,tbs1),(c2,tbs2),tbsA,pVal) = TbDiag
         TbDiagIndices.append([])
-        for (indx,(_,_)) in enumerate(tbsA):
-            TbDiagIndices[-1].append((tbs1[indx][0],tbs2[indx][0]))
+        for (indx,(_,_,_)) in enumerate(tbsA):
+            TbDiagIndices[-1].append((tbs1[indx],tbs2[indx]))
     return TbDiagIndices
 
 def genesComputeHomologyInformations(chromosome1, chromosome2):
-    chromosome1_aID = mD.rewriteWithAncGeneID(chromosome1,ancGenes)
-    chromosome2_aID = mD.rewriteWithAncGeneID(chromosome2,ancGenes)
-    (chromosome1_aID_filt, chromosome2_aID_filt, chromosome1filt2chromosome1aID, chromosome2filt2chromosome2aID) = mD.filter(chromosome1_aID, chromosome2_aID, filterType, arguments["minChromLength"], keepOriginal=True) # Must be applied on the two genomes
-    (chromosome1_tb, chromosome1tb2chromosome1filt,_) = mD.rewriteInTb(chromosome1_aID_filt)
-    (chromosome2_tb, chromosome2tb2chromosome2filt,_) = mD.rewriteInTb(chromosome2_aID_filt)
+    chromosome1_aID = myDiags.labelWithAncGeneID(chromosome1,ancGenes)
+    chromosome2_aID = myDiags.labelWithAncGeneID(chromosome2,ancGenes)
+    (chromosome1_aID_filt, chromosome2_aID_filt, chromosome1filt2chromosome1aID, chromosome2filt2chromosome2aID) = myDiags.filter(chromosome1_aID, chromosome2_aID, filterType, arguments["minChromLength"], keepOriginal=True) # Must be applied on the two genomes
+    (chromosome1_tb, chromosome1tb2chromosome1filt,_) = myDiags.rewriteInTb(chromosome1_aID_filt)
+    (chromosome2_tb, chromosome2tb2chromosome2filt,_) = myDiags.rewriteInTb(chromosome2_aID_filt)
 
     #Focus on the chromosome of the window
     chromosome1 = chromosome1[chr1]
@@ -199,18 +199,13 @@ def genesComputeDiagIndices(listOfDiags):
     ###
     diagIndices = []
     for diag in listOfDiags:
-        ((c1,l1),(c2,l2),la,pVal) = diag
-        l1=[indx for (indx,_) in l1]
-        l2=[indx for (indx,_) in l2]
+        ((c1,l1), (c2,l2), la, pVal) = diag
         diagIndices.append([])
-        count_indx_l1 = 0
-        count_indx_l2 = 0
-        for (anc,strand, w_g1, w_g2) in la: # for each hp of width w_g1 and height w_g2
-            diagIndices[-1].extend(itertools.product(l1[count_indx_l1:count_indx_l1 + w_g1],l2[count_indx_l2:count_indx_l2 + w_g2]))
-            count_indx_l1 += w_g1
-            count_indx_l2 += w_g2
+        for (idxHp, (anc, strand, dist)) in enumerate(la):
+            diagIndices[-1].extend(itertools.product(l1[idxHp], l2[idxHp]))
     return diagIndices
-arguments = utils.myTools.checkArgs( \
+
+arguments = myTools.checkArgs( \
         [("genome1",file), ("genome2",file), ("ancGenes",file), ("chr1:deb1-fin1", str), ("chr2:deb2-fin2", str)], \
         [("gapMax",str,'None'), ("consistentSwDType",bool,True), ("filterType",str, 'InCommonAncestor'), ("minChromLength",int,1), ("pThreshold",float,0.001), \
         ("out:SyntenyBlocks",str,"./res/syntenyBlocksDrawer.txt"), \
@@ -234,24 +229,24 @@ assert arguments["distanceMetric"] == 'DPD' or arguments["distanceMetric"] == 'M
 assert (arguments["convertGenicToTbCoordinates"] and arguments["mode:chromosomesRewrittenInTbs"]) or not arguments["convertGenicToTbCoordinates"]
 
 # Load genomes
-genome1 = utils.myGenomes.Genome(arguments["genome1"])
-genome2 = utils.myGenomes.Genome(arguments["genome2"])
+genome1 = myGenomes.Genome(arguments["genome1"])
+genome2 = myGenomes.Genome(arguments["genome2"])
 # Change genome format
 genome1Name = genome1.name
 genome2Name = genome2.name
 genome1_ = {}
-for chrom in genome1.chrList[utils.myGenomes.ContigType.Chromosome] + genome1.chrList[utils.myGenomes.ContigType.Scaffold]:
+for chrom in genome1.chrList[myGenomes.ContigType.Chromosome] + genome1.chrList[myGenomes.ContigType.Scaffold]:
     genome1_[chrom] = genome1.lstGenes[chrom]
     genome1_[chrom] = [(g.names[0],g.strand) for g in genome1_[chrom]]
 genome2_ ={}
-for chrom in genome2.chrList[utils.myGenomes.ContigType.Chromosome] + genome2.chrList[utils.myGenomes.ContigType.Scaffold]:
+for chrom in genome2.chrList[myGenomes.ContigType.Chromosome] + genome2.chrList[myGenomes.ContigType.Scaffold]:
     genome2_[chrom] = genome2.lstGenes[chrom]
     genome2_[chrom] = [(g.names[0],g.strand) for g in genome2_[chrom]]
 genome1=genome1_
 genome2=genome2_
-ancGenes = utils.myGenomes.Genome(arguments["ancGenes"])
-modesFilter = list(utils.myDiags.FilterType._keys)
-filterType = mD.FilterType[modesFilter.index(arguments["filterType"])]
+ancGenes = myGenomes.Genome(arguments["ancGenes"])
+modesFilter = list(myDiags.FilterType._keys)
+filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
 thresholdChr = 50
 
 if not arguments['mode:chromosomesRewrittenInTbs']:
@@ -281,18 +276,24 @@ if not arguments['mode:chromosomesRewrittenInTbs']:
 
     # Search diagonals
     #FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
-    listOfDiags = list(mD.extractSbsInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=gapMax, consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], pThreshold=arguments["pThreshold"], verbose=arguments['verbose']))
+    listOfDiags = list(myDiags.extractSbsInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=gapMax, consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], pThreshold=arguments["pThreshold"], verbose=arguments['verbose']))
     genesDiagIndices = genesComputeDiagIndices(listOfDiags)
 
-    strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2), genesHomologiesHpSign, genesHomologyGroupsInWindow, genesDiagIndices, outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
+    strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix(
+        (range1, range2), (genesStrandsC1, genesStrandsC2),
+        (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
+        (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
+        genesHomologiesHpSign, genesHomologyGroupsInWindow,
+        genesDiagIndices,
+        outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
 
 else:
     #chromosomes are shown as lists of tbs
-    genome1_aID = mD.rewriteWithAncGeneID(genome1,ancGenes)
-    genome2_aID = mD.rewriteWithAncGeneID(genome2,ancGenes)
-    (genome1_filt, genome2_filt, g1filt2g1aID, g2filt2g2aID) = mD.filter(genome1_aID, genome2_aID, filterType, arguments["minChromLength"], keepOriginal=True) # Must be applied on the two genomes
-    (genome1_tb, g1tb2g1filt,_) = mD.rewriteInTb(genome1_filt)
-    (genome2_tb, g2tb2g2filt,_) = mD.rewriteInTb(genome2_filt)
+    genome1_aID = myDiags.labelWithAncGeneID(genome1,ancGenes)
+    genome2_aID = myDiags.labelWithAncGeneID(genome2,ancGenes)
+    (genome1_filt, genome2_filt, g1filt2g1aID, g2filt2g2aID) = myDiags.filter(genome1_aID, genome2_aID, filterType, arguments["minChromLength"], keepOriginal=True) # Must be applied on the two genomes
+    (genome1_tb, g1tb2g1filt,_) = myDiags.rewriteInTb(genome1_filt)
+    (genome2_tb, g2tb2g2filt,_) = myDiags.rewriteInTb(genome2_filt)
     #print >> sys.stderr, "List of (chromosomes, length in tbs) of Genome 1, for chr of size > %s " % thresholdChr
     #for (chr1,len1) in [(key1, len(chr1)) for (key1,chr1) in genome1_tb.items() if len(chr1) > thresholdChr]:
     #       print >> sys.stderr, "chr %s has %s tbs" % (chr1,len1)
@@ -394,8 +395,8 @@ else:
 
     # compute the recommended gapMax parameter
     #########################################
-    N12s, N12_g = mD.numberOfHomologies(chromosome1_tb,chromosome2_tb)
-    (p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = utils.myProbas.statsHpSign(chromosome1_tb,chromosome1_tb)
+    N12s, N12_g = myDiags.numberOfHomologies(chromosome1_tb,chromosome2_tb)
+    (p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = myProbas.statsHpSign(chromosome1_tb,chromosome1_tb)
     p_hpSign={(chr1,chr2):p_hpSign[(1,1)]}#FIXME
     print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
     print >> sys.stderr, "genome 2 tb orientation proba = {+1=%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG2_g[+1], sTBG2_g[-1], sTBG2_g[None])
@@ -404,7 +405,7 @@ else:
     N2_g=sum([len(chromosome2_tb[c2]) for c2 in chromosome2_tb])
     m=2
     #FIXME : calculate adviced gapMax before, on the whole chromosome, not the ROI specified by the user ranges
-    gap = mD.recommendedGap(arguments["nbHpsRecommendedGap"], arguments["targetProbaRecommendedGap"], N12_g, N1_g, N2_g, p_hpSign=p_hpSign_g, verbose=arguments['verbose'])
+    gap = myDiags.recommendedGap(arguments["nbHpsRecommendedGap"], arguments["targetProbaRecommendedGap"], N12_g, N1_g, N2_g, p_hpSign=p_hpSign_g, verbose=arguments['verbose'])
     print >> sys.stderr, "recommended gapMax = %s tbs" % gap
     if arguments['gapMax'] == None:
         gapMax = gap
@@ -413,11 +414,11 @@ else:
     print >> sys.stderr, "used gapMax = %s" % gapMax
 
     # Search diagonals
-    listOfDiags = mD.extractSbsInPairCompChr(chr1, chr2, chromosome1_tb[chr1], chromosome2_tb[chr2], consistentSwDType=arguments['consistentSwDType'], gapMax=gapMax, distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
+    listOfDiags = myDiags.extractSbsInPairCompChr(chr1, chr2, chromosome1_tb[chr1], chromosome2_tb[chr2], consistentSwDType=arguments['consistentSwDType'], gapMax=gapMax, distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
     # statistical validation (SV)
     #FIXME : calculate p-values before, on the whole chromosome, not the ROI specified by the user ranges
     print >> sys.stderr, "Warning the p-value calculation is performed on the ROI defined by the user ranges"
-    listOfDiags = list(mD.filterStatisticalValidation(listOfDiags, chromosome1_tb, chromosome2_tb, N12s, p_hpSign, pThreshold = arguments['pThreshold'], NbOfHomologiesThreshold=50, verbose=arguments['verbose']))
+    listOfDiags = list(myDiags.filterStatisticalValidation(listOfDiags, chromosome1_tb, chromosome2_tb, N12s, p_hpSign, pThreshold = arguments['pThreshold'], NbOfHomologiesThreshold=50, verbose=arguments['verbose']))
     TbDiagIndices = TbComputeDiagIndices(listOfDiags)
 
     strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2), (TbStrandsC1, TbStrandsC2), ([],[]), (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHpSign, TbHomologyGroupsInWindow, TbDiagIndices, outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100, symbolsInGenes=(TbNumberOfGenesInEachTbC1, TbNumberOfGenesInEachTbC2) )
@@ -437,9 +438,9 @@ listOfDiags = [l for l in listOfDiags]
 listOfDiags = sorted(list(listOfDiags), key=lambda x:len(x[2]), reverse=True)
 for diag in listOfDiags:
     ((c1,l1), (c2,l2), la, pVal) = diag
-    min_l2 = min(l2[0][0],l2[-1][0])
-    max_l2 = max(l2[0][0],l2[-1][0])
-    print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (c1,l1[0][0],l1[-1][0],c2,min_l2,max_l2,len(la),pVal)
+    min_l2 = min(l2[0],l2[-1])
+    max_l2 = max(l2[0],l2[-1])
+    print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (c1,l1[0],l1[-1],c2,min_l2,max_l2,len(la),pVal)
 f.close()
 
 # Add lengends and title to the ouput matrix
@@ -569,7 +570,7 @@ def chooseChrsAndRanges(genome1, genome2, ancGenes, distanceMetric = 'DPD'):
     chromosome2 ={}
     chromosome1[chr1] = genome1[chr1][range1[0]:range1[1]]
     chromosome2[chr2] = genome2[chr2][range2[0]:range2[1]]
-    listOfDiags = mD.extractSbsInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=arguments["gapMax"], consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
+    listOfDiags = myDiags.extractSbsInPairCompGenomes(chromosome1, chromosome2, ancGenes, gapMax=arguments["gapMax"], consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
     listOfDiags = list(listOfDiags)
     print >> sys.stderr, "pairwise comparison of the two chromosomes yields" , len(listOfDiags), "diagonals."
     if len(listOfDiags) == 0:

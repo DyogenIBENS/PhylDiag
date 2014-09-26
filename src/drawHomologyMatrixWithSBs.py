@@ -14,8 +14,8 @@ import sys
 import collections
 import itertools
 import random
-import utils.myTools
-import utils.mySvgDrawer as svgDrw
+import libs.utils.myTools as myTools
+import libs.utils.mySvgDrawer as svgDrw
 
 # draw either the mh or the mhp, if draw mode is 'writeinTB'
 # inputs :
@@ -28,7 +28,11 @@ import utils.mySvgDrawer as svgDrw
 #       diagIndices = [..., [...,(i16,j16),...], ...] list of diagonals with diagonals = list of all the points of the diagonal
 # output :
 #       string with the svg drawing of the mhp (or the mh)
-def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2), hpSigns, homologyGroupsInWindow, diagsIndices, outputFileName=None, maxWidth=100, maxHeight=100 , symbolsInGenes=None):
+def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStrandsC2),
+                       (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
+                       (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2),
+                       hpSigns, homologyGroupsInWindow, diagsIndices,
+                       outputFileName=None, maxWidth=100, maxHeight=100 , symbolsInGenes=None):
     begC1=begC1+1 # For the print on screen
     begC2=begC2+1
     endC1=endC1+1
@@ -334,5 +338,5 @@ def test(outFileName):
         drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStrandsC2), (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2), hpSigns, homologyGroupsInWindow, diagsIndices, outputFileName=outFileName, maxWidth=100, maxHeight=100 , symbolsInGenes=symbolsInGenes)
 
 if __name__ == '__main__':
-    arguments = utils.myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
+    arguments = myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
     test(arguments['out:FileName'])

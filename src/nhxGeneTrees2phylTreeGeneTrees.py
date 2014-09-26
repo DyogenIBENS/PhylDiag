@@ -14,9 +14,9 @@ __doc__ = """
 import cStringIO
 import string
 
-import utils.myPhylTree
-import utils.myFile
-import utils.myTools
+import libs.utils.myPhylTree as myPhylTree
+import libs.utils.myFile as myFile
+import libs.utils.myTools as myTools
 
 
 nodeid = 0
@@ -24,7 +24,7 @@ ntree = 0
 
 def processData(data):
 
-    tree = utils.myPhylTree.PhylogeneticTree(cStringIO.StringIO(data))
+    tree = myPhylTree.PhylogeneticTree(cStringIO.StringIO(data))
 
     def printTree(indent, node):
         global nodeid, ntree
@@ -129,9 +129,9 @@ def processData(data):
     printTree("", tree.root)
 
 
-arguments = utils.myTools.checkArgs( [("tree",file)], [], __doc__)
+arguments = myTools.checkArgs( [("tree",file)], [], __doc__)
 
-f = utils.myFile.openFile(arguments["tree"], "r")
+f = myFile.openFile(arguments["tree"], "r")
 for line in f:
     if len(line.replace(" ","").replace("\n","")) == 0:
         #Do nothing : empty line
