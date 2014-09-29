@@ -11,11 +11,11 @@ import sys
 import itertools
 import collections
 
-import libs.utils.myGenomes as myGenomes
-import libs.utils.myTools as myTools
+import utils.myGenomes as myGenomes
+import utils.myTools as myTools
 # PhylDiag core algorithm
-import libs.utils.myDiags as myDiags
-import libs.utils.myProbas as myProbas
+import utils.myDiags as myDiags
+import utils.myProbas as myProbas
 
 import drawHomologyMatrixWithSBs
 

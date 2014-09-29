@@ -14,9 +14,9 @@ __doc__ = """
 import cStringIO
 import string
 
-import libs.utils.myPhylTree as myPhylTree
-import libs.utils.myFile as myFile
-import libs.utils.myTools as myTools
+import utils.myPhylTree as myPhylTree
+import utils.myFile as myFile
+import utils.myTools as myTools
 
 
 nodeid = 0

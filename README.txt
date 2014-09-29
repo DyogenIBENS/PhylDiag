@@ -36,7 +36,7 @@
 # Supplementary data are also in the doc/ folder or can be accessed at the next url:
 # http://www.biomedcentral.com/content/supplementary/1471-2105-15-268-S1.pdf
 
-# This code uses personal libraries in src/utils: myTools, myGenomes, myMaths, myFile, myPhylTree, mySvgDrawer.py, myProbas.py, myProteinTree and myDiags.py
+# This code uses a personal library: contained in git@depot.biologie.ens.fr:LibsDyogen
 
 ##################
 # PhylDiag v1.02 #
@@ -46,18 +46,21 @@
 # INSTALL #
 ###########
 
-From now on we consider that the user is in the root directory of the PhylDiag deposit 
-: cd <PhylDiagFolder>
-
-Install PhylDiag
------------------
-install python 2.7 :
+install python 2.7:
 : sudo apt-get install python2.7
 
-Give excecution rights to scripts :
+: cd ${HOME}
+: mkdir Libs
+: cd Libs
+: echo 'export PYTHONPATH="$PYTHONPATH:${HOME}/LibsDyogen"' >> ~/.bashrc
+: git clone git@depot.biologie.ens.fr:LibsDyogen
+: git clone git@depot.biologie.ens.fr:PhylDiag
+
+From now on we consider that the user is in the root directory of the PhylDiag deposit
+: cd ${Home}/Libs/PhylDiag
+
+# Give excecution rights to scripts:
 : chmod +x src/*.py
-: chmod +x src/utils/*.py
------------------
 
 ##############################################################
 # preprocessing step : define gene families using gene trees #

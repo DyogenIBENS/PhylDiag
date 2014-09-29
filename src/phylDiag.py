@@ -12,9 +12,9 @@ Wrapper for PhylDiag Library
 
 import sys
 
-import libs.utils.myGenomes as myGenomes
-import libs.utils.myTools as myTools
-import libs.utils.myDiags as myDiags
+import utils.myTools as myTools
+import utils.myDiags as myDiags
+import utils.myGenomes as myGenomes
 
 # Arguments
 modesOrthos = list(myDiags.FilterType._keys)

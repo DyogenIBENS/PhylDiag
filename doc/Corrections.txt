@@ -5,3 +5,5 @@
 
 						|(l-k)/(g+1)| must be replaced by  | (l-k)/(g+1) |
 																							 |_           _|
+    It may not be so important since this float value can be interpreted as a 
+	  limit of the sum.

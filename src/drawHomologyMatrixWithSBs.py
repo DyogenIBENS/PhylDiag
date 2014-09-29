@@ -14,8 +14,8 @@ import sys
 import collections
 import itertools
 import random
-import libs.utils.myTools as myTools
-import libs.utils.mySvgDrawer as svgDrw
+import utils.myTools as myTools
+import utils.mySvgDrawer as svgDrw
 
 # draw either the mh or the mhp, if draw mode is 'writeinTB'
 # inputs :

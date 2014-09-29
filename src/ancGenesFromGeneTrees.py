@@ -13,10 +13,10 @@ __doc__ = """
 import sys
 import collections
 
-import libs.utils.myFile as myFile
-import libs.utils.myTools as myTools
-import libs.utils.myPhylTree as myPhylTree
-import libs.utils.myProteinTree as myProteinTree
+import utils.myFile as myFile
+import utils.myTools as myTools
+import utils.myPhylTree as myPhylTree
+import utils.myProteinTree as myProteinTree
 
 # arguments
 arguments = myTools.checkArgs( [("speciesTree",file), ("geneTreeForest",file)], [("out:ancGenes",str,""), ("reuseNames",bool,False)], __doc__ )
