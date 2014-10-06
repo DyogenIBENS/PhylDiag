@@ -1,9 +1,20 @@
 1) "European Molecular Biology Laboratory" should be used instead of "EMBL"
-2) "Düsternbrooker Weg 20" should be removed 
+2) "Düsternbrooker Weg 20" should be removed
 3) In equation 4, over the sum, the absolute brakets-like-symbols must replaced 
 		by closest smallest integer. I.e. :
 
 						|(l-k)/(g+1)| must be replaced by  | (l-k)/(g+1) |
 																							 |_           _|
-    It may not be so important since this float value can be interpreted as a 
+    It may not be so important since this float value can be interpreted as a
 	  limit of the sum.
+
+4) Include upgrades:
+		*tandemGapMax. This option overcomes annotation errors in rows of tandem
+			duplicates. And when this option is activated, pylDiag does not count
+			small segmental tandem duplications as events that break the synteny.
+			One advantage is that there won't be pralogs any more in small extracted 
+			sbs, thus the previously impossible to calculate statistical validation 
+			could be performed for sbs that had paralogs.
+		*Weighted average
+		*ancestral gene sign is also infered during the merging process of diagonals
+		*explain the output file format, analog of genes.%s/list.bz2

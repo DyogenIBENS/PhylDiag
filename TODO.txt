@@ -1,38 +1,89 @@
+For sbs file names, always mention the two extant species, the ancestor, the
+filtering, the tandemGapMax, the gapMax and the distance metric used.
+Example:
+Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm2Gm5CD.sbs : synteny blocks 
+extracted in the comparison between the genomes of Homo.sapiens and 
+Mus.musculus, using the filtering, 'InCommonAncestor' Euarchontoglires, 
+a (t)andem(G)ap(M)ax=2, a (g)ap(M)ax=5 and the 2D distance metric CD.
+Anolis.carolinensisc_Monodelphis.domestica_fIBS_Tgm5Gm5MD.sbs : Anolis.carolinensis vs Monodelphis.domestica, using
+the filtering '(I)n(B)oth(S)pecies'.
+Gallus.gallus_Monodelphis.domestica_fNone_Tgm0Gm3DPD.sbs : using no filtering
+
 Add the source *.tex files of the article and supp data
 -------------------------------------------------
-Even figures and the excel file with all the bibliography and comparison of state of the art concerning synteny block prediction.
+Even figures and the excel file with all the bibliography and comparison of
+state of the art concerning synteny block prediction.
 
 Merging Process:
 ----------------
-Build a graph with all the possible fusions at a gap iteration and choose the fusions that maximise the length of the diagonals
+Build a graph with all the possible fusions at a gap iteration and choose the
+fusions that maximise the length of the diagonals
 
-Deal with segmental duplications (in the transition diagonals->sb and the definition of a sb):
-----------------------------------------------------------------------------------------------
-In the manuscript, add a clarification concerning the systematic transition from a significant consistent diagonal to a synteny block. This is not always the case. For instance a segmental duplication may yield four significant consistent diagonals in a MHP, however there are only at most two synteny blocks, or only one if a synteny block is defined as an ancestral chain of tbs. Here appears an issue in the definition of a synteny block, if an ancestral chain of tbs undergoes a segemental duplication do the two resulting chains are two synteny blocks or the same synteny block ?
-Thus it would be interesting to remove irrelevant diagonal duplicates in the MHPs that do not corresponds to synteny blocks. This update of the algorithm will depend on the updated definition of a synteny block.
+Deal with segmental duplications (in the transition diagonals->sb and the
+definition of a sb):
+---------------------------------------------------------------------------
+In the manuscript, add a clarification concerning the systematic transition
+from a significant consistent diagonal to a synteny block. This is not always
+the case. For instance a segmental duplication may yield four significant
+consistent diagonals in a MHP, however there are only at most two synteny
+blocks, or only one if a synteny block is defined as an ancestral chain of tbs. 
+Here appears an issue in the definition of a synteny block, if an ancestral
+chain of tbs undergoes a segemental duplication do the two resulting chains
+are two synteny blocks or the same synteny block ?
+Thus it would be interesting to remove irrelevant diagonal duplicates in the
+MHPs that do not corresponds to synteny blocks. This update of the algorithm
+will depend on the updated definition of a synteny block.
 
-N-D generalisation of the 2-D working framework of PhylDiag (from pairwise comparisons to multi-genome comparisons):
---------------------------------------------------------------------------------------------------------------------
-It seems intuitively possible to generalise the 2D MHPs corresponding to pairwise comparisons of chromosomes of PhylDiag by ND MHPs, corresponding to multi-chromosome comparisons involving N chromosomes. In such matrices, hps would have signs equal to ND-vectors (+,-,-,+,-) that would give the relative orientations of tbs between pairs of chromosomes. The first component will give the relative orientation of the corresponding tbs in ch1 and ch2, the second component betweens the tbs of ch2 and ch3, ... the Nth component will give the orientation between the tbs of the ch(N-1) and chN. If needed the relative orientations of tbs on ch1 and ch3 can be deduced from the two first components.
-Here diagonals would have 2^(N-1) different diagonal types. The distance metrics and the statistical computations are easily translatable in N-D. The p_d formula is already written for N-D in the paper of Rose Hoberman and the other formulas are easy to translate.
-Diagonals may be interrupted in the ND-volume and continued in lower dimensions (here a parameter arises) to discover diagonals from highly diverged synteny blocks. However this feature, may be difficult to conceptualise.
+N-D generalisation of the 2-D working framework of PhylDiag (from pairwise
+comparisons to multi-genome comparisons):
+---------------------------------------------------------------------------
+It seems intuitively possible to generalise the 2D MHPs corresponding to
+pairwise comparisons of chromosomes of PhylDiag by ND MHPs, corresponding to
+multi-chromosome comparisons involving N chromosomes. In such matrices, hps
+would have signs equal to ND-vectors (+,-,-,+,-) that would give the relative
+orientations of tbs between pairs of chromosomes. The first component will give 
+the relative orientation of the corresponding tbs in ch1 and ch2, the second
+component betweens the tbs of ch2 and ch3, ... the Nth component will give the
+orientation between the tbs of the ch(N-1) and chN. If needed the relative
+orientations of tbs on ch1 and ch3 can be deduced from the two first components.
+Here diagonals would have 2^(N-1) different diagonal types. The distance
+metrics and the statistical computations are easily translatable in N-D. The
+p_d formula is already written for N-D in the paper of Rose Hoberman and the
+other formulas are easy to translate.
+Diagonals may be interrupted in the ND-volume and continued in lower dimensions 
+(here a parameter arises) to discover diagonals from highly diverged synteny
+blocks. However this feature, may be difficult to conceptualise.
 Possible Difficulties:
-	-a very time consuming building of MHPs and memory consuming stokage. But let's hope that with an appropriate sparse matrix management this would not be such a big issue.
+	-a very time consuming building of MHPs and memory consuming stokage. But
+		let's hope that with an appropriate sparse matrix management this would not 
+		be such a big issue.
 	-ND-diagonals may be complex to interpret
 
 Add gene team inference and encapsulate levels of gene organisation :
 ---------------------------------------------------------------------
-Infer gene teams (with gaps < g) first, then infer synteny blocks (with gaps < g). The inference of synteny blocks can be done on each sub-matrix containing each gene team. By definition, synteny blocks are strikly inclused in gene teams. Thus, gene teams can be understood as composed of synteny blocks.
-Different levels of organisation emerge from large unordered gene teams through smaller and ordered synteny blocks to tandem blocks and finally to genes and nucleotides. An analog conception about homologies gives: clouds, diagonals, homology packs, homologies and alignments.
+Infer gene teams (with gaps < g) first, then infer synteny blocks
+(with gaps < g). The inference of synteny blocks can be done on each sub-matrix 
+containing each gene team. By definition, synteny blocks are strikly inclused
+in gene teams. Thus, gene teams can be understood as composed of synteny blocks.
+Different levels of organisation emerge from large unordered gene teams through 
+smaller and ordered synteny blocks to tandem blocks and finally to genes and
+nucleotides. An analog conception about homologies gives: clouds, diagonals,
+homology packs, homologies and alignments.
 
 Distance metrics:
 -----------------
-For the moment only the CD wil return maximum synteny blocks that fully satisfy the formal definition 
-A chain with gaps <= gapMax conserved from LCA(Sa,Sb) to Sa and Sb always generate a diagonal with gaps <= gapMax with either the CD
-Other distance metrics (ED,MD and DPD) returns non-maximum synteny blocks
-A chain with gaps <= gapMax conserved from LCA(Sa,Sb) to Sa and Sb may generate a diagonal with gaps > gapMax with either ED, MD or DPD
-To ensure that sbs are maximum with either ED, MD or DPD, the distances could be calculated for all cells in a square of size gapMax*gapMax.
-If gapMax = 5, all the merges within a gap(CD) <= 5 should be allowed, but the order of fusions would be performed following the distance chosen distance metric (either MD,CD or DPD).
+For the moment only the CD wil return maximum synteny blocks that fully satisfy 
+the formal definition.
+A chain with gaps <= gapMax conserved from LCA(Sa,Sb) to Sa and Sb always
+generate a diagonal with gaps <= gapMax with either the CD.
+Other distance metrics (ED,MD and DPD) returns non-maximum synteny blocks.
+A chain with gaps <= gapMax conserved from LCA(Sa,Sb) to Sa and Sb may generate 
+a diagonal with gaps > gapMax with either ED, MD or DPD.
+To ensure that sbs are maximum with either ED, MD or DPD, the distances could
+be calculated for all cells in a square of size gapMax*gapMax.
+If gapMax = 5, all the merges within a gap(CD) <= 5 should be allowed, but the
+order of fusions would be performed following the distance chosen distance
+metric (either MD,CD or DPD).
 
 Genome compared to itself to study segmental duplications:
 ----------------------------------------------------------
@@ -40,14 +91,13 @@ Genome compared to itself to study segmental duplications:
 Write the time consuming and memory consuming parts in C++:
 ------------------------------------------------------------
 
-Add a tandem_gap option:
-------------------------
-This option will not count small segmental tandem duplications as events that break the synteny
-
 Small issues:
 ------------------
-*No p-value (only 'None' and 0 p-values) in the syntenyBlocks.txt output of the drawer when using the mode "chromosomeRewrittenInTbs" whereas there are p-values in the syntenyBlocks.txt output when this mode is not activated
-*When ROIs are used in the viewer, the coordinates (beg,end) of synteny blocks are not the absolute coordinates of synteny blocks
+*No p-value (only 'None' and 0 p-values) in the syntenyBlocks.txt output of the 
+	drawer when using the mode "chromosomeRewrittenInTbs" whereas there are
+	p-values in the syntenyBlocks.txt output when this mode is not activated
+*When ROIs are used in the viewer, the coordinates (beg,end) of synteny blocks
+	are not the absolute coordinates of synteny blocks
 *check if the option -filterType=InBothSpecies works well with the viewer
 
 Code refactoring:
@@ -56,14 +106,17 @@ Code refactoring:
 
 Use the Cairo library to render svg graphics:
 ---------------------------------------------
-Instead of using mySvgDrawer.py use Cairo, a widely used library to draw vectorial images (http://cairographics.org/)
-Use also Pango for text rendering inside Cairo, both libraries are working together (http://www.pango.org/)
+Instead of using mySvgDrawer.py use Cairo, a widely used library to draw
+vectorial images (http://cairographics.org/)
+Use also Pango for text rendering inside Cairo, both libraries are working
+together (http://www.pango.org/)
 
 TODO:
 -----
 *Create a class for synteny blocks ?
-*Change the colors in the viewer (avoid yellow because there is not enough contrast on a white background)
+*Change the colors in the viewer (avoid yellow because there is not enough
+	contrast on a white background)
 *Add red rectangles around diagonals that did not pass the statistical validation
 *Update src/newickSpeciesTree2phylTreeSpeciesTree.py to tackle branch lengths
-*verify comments after the change of format of diags/sbs 
+*verify comments after the change of format of diags/sbs
 	la=[...(aGIdx,aGs,dist)...], lX=[...[...i1...]...] and the output format

@@ -20,7 +20,9 @@ import utils.myGenomes as myGenomes
 modesOrthos = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs( \
                 [("genome1",file), ("genome2",file), ("ancGenes",file)], \
-                [("gapMax",str,'None'), ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
+                [("tandemGapMax", int, 0),
+                 ("gapMax",str,'None'),
+                 ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
                 ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
                 ('validateImpossToCalc_mThreshold',int,3),\
                 ('multiProcess',bool,True),\
@@ -48,8 +50,21 @@ filterType = myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-listOfSbs = list(myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes, gapMax=arguments["gapMax"], distanceMetric=arguments['distanceMetric'], pThreshold=arguments['pThreshold'], filterType=filterType, minChromLength=arguments["minChromLength"], consistentSwDType=arguments["sameStrand"], nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'], targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'], validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'], multiProcess=arguments['multiProcess'], verbose=arguments['verbose']))
+listOfSbs =\
+    list(myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes,
+                                             tandemGapMax=arguments['tandemGapMax'],
+                                             gapMax=arguments["gapMax"],
+                                             distanceMetric=arguments['distanceMetric'],
+                                             pThreshold=arguments['pThreshold'],
+                                             filterType=filterType,
+                                             minChromLength=arguments["minChromLength"],
+                                             consistentSwDType=arguments["sameStrand"],
+                                             nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
+                                             targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
+                                             validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
+                                             multiProcess=arguments['multiProcess'],
+                                             verbose=arguments['verbose']))
 print >> sys.stderr, "End of the synteny block research"
-listOfSbs.sort(key=lambda x: len(x[2]))
+listOfSbs.sort(key=lambda x: len(x[2]), reverse=True)
 
 myDiags.printSbsFile(listOfSbs, genome1, genome2)

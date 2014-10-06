@@ -48,19 +48,13 @@
 
 install python 2.7:
 : sudo apt-get install python2.7
-
 : cd ${HOME}
 : mkdir Libs
 : cd Libs
-: echo 'export PYTHONPATH="$PYTHONPATH:${HOME}/LibsDyogen"' >> ~/.bashrc
 : git clone git@depot.biologie.ens.fr:LibsDyogen
+: echo 'export PYTHONPATH="$PYTHONPATH:${HOME}/LibsDyogen"' >> ~/.bashrc
 : git clone git@depot.biologie.ens.fr:PhylDiag
-
-From now on we consider that the user is in the root directory of the PhylDiag deposit
-: cd ${Home}/Libs/PhylDiag
-
-# Give excecution rights to scripts:
-: chmod +x src/*.py
+: chmod +x ${Home}/Libs/PhylDiag/src/*.py
 
 ##############################################################
 # preprocessing step : define gene families using gene trees #
