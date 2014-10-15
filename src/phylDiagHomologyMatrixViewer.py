@@ -58,36 +58,27 @@ def parseChrRange(text, genome, g2gtb=None):
     return (chr, range)
 
 def TbComputeHomologyInformations(chrom1_tb, chrom2_tb):
+    ####
+    ## Build MHP = { i1_tb : {i2_tb : hpSign, ...}...} with hpSign
+    ## the hpSign (s1*s2) of the homology at the (i1,i2) coordinate
+    ####
+    (MHP, locG2) = myDiags.homologyMatrix(chrom1_tb, chrom2_tb)
 
-    locC2 = collections.defaultdict(list)
-    for (i2_tb,(ianc,_)) in enumerate(chrom2_tb):
-        if ianc != -1:
-            locC2[ianc].append( i2_tb )
-    ###
-    # Build homologiesHpSigns = { i1_tb : {i2_tb : hpSign, ...}...} with hpSign
-    # the hpSign (s1*s2) of the homology at the (i1,i2) coordinate
-    ###
-    TbHpSign = collections.defaultdict(lambda:collections.defaultdict(tuple))
-    TbHpSign2 =  collections.defaultdict(int)
-    for (i1_tb,(ianc,_)) in enumerate(chrom1_tb):
-        if ianc !=-1:
-            if ianc in locC2: #TODO remove by advance ianc == -1 from chrom1_tb
-                for i2_tb in locC2[ianc]:
-                    TbHpSign2[i2_tb] = None # Just to perform a search after
-                    s1 = chrom1_tb[i1_tb][1]
-                    s2 = chrom2_tb[i2_tb][1]
-                    TbHpSign[i1_tb][i2_tb] = myDiags.strandProduct(s1,s2)
+    tbsOnChr2ThatHaveHomologies = set([])
+    for tb1 in MHP:
+        tbsOnChr2ThatHaveHomologies |= set(MHP[tb1].keys())
+
     ###
     # Build TBNoHomologiesInWindowX = [..., i_tb, ... ] with i_tb the index of
     # the tb of chromosomeX_tb with no homology in the window
     ###
     TbNoHomologiesInWindowC1 = []
     for (i1_tb,_) in enumerate(chrom1_tb):
-        if i1_tb not in TbHpSign:
+        if i1_tb not in MHP:
             TbNoHomologiesInWindowC1.append(i1_tb)
     TbNoHomologiesInWindowC2 = []
     for (i2_tb,_) in enumerate(chrom2_tb):
-        if i2_tb not in TbHpSign2:
+        if i2_tb not in tbsOnChr2ThatHaveHomologies:
             TbNoHomologiesInWindowC2.append(i2_tb)
     ###
     # Build homologyGroupsInWindow : [..., ([tbC1_4,tbC1_46,tbC1_80],[tbC2_2,tbC2_7]), ...]
@@ -98,30 +89,30 @@ def TbComputeHomologyInformations(chrom1_tb, chrom2_tb):
     locC2_tbIndx = collections.defaultdict(list)
     TbHomologyGroupsInWindow = []
     listOfHPsCoordinates=[]
-    for i1_tb in TbHpSign:
-        for i2_tb in TbHpSign[i1_tb]:
-            listOfHPsCoordinates.append((i1_tb,i2_tb))
-    for (i1_tb,i2_tb) in listOfHPsCoordinates:
+    for i1_tb in MHP:
+        for i2_tb in MHP[i1_tb]:
+            listOfHPsCoordinates.append((i1_tb, i2_tb))
+    for (i1_tb, i2_tb) in listOfHPsCoordinates:
         locC2_tbIndx[i1_tb].append(i2_tb)
         locC1_tbIndx[i2_tb].append(i1_tb)
-    HomologyGroup1={}
-    HomologyGroup2={}
+    HomologyGroup1 = set([])
+    HomologyGroup2 = set([])
     for (i1_tb,i2_tb) in listOfHPsCoordinates:
         if i1_tb not in HomologyGroup1 or i2_tb not in HomologyGroup2:
-            TbHomologyGroupsInWindow.append(([i1_tb],[i2_tb]))
-            HomologyGroup1[i1_tb] = None
+            TbHomologyGroupsInWindow.append(([],[]))
+            HomologyGroup1.add(i1_tb)
             for i2_tbb in locC2_tbIndx[i1_tb]:
                 TbHomologyGroupsInWindow[-1][1].append(i2_tbb)
-                HomologyGroup2[i2_tbb] = None
+                HomologyGroup2.add(i2_tbb)
                 for i1_tbb in locC1_tbIndx[i2_tbb]:
                     TbHomologyGroupsInWindow[-1][0].append(i1_tbb)
-                    HomologyGroup1[i1_tbb] = None
+                    HomologyGroup1.add(i1_tbb)
                 del locC1_tbIndx[i2_tbb]
             del locC2_tbIndx[i1_tb]
     del HomologyGroup1
     del HomologyGroup2
 
-    return (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow)
+    return (MHP, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow)
 
 def TbComputeDiagIndices(TbListOfDiags):
     ###
@@ -319,7 +310,10 @@ if not arguments['mode:chromosomesRewrittenInTbs']:
     genesStrandsC1 = [s for (_,s) in chrom1[chr1]]
     genesStrandsC2 = [s for (_,s) in chrom2[chr2]]
 
-    ((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2), genesHomologiesHpSign,(genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),genesHomologyGroupsInWindow) = genesComputeHomologyInformations(chrom1, chrom2)
+    ((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
+     genesHomologiesHpSign,
+     (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
+     genesHomologyGroupsInWindow) = genesComputeHomologyInformations(chrom1, chrom2)
 
     # Search diagonals
     #FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
@@ -371,69 +365,10 @@ else:
         # see Mapping class addition
         gtb2gaID2[c] = gtb2gf2[c] + gf2gaID2[c]
 
-    ##print >> sys.stderr, "List of (chromosomes, length in tbs) of Genome 1, for chr of size > %s " % thresholdChr
-    ##for (chr1,len1) in [(key1, len(chr1)) for (key1,chr1) in g1tb.items() if len(chr1) > thresholdChr]:
-    ##       print >> sys.stderr, "chr %s has %s tbs" % (chr1,len1)
-    ##print >> sys.stderr, "List of (chromosomes, length in tbs) of Genome 2, for chr of size > %s " % thresholdChr
-    ##for (chr2,len2) in [(key2, len(chr2)) for (key2,chr2) in g2tb.items() if len(chr2) > thresholdChr]:
-    ##       print >> sys.stderr, "chr %s has %s tbs" % (chr2,len2)
-
-    ## Inverse dictionnaries for conversion from the gene base to the tb base
-    #g12g1filt = dict([(chr1,dict([(i1,i1filt) for (i1filt, i1) in gf2gaID1[chr1].items()])) for chr1 in gf2gaID1])
-    #g22g2filt = dict([(chr2,dict([(i2,i2filt) for (i2filt, i2) in gf2gaID2[chr2].items()])) for chr2 in gf2gaID2])
-    #g1filt2g1tb = collections.defaultdict(lambda:collections.defaultdict(int))
-    #g2filt2g2tb = collections.defaultdict(lambda:collections.defaultdict(int))
-    #for chr1 in gtb2gf1:
-    #    for (i1tb, i1sfilt) in enumerate(gtb2gf1[chr1]):
-    #        for i1filt in i1sfilt:
-    #            g1filt2g1tb[chr1][i1filt] = i1tb
-    #g2filt2g2tb = collections.defaultdict(lambda:collections.defaultdict(int))
-    #for chr2 in gtb2gf2:
-    #    for (i2tb, i2sfilt) in enumerate(gtb2gf2[chr2]):
-    #        for i2filt in i2sfilt:
-    #            g2filt2g2tb[chr2][i2filt] = i2tb
-
     if not arguments['convertGenicToTbCoordinates']:
         (chr1,range1) = parseChrRange(arguments["chr1:deb1-fin1"], g1tb)
         (chr2,range2) = parseChrRange(arguments["chr2:deb2-fin2"], g2tb)
     else:
-
-        #if the user uses genic coordinates and wants to view results in the tb coordinates
-        #inverse again dictionnaries
-        #g12g1tb = collections.defaultdict(lambda:collections.defaultdict(int))
-        #for chr1 in g1filt2g1tb:
-        #    i1_old=None
-        #    i1_old_tmp=0
-        #    for i1,_ in enumerate(g1aID[chr1]):
-        #        if i1 in g12g1filt[chr1]:
-        #            if i1_old == None:
-        #                for i11 in range(i1_old_tmp):
-        #                    g12g1tb[chr1][i11]=g1filt2g1tb[chr1][g12g1filt[chr1][i1]]
-        #            g12g1tb[chr1][i1]=g1filt2g1tb[chr1][g12g1filt[chr1][i1]]
-        #            i1_old = i1
-        #        else:
-        #            if i1_old == None:
-        #                i1_old_tmp+=1
-        #            else:
-        #                g12g1tb[chr1][i1]=g1filt2g1tb[chr1][g12g1filt[chr1][i1_old]]
-        #g22g2tb = collections.defaultdict(lambda:collections.defaultdict(int))
-        #for chr2 in g2filt2g2tb:
-        #    i2_old=None
-        #    i2_old_tmp=0
-        #    for i2,_ in enumerate(g2aID[chr2]):
-        #        if i2 in g22g2filt[chr2]:
-        #            if i2_old == None:
-        #                for i22 in range(i2_old_tmp):
-        #                    g22g2tb[chr2][i22]=g2filt2g2tb[chr2][g22g2filt[chr2][i2]]
-        #            g22g2tb[chr2][i2]=g2filt2g2tb[chr2][g22g2filt[chr2][i2]]
-        #            i2_old = i2
-        #        else:
-        #            if i2_old == None:
-        #                i2_old_tmp+=1
-        #            else:
-        #                g22g2tb[chr2][i2]=g2filt2g2tb[chr2][g22g2filt[chr2][i2_old]]
-        #(chr1,range1) = parseChrRange(arguments["chr1:deb1-fin1"], g1tb, g2gtb=g12g1tb)
-        #(chr2,range2) = parseChrRange(arguments["chr2:deb2-fin2"], g2tb, g2gtb=g22g2tb)
         (chr1,range1) = parseChrRange(arguments["chr1:deb1-fin1"], g1tb, g2gtb=gtb2gaID1.old)
         (chr2,range2) = parseChrRange(arguments["chr2:deb2-fin2"], g2tb, g2gtb=gtb2gaID2.old)
 
@@ -472,8 +407,30 @@ else:
     ###
     # Build rangeXTB
     ###
-    (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow) =\
+    (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2),
+     TbHomologyGroupsInWindow) =\
         TbComputeHomologyInformations(chrom1_tb[chr1], chrom2_tb[chr2])
+    ###
+    # Convert into the correct format for the function TbHomologyGroupsInWindow
+    ###
+    tmpTbHomologyGroupsInWindow = []
+    for (tbs1, tbs2) in TbHomologyGroupsInWindow:
+        tmpTbs1 = []
+        tmpTbs2 = []
+        for tb1 in tbs1:
+            tmpTbs1.append([tb1])
+        for tb2 in tbs2:
+            tmpTbs2.append([tb2])
+        tmpTbHomologyGroupsInWindow.append((tmpTbs1, tmpTbs2))
+    TbHomologyGroupsInWindow = tmpTbHomologyGroupsInWindow
+    TbNoHomologiesInWindowC1 = [[tb1] for tb1 in TbNoHomologiesInWindowC1]
+    TbNoHomologiesInWindowC2 = [[tb2] for tb2 in TbNoHomologiesInWindowC2]
+
+
+
+
+
+
 
     # compute the recommended gapMax parameter
     #########################################

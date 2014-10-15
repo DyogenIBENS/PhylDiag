@@ -17,6 +17,61 @@ import random
 import utils.myTools as myTools
 import utils.mySvgDrawer as svgDrw
 
+
+# Generator of levels for colors or gray indices within a palette:
+class levelIdxGenerator():
+    def __init__(self, farIdxs=False, grays=False):
+        if grays is not None:
+            # see the css joint file "HomologyGroup" ranges from 0 to 44 (included)
+            self.firstLevelIdx = 2
+            self.lastLevelIdx = 44
+        else:
+            # see the css joint file "NoHomologyInWindow" ranges from 0 to 14 (included)
+            self.firstLevelIdx = 2
+            self.lastLevelIdx = 14
+        if farIdxs is False:
+            self.availableLevels = range(self.firstLevelIdx, self.lastLevelIdx+1)
+        else:
+            self.availableLevels = range(self.firstLevelIdx, self.lastLevelIdx+1, 3) +\
+                                   range(self.firstLevelIdx+1, self.lastLevelIdx+1, 3) +\
+                                   range(self.firstLevelIdx+2, self.lastLevelIdx+1, 3)
+        self.currIdx = 0
+        assert len(self.availableLevels) == (self.lastLevelIdx+1) - self.firstLevelIdx
+
+    def getLevel(self, differentFrom=set([])):
+        if len(differentFrom.intersection(self.availableLevels)) == len(self.availableLevels):
+            print >> sys.stderr, "Warning: too many colors too avoid, thus a non-optimal choice of the color is made"
+        else:
+            while self.currIdx in differentFrom:
+                if self.currIdx < self.lastLevelIdx - self.firstLevelIdx:
+                    self.currIdx += 1
+                else:
+                    self.currIdx = 0
+        level = self.availableLevels[self.currIdx]
+        self.currIdx += 1
+        if self.currIdx > self.lastLevelIdx - self.firstLevelIdx:
+            self.currIdx = 0
+        return level
+
+def neighboursLevels(chromosome, i):
+    # level of the 'L'eft neighbour
+    levelL = chromosome[i-1].SVGclass if i-1 in chromosome else None
+    # level of the 'R'ight neighbour
+    levelR = chromosome[i+1].SVGclass if i+1 in chromosome else None
+
+    def convertSVGclassIntoInt(strSVGclass):
+        if strSVGclass is not None:
+            try:
+                int(strSVGclass[-2:])
+            except:
+                int(strSVGclass[-1])
+
+    levelL = convertSVGclassIntoInt(levelL)
+    levelR = convertSVGclassIntoInt(levelR)
+    neighboursLevels = set([levelL, levelR])
+    neighboursLevels = set([l for l in neighboursLevels if l is not None])
+    return neighboursLevels
+
 # draw either the mh or the mhp, if draw mode is 'writeinTB'
 # inputs :
 #       genesStrandsCX = [+1, -1, ...] of length = to nX
@@ -42,14 +97,6 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
     nx = len(genesStrandsC1)
     ny = len(genesStrandsC2)
 
-    # corresponds to a palete of colors in the css file
-    availableColors=range(8,40,2) # step = 2
-    availableColors.reverse()
-    availableGreys = range(0,15,1)
-    random.shuffle(availableGreys)
-    availableColorsForDiags = range(2,43)
-    random.shuffle(availableColorsForDiags)
-
     # the size of the components of the matrix is chosen using the smallest and more restricting dimension (contains more genes comparing to its size)
     sizeCase = float (      min( float(maxWidth) / (nx + 3), float(maxHeight) / (ny + 3))    )# +3 for margins
     sizeText = float( sizeCase*0.9 )
@@ -63,19 +110,25 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
     nbLinesX= nx+1 #Nb of vertical lines (x varies) in the matrix
     nbLinesY= ny+1 #Nb of horizontal lines (y varies) in the matrix
 
+    farColorsGenerator = levelIdxGenerator(farIdxs=True)
+    closeColorsGenerator = levelIdxGenerator()
+    farGraysGenerator = levelIdxGenerator(farIdxs=True, grays=True)
+
     # draw lines of chromosomes
     # offset_genes : corresponds to the chromosome lines positions passing through the middle of the genes
     offset_genes_x = sizeCase + sizeCase/2
     offset_genes_y = sizeCase + sizeCase/2
     scene.add(svgDrw.Line((offset_genes_x, height - offset_genes_y), ( width-sizeCase, height - offset_genes_y), width=0.1*sizeCase))
     scene.add(svgDrw.Line((offset_genes_x, sizeCase), ( offset_genes_x, height - (offset_genes_y)), width=0.1*sizeCase))
-    offset_matrix_x = 2*sizeCase
-    offset_matrix_y = 2*sizeCase
+    offset_matrix_x = 2 * sizeCase
+    offset_matrix_y = 2 * sizeCase
     # draw Diagonals first because they are on the background
     print >> sys.stderr, "Nb of diagonals showed = ", len(diagsIndices)
+    # sort diagonals to give colors according to localisations of diagonals
+    diagsIndices.sort(key=lambda x: x[0][0])
     for diag in diagsIndices:
-        #color = availableGreys.pop() if len(availableGreys) > 0 else random.randint(0,230)
-        color = availableColorsForDiags.pop() if len(availableColorsForDiags)>0 else random.choice(range(2,43))
+        # choose a color different from the neighbours
+        color = farColorsGenerator.getLevel()
         for (i,j) in diag:
             cx_s=i*sizeCase
             cy_s=j*sizeCase
@@ -94,7 +147,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
     # tick lines
     widthTicks = min(float(width)/1000, float(height)/1000)
     sizeTextTicks = widthTicks*10
-    for i,ni in enumerate(range(begC1,endC1)): # TODO : better place ticks
+    for i,ni in enumerate(range(begC1,endC1)):
         cx = i*sizeCase
         if ni%10==0:
             scene.add(svgDrw.Line((offset_matrix_x+sizeCase/2+cx, height - offset_genes_y/2), (offset_matrix_x+sizeCase/2+cx, height - offset_genes_y), width=widthTicks))
@@ -110,7 +163,7 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
                 scene.add(svgDrw.Text((cxText, cyText), str(ni), text_anchor="middle", size=sizeTextTicks))
                 scene.add(svgDrw.Line((cxx, height - offset_matrix_y), (cxx, sizeCase), width=sizeCase*0.1))
 
-    for j,nj in enumerate(range(begC2,endC2)): # TODO : better place ticks
+    for j,nj in enumerate(range(begC2,endC2)):
         cy = j*sizeCase
         if nj%10==0:
             scene.add(svgDrw.Line((offset_genes_x/2, height - (offset_matrix_y+sizeCase/2+cy)), (offset_genes_x, (height - (offset_matrix_y+sizeCase/2+cy))), width=widthTicks))
@@ -152,35 +205,30 @@ def drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStra
 
         # give a color to each gene using homology relationships
         for (tbs1,tbs2) in homologyGroupsInWindow:
-            color = availableColors.pop() if len(availableColors) > 0 else random.choice(range(8,40,2))
+            # Choose a level different from the direct neighbours
+            neighboursLevelsOnBothsChrs = reduce(lambda x, y: x | y, [neighboursLevels(chromosome1, i1) for tb1 in tbs1 for i1 in tb1]) |\
+                                          reduce(lambda x, y: x | y, [neighboursLevels(chromosome2, i2) for tb2 in tbs2 for i2 in tb2])
+            color = closeColorsGenerator.getLevel(differentFrom=neighboursLevelsOnBothsChrs)
             for tb1 in tbs1:
-                if isinstance(tb1,list):
-                    for i1 in tb1:
-                        chromosome1[i1].SVGclass = "HomologGroup%s" % color
-                else:
-                    chromosome1[tb1].SVGclass = "HomologGroup%s" % color
+                for i1 in tb1:
+                    chromosome1[i1].SVGclass = "HomologGroup%s" % color
             for tb2 in tbs2:
-                if isinstance(tb2,list):
-                    for i2 in tb2:
-                        chromosome2[i2].SVGclass = "HomologGroup%s" % color
-                else:
-                    chromosome2[tb2].SVGclass = "HomologGroup%s" % color
+                for i2 in tb2:
+                    chromosome2[i2].SVGclass = "HomologGroup%s" % color
 
         # give grey levels to genes that have no homology in the window
-        for tb in tbWithNoHomologyInWindowC1:
-            grey = availableGreys.pop() if len(availableGreys) > 0 else random.choice(range(0,13,1))
-            if isinstance(tb,list):
-                for i1 in tb:
-                    chromosome1[i1].SVGclass = "NoHomologyInWindow%s" % grey
-            else:
-                chromosome1[tb].SVGclass = "NoHomologyInWindow%s" % grey
-        for tb in tbWithNoHomologyInWindowC2:
-            grey = availableGreys.pop() if len(availableGreys) > 0 else random.choice(range(0,13,1))
-            if isinstance(tb,list):
-                for i2 in tb:
-                    chromosome2[i2].SVGclass = "NoHomologyInWindow%s" % grey
-            else:
-                chromosome2[tb].SVGclass = "NoHomologyInWindow%s" % grey
+
+        def giveGreyLevelsTo(chromosome, tbWithNoHomologyInWindow):
+            for tb in tbWithNoHomologyInWindow:
+                # Choose a level different from the direct neighbours
+                nLevels = reduce(lambda x, y: x | y, [neighboursLevels(chromosome, i) for i in tb])
+                grey = farGraysGenerator.getLevel(differentFrom=nLevels)
+                for i in tb:
+                    chromosome[i].SVGclass = "NoHomologyInWindow%s" % grey
+            return chromosome
+
+        chromosome1 = giveGreyLevelsTo(chromosome1, tbWithNoHomologyInWindowC1)
+        chromosome2 = giveGreyLevelsTo(chromosome2, tbWithNoHomologyInWindowC2)
 
         for i1 in genesRemovedDuringFilteringC1:
             chromosome1[i1].SVGclass = "SpeciesSpecificGenes"
