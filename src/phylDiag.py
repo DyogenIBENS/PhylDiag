@@ -25,7 +25,12 @@ arguments = myTools.checkArgs( \
                  ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
                 ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
                 ('validateImpossToCalc_mThreshold',int,3),\
-                ('multiProcess',bool,True),\
+                 # TODO
+                 # Update functions using the multiprocess package of python to
+                 # allow usage of multiprocessing. For the moment, since it is
+                 # not working like this with the python version 2.7.8, the
+                 # multiprocessing is set to false by default.
+                ('multiProcess',bool,False),\
                 ('verbose',bool,False)], \
                 #, ("computeDiagsWithoutGenesOnlyImplyedInDiagsOfLengthSmallerOrEqualTo",int,-1)], \
                 __doc__ \
