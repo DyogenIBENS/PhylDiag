@@ -1,0 +1,14 @@
+Tandem Blocks scale
+chromosome X de data/genesST.Homo.sapiens.list.bz2	beginC1	endC1	chromosome X de data/genesST.Mus.musculus.list.bz2	beginC2	endC2	length in ancestral genes
+c1	beg1	end1	c2	beg2	end2	hps	pVal
+X	34	103	X	642	709	63	0
+X	104	138	X	339	372	25	0.0
+X	127	193	X	46	102	51	0
+X	193	239	X	3	45	43	0.0
+X	248	267	X	608	626	19	0.0
+X	274	277	X	632	635	4	1.40487870226e-08
+X	283	499	X	376	606	196	0
+X	503	507	X	103	106	4	5.62008304339e-08
+X	508	522	X	128	143	15	0.0
+X	523	526	X	144	147	4	1.40487870226e-08
+X	530	711	X	150	332	147	0

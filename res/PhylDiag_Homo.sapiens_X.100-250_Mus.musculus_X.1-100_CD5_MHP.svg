@@ -13,7 +13,7 @@ stroke-width:1;">
 <foreignObject x="0" y="0" width="95" height="5">
 <xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">
 <xhtml:div style="display: table-cell; vertical-align: middle;">
-<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >MHP, gapMax DPD10, 2 sbs
+<xhtml:div style="color:black; word-wrap:break-word; font-size:1.5px; font-family:Arial" >MHP, tandemGapMax=0 tbs, gapMax=5CD, overlapMax=10 tbs, 2 sbs
 </xhtml:div>
 </xhtml:div>
 </xhtml:div>
@@ -50,283 +50,283 @@ stroke-width:1;">
 stroke-width:0.25;">
   <line x1="0.974026" y1="65.909091" x2="99.350649" y2="65.909091" style="stroke-width:0.064935" />
   <line x1="0.974026" y1="0.649351" x2="0.974026" y2="65.909091" style="stroke-width:0.064935" />
-  <rect x="19.480519" y="33.766234" height="0.649351"
+  <rect x="19.480519" y="35.064935" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="22.077922" y="33.116883" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="22.077922" y="34.415584" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="25.324675" y="33.116883" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="25.324675" y="34.415584" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="27.272727" y="32.467532" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="27.272727" y="33.766234" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="27.922078" y="31.818182" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="27.922078" y="33.116883" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="29.220779" y="29.220779" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="29.220779" y="30.519481" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="29.870130" y="28.571429" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="29.870130" y="29.870130" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="30.519481" y="27.272727" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="30.519481" y="28.571429" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="31.168831" y="26.623377" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="31.168831" y="27.922078" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="31.818182" y="25.974026" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="31.818182" y="27.272727" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="32.467532" y="25.324675" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="32.467532" y="26.623377" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="33.116883" y="24.675325" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="33.116883" y="25.974026" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="33.766234" y="24.025974" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="33.766234" y="25.324675" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="34.415584" y="22.727273" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="34.415584" y="24.025974" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="35.064935" y="22.077922" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="35.064935" y="23.376623" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="35.714286" y="21.428571" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="35.714286" y="22.727273" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="36.363636" y="20.779221" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="36.363636" y="22.077922" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="37.012987" y="20.129870" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="37.012987" y="21.428571" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="37.662338" y="19.480519" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="37.662338" y="20.779221" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="38.311688" y="18.831169" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="38.311688" y="20.129870" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="38.961039" y="18.181818" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="38.961039" y="19.480519" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="39.610390" y="17.532468" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="39.610390" y="18.831169" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="40.259740" y="16.883117" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="40.259740" y="18.181818" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="40.909091" y="15.584416" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="40.909091" y="16.883117" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="41.558442" y="14.935065" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="41.558442" y="16.233766" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="42.207792" y="14.285714" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="42.207792" y="15.584416" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="42.857143" y="13.636364" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="42.857143" y="14.935065" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="43.506494" y="12.987013" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="43.506494" y="14.285714" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="44.155844" y="12.337662" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="44.155844" y="13.636364" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="44.805195" y="11.688312" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="44.805195" y="12.987013" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="45.454545" y="11.038961" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="45.454545" y="12.337662" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="47.402597" y="9.740260" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="47.402597" y="11.038961" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="48.051948" y="9.090909" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="48.051948" y="10.389610" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="48.701299" y="8.441558" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="48.701299" y="9.740260" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="49.350649" y="7.792208" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="49.350649" y="9.090909" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="50.000000" y="7.142857" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="50.000000" y="8.441558" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="50.649351" y="6.493506" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="50.649351" y="7.792208" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="51.298701" y="5.844156" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="51.298701" y="7.142857" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="51.948052" y="5.194805" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="51.948052" y="6.493506" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="52.597403" y="4.545455" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="52.597403" y="5.844156" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="53.246753" y="3.896104" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="53.246753" y="5.194805" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="55.844156" y="3.246753" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="55.194805" y="4.545455" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="56.493506" y="2.597403" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="55.844156" y="3.896104" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="57.142857" y="1.948052" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="56.493506" y="3.246753" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="57.792208" y="1.298701" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="57.142857" y="2.597403" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="58.441558" y="0.649351" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="57.792208" y="1.948052" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup30"/>
-  <rect x="19.480519" y="0.649351" height="33.766234"
-    width="39.610390" style="fill:none;fill-opacity:0.650000;stroke:black;stroke-width:0.12987012987"/>
-  <rect x="62.337662" y="34.415584" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="58.441558" y="1.298701" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="63.636364" y="34.415584" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="59.740260" y="0.649351" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="64.285714" y="35.064935" height="0.649351"
+    class="HomologGroup2"/>
+  <rect x="19.480519" y="0.649351" height="35.064935"
+    width="40.909091" style="fill:none;fill-opacity:0.650000;stroke:black;stroke-width:0.12987012987"/>
+  <rect x="62.337662" y="35.714286" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="64.935065" y="35.714286" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="62.987013" y="36.363636" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="65.584416" y="36.363636" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="63.636364" y="37.012987" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="66.233766" y="37.012987" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="64.285714" y="37.662338" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="66.883117" y="37.662338" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="64.935065" y="38.311688" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="68.181818" y="38.311688" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="65.584416" y="38.961039" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="68.831169" y="38.961039" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="66.233766" y="39.610390" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="69.480519" y="39.610390" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="66.883117" y="40.259740" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="70.129870" y="40.259740" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="67.532468" y="40.909091" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="70.779221" y="40.909091" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="68.181818" y="41.558442" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="71.428571" y="41.558442" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="68.831169" y="42.207792" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="72.077922" y="42.207792" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="69.480519" y="42.857143" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="72.727273" y="42.857143" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="70.129870" y="43.506494" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="73.376623" y="43.506494" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="70.779221" y="44.155844" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="74.025974" y="44.155844" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="71.428571" y="44.805195" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="74.675325" y="44.805195" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="72.077922" y="45.454545" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="75.324675" y="45.454545" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="72.727273" y="46.103896" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="75.974026" y="46.103896" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="73.376623" y="46.753247" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="76.623377" y="46.753247" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="74.025974" y="47.402597" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="77.272727" y="47.402597" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="74.675325" y="48.051948" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="77.922078" y="48.051948" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="75.324675" y="48.701299" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="78.571429" y="48.701299" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="75.974026" y="49.350649" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="79.220779" y="49.350649" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="76.623377" y="50.000000" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="79.870130" y="50.000000" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="77.272727" y="50.649351" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="80.519481" y="50.649351" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="78.571429" y="51.298701" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="81.168831" y="51.298701" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="79.220779" y="51.948052" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="81.818182" y="51.948052" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="79.870130" y="52.597403" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="82.467532" y="52.597403" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="80.519481" y="53.246753" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="83.116883" y="53.246753" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="81.168831" y="53.896104" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="83.766234" y="53.896104" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="81.818182" y="54.545455" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="84.415584" y="54.545455" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="82.467532" y="55.194805" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="85.064935" y="55.194805" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="83.116883" y="55.844156" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="85.714286" y="55.844156" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="83.766234" y="56.493506" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="86.363636" y="56.493506" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="84.415584" y="57.142857" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="88.311688" y="57.142857" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="85.064935" y="57.792208" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="88.961039" y="57.792208" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="86.363636" y="58.441558" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="89.610390" y="58.441558" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="87.012987" y="59.090909" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="90.259740" y="59.090909" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="87.662338" y="59.740260" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="90.909091" y="60.389610" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="88.311688" y="60.389610" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="91.558442" y="61.038961" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="88.961039" y="61.038961" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="92.207792" y="61.688312" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="89.610390" y="61.688312" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="92.857143" y="62.337662" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="90.259740" y="62.337662" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="93.506494" y="62.987013" height="0.649351"
+    class="HomologGroup5"/>
+  <rect x="92.207792" y="62.987013" height="0.649351"
     width="0.649351" style="fill-opacity:0.900000;stroke:None"
-    class="HomologGroup20"/>
-  <rect x="62.337662" y="34.415584" height="29.220779"
-    width="31.818182" style="fill:none;fill-opacity:0.650000;stroke:black;stroke-width:0.12987012987"/>
+    class="HomologGroup5"/>
+  <rect x="62.337662" y="35.714286" height="27.922078"
+    width="30.519481" style="fill:none;fill-opacity:0.650000;stroke:black;stroke-width:0.12987012987"/>
   <line x1="1.623377" y1="66.396104" x2="1.623377" y2="65.909091" style="stroke-width:0.066883" />
   <text x="1.623377" y="66.730519" font-size="0.668831" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    100
@@ -631,87 +631,87 @@ stroke-width:0.25;">
   <line x1="1.298701" y1="1.298701" x2="99.350649" y2="1.298701" style="stroke-width:0.006494" />
   <line x1="1.298701" y1="0.649351" x2="99.350649" y2="0.649351" style="stroke-width:0.006494" />
 <polygon points=" 1.363636,65.681818 1.363636,66.136364 1.785714,66.136364 1.883117,65.909091 1.785714,65.681818"
-class="NoHomologyInWindow0" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
   <text x="1.623377" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 2.012987,65.681818 2.012987,66.136364 2.435065,66.136364 2.532468,65.909091 2.435065,65.681818"
-class="NoHomologyInWindow1" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow5" style="stroke-width:0.0324675324675"/>
   <text x="2.272727" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 2.662338,65.681818 2.662338,66.136364 3.084416,66.136364 3.181818,65.909091 3.084416,65.681818"
-class="NoHomologyInWindow6" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
   <text x="2.922078" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 3.311688,65.909091 3.409091,66.136364 3.831169,66.136364 3.831169,65.681818 3.409091,65.681818"
-class="NoHomologyInWindow13" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
   <text x="3.571429" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 3.961039,65.681818 3.961039,66.136364 4.383117,66.136364 4.480519,65.909091 4.383117,65.681818"
-class="NoHomologyInWindow3" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow14" style="stroke-width:0.0324675324675"/>
   <text x="4.220779" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 4.610390,65.909091 4.707792,66.136364 5.129870,66.136364 5.129870,65.681818 4.707792,65.681818"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow17" style="stroke-width:0.0324675324675"/>
   <text x="4.870130" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 5.259740,65.681818 5.259740,66.136364 5.681818,66.136364 5.779221,65.909091 5.681818,65.681818"
-class="NoHomologyInWindow10" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow20" style="stroke-width:0.0324675324675"/>
   <text x="5.519481" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 5.909091,65.909091 6.006494,66.136364 6.428571,66.136364 6.428571,65.681818 6.006494,65.681818"
-class="NoHomologyInWindow14" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow23" style="stroke-width:0.0324675324675"/>
   <text x="6.168831" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 6.558442,65.681818 6.558442,66.136364 6.980519,66.136364 7.077922,65.909091 6.980519,65.681818"
-class="NoHomologyInWindow4" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow26" style="stroke-width:0.0324675324675"/>
   <text x="6.818182" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 7.207792,65.681818 7.207792,66.136364 7.629870,66.136364 7.727273,65.909091 7.629870,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow29" style="stroke-width:0.0324675324675"/>
   <text x="7.467532" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 7.857143,65.681818 7.857143,66.136364 8.279221,66.136364 8.376623,65.909091 8.279221,65.681818"
-class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow32" style="stroke-width:0.0324675324675"/>
   <text x="8.116883" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 8.506494,65.909091 8.603896,66.136364 9.025974,66.136364 9.025974,65.681818 8.603896,65.681818"
-class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow35" style="stroke-width:0.0324675324675"/>
   <text x="8.766234" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 9.155844,65.681818 9.155844,66.136364 9.577922,66.136364 9.675325,65.909091 9.577922,65.681818"
-class="NoHomologyInWindow5" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow38" style="stroke-width:0.0324675324675"/>
   <text x="9.415584" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 9.805195,65.909091 9.902597,66.136364 10.324675,66.136364 10.324675,65.681818 9.902597,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow41" style="stroke-width:0.0324675324675"/>
   <text x="10.064935" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 10.454545,65.681818 10.454545,66.136364 10.876623,66.136364 10.974026,65.909091 10.876623,65.681818"
-class="NoHomologyInWindow12" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow44" style="stroke-width:0.0324675324675"/>
   <text x="10.714286" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 11.103896,65.681818 11.103896,66.136364 11.525974,66.136364 11.623377,65.909091 11.525974,65.681818"
-class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow3" style="stroke-width:0.0324675324675"/>
   <text x="11.363636" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 11.753247,65.681818 11.753247,66.136364 12.175325,66.136364 12.272727,65.909091 12.175325,65.681818"
-class="NoHomologyInWindow1" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow6" style="stroke-width:0.0324675324675"/>
   <text x="12.012987" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
@@ -721,192 +721,192 @@ class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
    1
   </text>
 <polygon points=" 13.051948,65.681818 13.051948,66.136364 13.474026,66.136364 13.571429,65.909091 13.474026,65.681818"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow12" style="stroke-width:0.0324675324675"/>
   <text x="13.311688" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 13.701299,65.909091 13.798701,66.136364 14.220779,66.136364 14.220779,65.681818 13.798701,65.681818"
-class="NoHomologyInWindow10" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow15" style="stroke-width:0.0324675324675"/>
   <text x="13.961039" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 14.350649,65.681818 14.350649,66.136364 14.772727,66.136364 14.870130,65.909091 14.772727,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow18" style="stroke-width:0.0324675324675"/>
   <text x="14.610390" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 15.000000,65.681818 15.000000,66.136364 15.422078,66.136364 15.519481,65.909091 15.422078,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow21" style="stroke-width:0.0324675324675"/>
   <text x="15.259740" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 15.649351,65.681818 15.649351,66.136364 16.071429,66.136364 16.168831,65.909091 16.071429,65.681818"
-class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow24" style="stroke-width:0.0324675324675"/>
   <text x="15.909091" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 16.298701,65.681818 16.298701,66.136364 16.720779,66.136364 16.818182,65.909091 16.720779,65.681818"
-class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow27" style="stroke-width:0.0324675324675"/>
   <text x="16.558442" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    2
   </text>
 <polygon points=" 16.948052,65.909091 17.045455,66.136364 17.467532,66.136364 17.467532,65.681818 17.045455,65.681818"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow30" style="stroke-width:0.0324675324675"/>
   <text x="17.207792" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 17.597403,65.909091 17.694805,66.136364 18.116883,66.136364 18.116883,65.681818 17.694805,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow33" style="stroke-width:0.0324675324675"/>
   <text x="17.857143" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 18.246753,65.681818 18.246753,66.136364 18.668831,66.136364 18.766234,65.909091 18.668831,65.681818"
-class="NoHomologyInWindow12" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow36" style="stroke-width:0.0324675324675"/>
   <text x="18.506494" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 18.896104,65.909091 18.993506,66.136364 19.415584,66.136364 19.415584,65.681818 18.993506,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow39" style="stroke-width:0.0324675324675"/>
   <text x="19.155844" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 19.545455,65.909091 19.642857,66.136364 20.064935,66.136364 20.064935,65.681818 19.642857,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup2" style="stroke-width:0.0324675324675"/>
   <text x="19.805195" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 20.194805,65.909091 20.292208,66.136364 20.714286,66.136364 20.714286,65.681818 20.292208,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow42" style="stroke-width:0.0324675324675"/>
   <text x="20.454545" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 20.844156,65.909091 20.941558,66.136364 21.363636,66.136364 21.363636,65.681818 20.941558,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="21.103896" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 21.493506,65.909091 21.590909,66.136364 22.012987,66.136364 22.012987,65.681818 21.590909,65.681818"
-class="NoHomologyInWindow6" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow4" style="stroke-width:0.0324675324675"/>
   <text x="21.753247" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 22.142857,65.681818 22.142857,66.136364 22.564935,66.136364 22.662338,65.909091 22.564935,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="22.402597" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 22.792208,65.681818 22.792208,66.136364 23.214286,66.136364 23.311688,65.909091 23.214286,65.681818"
-class="NoHomologyInWindow10" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
   <text x="23.051948" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 23.441558,65.681818 23.441558,66.136364 23.863636,66.136364 23.961039,65.909091 23.863636,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow10" style="stroke-width:0.0324675324675"/>
   <text x="23.701299" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 24.090909,65.681818 24.090909,66.136364 24.512987,66.136364 24.610390,65.909091 24.512987,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow13" style="stroke-width:0.0324675324675"/>
   <text x="24.350649" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 24.740260,65.681818 24.740260,66.136364 25.162338,66.136364 25.259740,65.909091 25.162338,65.681818"
-class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow16" style="stroke-width:0.0324675324675"/>
   <text x="25.000000" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 25.389610,65.681818 25.389610,66.136364 25.811688,66.136364 25.909091,65.909091 25.811688,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="25.649351" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 26.038961,65.681818 26.038961,66.136364 26.461039,66.136364 26.558442,65.909091 26.461039,65.681818"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="26.298701" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 26.688312,65.681818 26.688312,66.136364 27.110390,66.136364 27.207792,65.909091 27.110390,65.681818"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow19" style="stroke-width:0.0324675324675"/>
   <text x="26.948052" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 27.337662,65.681818 27.337662,66.136364 27.759740,66.136364 27.857143,65.909091 27.759740,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup5" style="stroke-width:0.0324675324675"/>
   <text x="27.597403" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 27.987013,65.681818 27.987013,66.136364 28.409091,66.136364 28.506494,65.909091 28.409091,65.681818"
-class="HomologGroup16" style="stroke-width:0.0324675324675"/>
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="28.246753" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 28.636364,65.681818 28.636364,66.136364 29.058442,66.136364 29.155844,65.909091 29.058442,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup7" style="stroke-width:0.0324675324675"/>
   <text x="28.896104" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 29.285714,65.909091 29.383117,66.136364 29.805195,66.136364 29.805195,65.681818 29.383117,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup8" style="stroke-width:0.0324675324675"/>
   <text x="29.545455" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 29.935065,65.681818 29.935065,66.136364 30.357143,66.136364 30.454545,65.909091 30.357143,65.681818"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup9" style="stroke-width:0.0324675324675"/>
   <text x="30.194805" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 30.584416,65.681818 30.584416,66.136364 31.006494,66.136364 31.103896,65.909091 31.006494,65.681818"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+class="HomologGroup10" style="stroke-width:0.0324675324675"/>
   <text x="30.844156" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 31.233766,65.909091 31.331169,66.136364 31.753247,66.136364 31.753247,65.681818 31.331169,65.681818"
-class="HomologGroup26" style="stroke-width:0.0324675324675"/>
+class="HomologGroup11" style="stroke-width:0.0324675324675"/>
   <text x="31.493506" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 31.883117,65.909091 31.980519,66.136364 32.402597,66.136364 32.402597,65.681818 31.980519,65.681818"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup12" style="stroke-width:0.0324675324675"/>
   <text x="32.142857" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 32.532468,65.681818 32.532468,66.136364 32.954545,66.136364 33.051948,65.909091 32.954545,65.681818"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+class="HomologGroup13" style="stroke-width:0.0324675324675"/>
   <text x="32.792208" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 33.181818,65.681818 33.181818,66.136364 33.603896,66.136364 33.701299,65.909091 33.603896,65.681818"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="33.441558" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 33.831169,65.681818 33.831169,66.136364 34.253247,66.136364 34.350649,65.909091 34.253247,65.681818"
-class="HomologGroup32" style="stroke-width:0.0324675324675"/>
+class="HomologGroup14" style="stroke-width:0.0324675324675"/>
   <text x="34.090909" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 34.480519,65.909091 34.577922,66.136364 35.000000,66.136364 35.000000,65.681818 34.577922,65.681818"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+class="HomologGroup15" style="stroke-width:0.0324675324675"/>
   <text x="34.740260" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 35.129870,65.681818 35.129870,66.136364 35.551948,66.136364 35.649351,65.909091 35.551948,65.681818"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+class="HomologGroup16" style="stroke-width:0.0324675324675"/>
   <text x="35.389610" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 35.779221,65.909091 35.876623,66.136364 36.298701,66.136364 36.298701,65.681818 35.876623,65.681818"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+class="HomologGroup17" style="stroke-width:0.0324675324675"/>
   <text x="36.038961" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 36.428571,65.909091 36.525974,66.136364 36.948052,66.136364 36.948052,65.681818 36.525974,65.681818"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup18" style="stroke-width:0.0324675324675"/>
   <text x="36.688312" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 37.077922,65.681818 37.077922,66.136364 37.500000,66.136364 37.597403,65.909091 37.500000,65.681818"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+class="HomologGroup19" style="stroke-width:0.0324675324675"/>
   <text x="37.337662" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
@@ -916,77 +916,77 @@ class="HomologGroup20" style="stroke-width:0.0324675324675"/>
    1
   </text>
 <polygon points=" 38.376623,65.681818 38.376623,66.136364 38.798701,66.136364 38.896104,65.909091 38.798701,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup21" style="stroke-width:0.0324675324675"/>
   <text x="38.636364" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 39.025974,65.909091 39.123377,66.136364 39.545455,66.136364 39.545455,65.681818 39.123377,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup22" style="stroke-width:0.0324675324675"/>
   <text x="39.285714" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 39.675325,65.681818 39.675325,66.136364 40.097403,66.136364 40.194805,65.909091 40.097403,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup23" style="stroke-width:0.0324675324675"/>
   <text x="39.935065" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 40.324675,65.681818 40.324675,66.136364 40.746753,66.136364 40.844156,65.909091 40.746753,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup24" style="stroke-width:0.0324675324675"/>
   <text x="40.584416" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 40.974026,65.681818 40.974026,66.136364 41.396104,66.136364 41.493506,65.909091 41.396104,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup25" style="stroke-width:0.0324675324675"/>
   <text x="41.233766" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 41.623377,65.909091 41.720779,66.136364 42.142857,66.136364 42.142857,65.681818 41.720779,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup26" style="stroke-width:0.0324675324675"/>
   <text x="41.883117" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 42.272727,65.909091 42.370130,66.136364 42.792208,66.136364 42.792208,65.681818 42.370130,65.681818"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup27" style="stroke-width:0.0324675324675"/>
   <text x="42.532468" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 42.922078,65.909091 43.019481,66.136364 43.441558,66.136364 43.441558,65.681818 43.019481,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup28" style="stroke-width:0.0324675324675"/>
   <text x="43.181818" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 43.571429,65.909091 43.668831,66.136364 44.090909,66.136364 44.090909,65.681818 43.668831,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup29" style="stroke-width:0.0324675324675"/>
   <text x="43.831169" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 44.220779,65.681818 44.220779,66.136364 44.642857,66.136364 44.740260,65.909091 44.642857,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup30" style="stroke-width:0.0324675324675"/>
   <text x="44.480519" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 44.870130,65.681818 44.870130,66.136364 45.292208,66.136364 45.389610,65.909091 45.292208,65.681818"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+class="HomologGroup31" style="stroke-width:0.0324675324675"/>
   <text x="45.129870" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 45.519481,65.909091 45.616883,66.136364 46.038961,66.136364 46.038961,65.681818 45.616883,65.681818"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="HomologGroup32" style="stroke-width:0.0324675324675"/>
   <text x="45.779221" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 46.168831,65.681818 46.168831,66.136364 46.590909,66.136364 46.688312,65.909091 46.590909,65.681818"
-class="NoHomologyInWindow4" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow22" style="stroke-width:0.0324675324675"/>
   <text x="46.428571" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 46.818182,65.909091 46.915584,66.136364 47.337662,66.136364 47.337662,65.681818 46.915584,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow25" style="stroke-width:0.0324675324675"/>
   <text x="47.077922" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 47.467532,65.681818 47.467532,66.136364 47.889610,66.136364 47.987013,65.909091 47.889610,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup33" style="stroke-width:0.0324675324675"/>
   <text x="47.727273" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
@@ -996,462 +996,462 @@ class="HomologGroup34" style="stroke-width:0.0324675324675"/>
    1
   </text>
 <polygon points=" 48.766234,65.681818 48.766234,66.136364 49.188312,66.136364 49.285714,65.909091 49.188312,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup35" style="stroke-width:0.0324675324675"/>
   <text x="49.025974" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 49.415584,65.681818 49.415584,66.136364 49.837662,66.136364 49.935065,65.909091 49.837662,65.681818"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+class="HomologGroup36" style="stroke-width:0.0324675324675"/>
   <text x="49.675325" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 50.064935,65.681818 50.064935,66.136364 50.487013,66.136364 50.584416,65.909091 50.487013,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup37" style="stroke-width:0.0324675324675"/>
   <text x="50.324675" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 50.714286,65.909091 50.811688,66.136364 51.233766,66.136364 51.233766,65.681818 50.811688,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup38" style="stroke-width:0.0324675324675"/>
   <text x="50.974026" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 51.363636,65.681818 51.363636,66.136364 51.785714,66.136364 51.883117,65.909091 51.785714,65.681818"
-class="HomologGroup26" style="stroke-width:0.0324675324675"/>
+class="HomologGroup39" style="stroke-width:0.0324675324675"/>
   <text x="51.623377" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 52.012987,65.681818 52.012987,66.136364 52.435065,66.136364 52.532468,65.909091 52.435065,65.681818"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+class="HomologGroup40" style="stroke-width:0.0324675324675"/>
   <text x="52.272727" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 52.662338,65.681818 52.662338,66.136364 53.084416,66.136364 53.181818,65.909091 53.084416,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup41" style="stroke-width:0.0324675324675"/>
   <text x="52.922078" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 53.311688,65.681818 53.311688,66.136364 53.733766,66.136364 53.831169,65.909091 53.733766,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup42" style="stroke-width:0.0324675324675"/>
   <text x="53.571429" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 53.961039,65.681818 53.961039,66.136364 54.383117,66.136364 54.480519,65.909091 54.383117,65.681818"
-class="NoHomologyInWindow1" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow28" style="stroke-width:0.0324675324675"/>
   <text x="54.220779" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 54.610390,65.909091 54.707792,66.136364 55.129870,66.136364 55.129870,65.681818 54.707792,65.681818"
-class="NoHomologyInWindow10" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow31" style="stroke-width:0.0324675324675"/>
   <text x="54.870130" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 55.259740,65.681818 55.259740,66.136364 55.681818,66.136364 55.779221,65.909091 55.681818,65.681818"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup43" style="stroke-width:0.0324675324675"/>
   <text x="55.519481" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 55.909091,65.681818 55.909091,66.136364 56.331169,66.136364 56.428571,65.909091 56.331169,65.681818"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+<polygon points=" 55.909091,65.909091 56.006494,66.136364 56.428571,66.136364 56.428571,65.681818 56.006494,65.681818"
+class="HomologGroup44" style="stroke-width:0.0324675324675"/>
   <text x="56.168831" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 56.558442,65.909091 56.655844,66.136364 57.077922,66.136364 57.077922,65.681818 56.655844,65.681818"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+<polygon points=" 56.558442,65.681818 56.558442,66.136364 56.980519,66.136364 57.077922,65.909091 56.980519,65.681818"
+class="HomologGroup2" style="stroke-width:0.0324675324675"/>
   <text x="56.818182" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 57.207792,65.681818 57.207792,66.136364 57.629870,66.136364 57.727273,65.909091 57.629870,65.681818"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+<polygon points=" 57.207792,65.909091 57.305195,66.136364 57.727273,66.136364 57.727273,65.681818 57.305195,65.681818"
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="57.467532" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 57.857143,65.909091 57.954545,66.136364 58.376623,66.136364 58.376623,65.681818 57.954545,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="58.116883" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 58.506494,65.909091 58.603896,66.136364 59.025974,66.136364 59.025974,65.681818 58.603896,65.681818"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="HomologGroup5" style="stroke-width:0.0324675324675"/>
   <text x="58.766234" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 59.155844,65.909091 59.253247,66.136364 59.675325,66.136364 59.675325,65.681818 59.253247,65.681818"
-class="NoHomologyInWindow4" style="stroke-width:0.0324675324675"/>
+<polygon points=" 59.155844,65.681818 59.155844,66.136364 59.577922,66.136364 59.675325,65.909091 59.577922,65.681818"
+class="NoHomologyInWindow34" style="stroke-width:0.0324675324675"/>
   <text x="59.415584" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 59.805195,65.681818 59.805195,66.136364 60.227273,66.136364 60.324675,65.909091 60.227273,65.681818"
-class="NoHomologyInWindow3" style="stroke-width:0.0324675324675"/>
+<polygon points=" 59.805195,65.909091 59.902597,66.136364 60.324675,66.136364 60.324675,65.681818 59.902597,65.681818"
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="60.064935" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 60.454545,65.909091 60.551948,66.136364 60.974026,66.136364 60.974026,65.681818 60.551948,65.681818"
-class="NoHomologyInWindow12" style="stroke-width:0.0324675324675"/>
+<polygon points=" 60.454545,65.681818 60.454545,66.136364 60.876623,66.136364 60.974026,65.909091 60.876623,65.681818"
+class="NoHomologyInWindow37" style="stroke-width:0.0324675324675"/>
   <text x="60.714286" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 61.103896,65.681818 61.103896,66.136364 61.525974,66.136364 61.623377,65.909091 61.525974,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+<polygon points=" 61.103896,65.909091 61.201299,66.136364 61.623377,66.136364 61.623377,65.681818 61.201299,65.681818"
+class="NoHomologyInWindow40" style="stroke-width:0.0324675324675"/>
   <text x="61.363636" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 61.753247,65.909091 61.850649,66.136364 62.272727,66.136364 62.272727,65.681818 61.850649,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+<polygon points=" 61.753247,65.681818 61.753247,66.136364 62.175325,66.136364 62.272727,65.909091 62.175325,65.681818"
+class="NoHomologyInWindow43" style="stroke-width:0.0324675324675"/>
   <text x="62.012987" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 62.402597,65.681818 62.402597,66.136364 62.824675,66.136364 62.922078,65.909091 62.824675,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 62.402597,65.681818 62.402597,66.136364 62.922078,66.136364 62.922078,65.681818"
+class="HomologGroup7" style="stroke-width:0.0324675324675"/>
   <text x="62.662338" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   5
   </text>
-<polygon points=" 63.051948,65.681818 63.051948,66.136364 63.474026,66.136364 63.571429,65.909091 63.474026,65.681818"
-class="NoHomologyInWindow1" style="stroke-width:0.0324675324675"/>
+<polygon points=" 63.051948,65.909091 63.149351,66.136364 63.571429,66.136364 63.571429,65.681818 63.149351,65.681818"
+class="HomologGroup8" style="stroke-width:0.0324675324675"/>
   <text x="63.311688" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 63.701299,65.681818 63.701299,66.136364 64.220779,66.136364 64.220779,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 63.701299,65.681818 63.701299,66.136364 64.123377,66.136364 64.220779,65.909091 64.123377,65.681818"
+class="HomologGroup9" style="stroke-width:0.0324675324675"/>
   <text x="63.961039" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   6
+   1
   </text>
-<polygon points=" 64.350649,65.909091 64.448052,66.136364 64.870130,66.136364 64.870130,65.681818 64.448052,65.681818"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+<polygon points=" 64.350649,65.681818 64.350649,66.136364 64.772727,66.136364 64.870130,65.909091 64.772727,65.681818"
+class="HomologGroup10" style="stroke-width:0.0324675324675"/>
   <text x="64.610390" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 65.000000,65.681818 65.000000,66.136364 65.422078,66.136364 65.519481,65.909091 65.422078,65.681818"
-class="HomologGroup16" style="stroke-width:0.0324675324675"/>
+class="HomologGroup11" style="stroke-width:0.0324675324675"/>
   <text x="65.259740" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 65.649351,65.681818 65.649351,66.136364 66.071429,66.136364 66.168831,65.909091 66.071429,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup12" style="stroke-width:0.0324675324675"/>
   <text x="65.909091" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 66.298701,65.681818 66.298701,66.136364 66.720779,66.136364 66.818182,65.909091 66.720779,65.681818"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+class="HomologGroup13" style="stroke-width:0.0324675324675"/>
   <text x="66.558442" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 66.948052,65.681818 66.948052,66.136364 67.370130,66.136364 67.467532,65.909091 67.370130,65.681818"
-class="HomologGroup16" style="stroke-width:0.0324675324675"/>
+class="HomologGroup14" style="stroke-width:0.0324675324675"/>
   <text x="67.207792" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 67.597403,65.909091 67.694805,66.136364 68.116883,66.136364 68.116883,65.681818 67.694805,65.681818"
-class="NoHomologyInWindow4" style="stroke-width:0.0324675324675"/>
+<polygon points=" 67.597403,65.681818 67.597403,66.136364 68.019481,66.136364 68.116883,65.909091 68.019481,65.681818"
+class="HomologGroup15" style="stroke-width:0.0324675324675"/>
   <text x="67.857143" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 68.246753,65.681818 68.246753,66.136364 68.668831,66.136364 68.766234,65.909091 68.668831,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup16" style="stroke-width:0.0324675324675"/>
   <text x="68.506494" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 68.896104,65.681818 68.896104,66.136364 69.318182,66.136364 69.415584,65.909091 69.318182,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup17" style="stroke-width:0.0324675324675"/>
   <text x="69.155844" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 69.545455,65.681818 69.545455,66.136364 69.967532,66.136364 70.064935,65.909091 69.967532,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup18" style="stroke-width:0.0324675324675"/>
   <text x="69.805195" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 70.194805,65.681818 70.194805,66.136364 70.616883,66.136364 70.714286,65.909091 70.616883,65.681818"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+class="HomologGroup19" style="stroke-width:0.0324675324675"/>
   <text x="70.454545" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 70.844156,65.681818 70.844156,66.136364 71.266234,66.136364 71.363636,65.909091 71.266234,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup20" style="stroke-width:0.0324675324675"/>
   <text x="71.103896" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 71.493506,65.681818 71.493506,66.136364 71.915584,66.136364 72.012987,65.909091 71.915584,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+<polygon points=" 71.493506,65.909091 71.590909,66.136364 72.012987,66.136364 72.012987,65.681818 71.590909,65.681818"
+class="HomologGroup21" style="stroke-width:0.0324675324675"/>
   <text x="71.753247" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 72.142857,65.681818 72.142857,66.136364 72.564935,66.136364 72.662338,65.909091 72.564935,65.681818"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+<polygon points=" 72.142857,65.909091 72.240260,66.136364 72.662338,66.136364 72.662338,65.681818 72.240260,65.681818"
+class="HomologGroup22" style="stroke-width:0.0324675324675"/>
   <text x="72.402597" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 72.792208,65.681818 72.792208,66.136364 73.214286,66.136364 73.311688,65.909091 73.214286,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup23" style="stroke-width:0.0324675324675"/>
   <text x="73.051948" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 73.441558,65.909091 73.538961,66.136364 73.961039,66.136364 73.961039,65.681818 73.538961,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup24" style="stroke-width:0.0324675324675"/>
   <text x="73.701299" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 74.090909,65.909091 74.188312,66.136364 74.610390,66.136364 74.610390,65.681818 74.188312,65.681818"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+class="HomologGroup25" style="stroke-width:0.0324675324675"/>
   <text x="74.350649" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 74.740260,65.681818 74.740260,66.136364 75.162338,66.136364 75.259740,65.909091 75.162338,65.681818"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+<polygon points=" 74.740260,65.909091 74.837662,66.136364 75.259740,66.136364 75.259740,65.681818 74.837662,65.681818"
+class="HomologGroup26" style="stroke-width:0.0324675324675"/>
   <text x="75.000000" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 75.389610,65.909091 75.487013,66.136364 75.909091,66.136364 75.909091,65.681818 75.487013,65.681818"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+class="HomologGroup27" style="stroke-width:0.0324675324675"/>
   <text x="75.649351" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 76.038961,65.909091 76.136364,66.136364 76.558442,66.136364 76.558442,65.681818 76.136364,65.681818"
-class="HomologGroup26" style="stroke-width:0.0324675324675"/>
+class="HomologGroup28" style="stroke-width:0.0324675324675"/>
   <text x="76.298701" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 76.688312,65.909091 76.785714,66.136364 77.207792,66.136364 77.207792,65.681818 76.785714,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup29" style="stroke-width:0.0324675324675"/>
   <text x="76.948052" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 77.337662,65.909091 77.435065,66.136364 77.857143,66.136364 77.857143,65.681818 77.435065,65.681818"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+<polygon points=" 77.337662,65.681818 77.337662,66.136364 77.759740,66.136364 77.857143,65.909091 77.759740,65.681818"
+class="HomologGroup30" style="stroke-width:0.0324675324675"/>
   <text x="77.597403" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 77.987013,65.909091 78.084416,66.136364 78.506494,66.136364 78.506494,65.681818 78.084416,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup31" style="stroke-width:0.0324675324675"/>
   <text x="78.246753" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 78.636364,65.909091 78.733766,66.136364 79.155844,66.136364 79.155844,65.681818 78.733766,65.681818"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup32" style="stroke-width:0.0324675324675"/>
   <text x="78.896104" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 79.285714,65.681818 79.285714,66.136364 79.707792,66.136364 79.805195,65.909091 79.707792,65.681818"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+<polygon points=" 79.285714,65.909091 79.383117,66.136364 79.805195,66.136364 79.805195,65.681818 79.383117,65.681818"
+class="HomologGroup31" style="stroke-width:0.0324675324675"/>
   <text x="79.545455" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 79.935065,65.909091 80.032468,66.136364 80.454545,66.136364 80.454545,65.681818 80.032468,65.681818"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup33" style="stroke-width:0.0324675324675"/>
   <text x="80.194805" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   2
+   1
   </text>
-<polygon points=" 80.584416,65.909091 80.681818,66.136364 81.103896,66.136364 81.103896,65.681818 80.681818,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+<polygon points=" 80.584416,65.681818 80.584416,66.136364 81.006494,66.136364 81.103896,65.909091 81.006494,65.681818"
+class="HomologGroup34" style="stroke-width:0.0324675324675"/>
   <text x="80.844156" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 81.233766,65.909091 81.331169,66.136364 81.753247,66.136364 81.753247,65.681818 81.331169,65.681818"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+<polygon points=" 81.233766,65.681818 81.233766,66.136364 81.655844,66.136364 81.753247,65.909091 81.655844,65.681818"
+class="HomologGroup35" style="stroke-width:0.0324675324675"/>
   <text x="81.493506" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 81.883117,65.681818 81.883117,66.136364 82.305195,66.136364 82.402597,65.909091 82.305195,65.681818"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+<polygon points=" 81.883117,65.909091 81.980519,66.136364 82.402597,66.136364 82.402597,65.681818 81.980519,65.681818"
+class="HomologGroup36" style="stroke-width:0.0324675324675"/>
   <text x="82.142857" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 82.532468,65.681818 82.532468,66.136364 82.954545,66.136364 83.051948,65.909091 82.954545,65.681818"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+<polygon points=" 82.532468,65.909091 82.629870,66.136364 83.051948,66.136364 83.051948,65.681818 82.629870,65.681818"
+class="HomologGroup37" style="stroke-width:0.0324675324675"/>
   <text x="82.792208" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 83.181818,65.909091 83.279221,66.136364 83.701299,66.136364 83.701299,65.681818 83.279221,65.681818"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup38" style="stroke-width:0.0324675324675"/>
   <text x="83.441558" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 83.831169,65.909091 83.928571,66.136364 84.350649,66.136364 84.350649,65.681818 83.928571,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 83.831169,65.681818 83.831169,66.136364 84.253247,66.136364 84.350649,65.909091 84.253247,65.681818"
+class="HomologGroup39" style="stroke-width:0.0324675324675"/>
   <text x="84.090909" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 84.480519,65.909091 84.577922,66.136364 85.000000,66.136364 85.000000,65.681818 84.577922,65.681818"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup40" style="stroke-width:0.0324675324675"/>
   <text x="84.740260" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 85.129870,65.681818 85.129870,66.136364 85.551948,66.136364 85.649351,65.909091 85.551948,65.681818"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+class="HomologGroup41" style="stroke-width:0.0324675324675"/>
   <text x="85.389610" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 85.779221,65.909091 85.876623,66.136364 86.298701,66.136364 86.298701,65.681818 85.876623,65.681818"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+<polygon points=" 85.779221,65.681818 85.779221,66.136364 86.201299,66.136364 86.298701,65.909091 86.201299,65.681818"
+class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
   <text x="86.038961" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 86.428571,65.681818 86.428571,66.136364 86.850649,66.136364 86.948052,65.909091 86.850649,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup42" style="stroke-width:0.0324675324675"/>
   <text x="86.688312" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 87.077922,65.681818 87.077922,66.136364 87.597403,66.136364 87.597403,65.681818"
-class="NoHomologyInWindow1" style="stroke-width:0.0324675324675"/>
+<polygon points=" 87.077922,65.681818 87.077922,66.136364 87.500000,66.136364 87.597403,65.909091 87.500000,65.681818"
+class="HomologGroup43" style="stroke-width:0.0324675324675"/>
   <text x="87.337662" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   17
+   1
   </text>
-<polygon points=" 87.727273,65.681818 87.727273,66.136364 88.149351,66.136364 88.246753,65.909091 88.149351,65.681818"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+<polygon points=" 87.727273,65.909091 87.824675,66.136364 88.246753,66.136364 88.246753,65.681818 87.824675,65.681818"
+class="HomologGroup44" style="stroke-width:0.0324675324675"/>
   <text x="87.987013" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 88.376623,65.681818 88.376623,66.136364 88.798701,66.136364 88.896104,65.909091 88.798701,65.681818"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+class="HomologGroup2" style="stroke-width:0.0324675324675"/>
   <text x="88.636364" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 89.025974,65.681818 89.025974,66.136364 89.448052,66.136364 89.545455,65.909091 89.448052,65.681818"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+<polygon points=" 89.025974,65.909091 89.123377,66.136364 89.545455,66.136364 89.545455,65.681818 89.123377,65.681818"
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="89.285714" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 89.675325,65.909091 89.772727,66.136364 90.194805,66.136364 90.194805,65.681818 89.772727,65.681818"
-class="HomologGroup32" style="stroke-width:0.0324675324675"/>
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="89.935065" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 90.324675,65.681818 90.324675,66.136364 90.746753,66.136364 90.844156,65.909091 90.746753,65.681818"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup5" style="stroke-width:0.0324675324675"/>
   <text x="90.584416" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 90.974026,65.909091 91.071429,66.136364 91.493506,66.136364 91.493506,65.681818 91.071429,65.681818"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 90.974026,65.681818 90.974026,66.136364 91.396104,66.136364 91.493506,65.909091 91.396104,65.681818"
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="91.233766" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 91.623377,65.681818 91.623377,66.136364 92.045455,66.136364 92.142857,65.909091 92.045455,65.681818"
-class="HomologGroup32" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow5" style="stroke-width:0.0324675324675"/>
   <text x="91.883117" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 92.272727,65.681818 92.272727,66.136364 92.694805,66.136364 92.792208,65.909091 92.694805,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+<polygon points=" 92.272727,65.909091 92.370130,66.136364 92.792208,66.136364 92.792208,65.681818 92.370130,65.681818"
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="92.532468" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 92.922078,65.681818 92.922078,66.136364 93.344156,66.136364 93.441558,65.909091 93.344156,65.681818"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
   <text x="93.181818" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 93.571429,65.909091 93.668831,66.136364 94.090909,66.136364 94.090909,65.681818 93.668831,65.681818"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+<polygon points=" 93.571429,65.681818 93.571429,66.136364 93.993506,66.136364 94.090909,65.909091 93.993506,65.681818"
+class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
   <text x="93.831169" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 94.220779,65.681818 94.220779,66.136364 94.642857,66.136364 94.740260,65.909091 94.642857,65.681818"
-class="NoHomologyInWindow1" style="stroke-width:0.0324675324675"/>
+<polygon points=" 94.220779,65.681818 94.220779,66.136364 94.740260,66.136364 94.740260,65.681818"
+class="NoHomologyInWindow14" style="stroke-width:0.0324675324675"/>
   <text x="94.480519" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   2
   </text>
 <polygon points=" 94.870130,65.681818 94.870130,66.136364 95.292208,66.136364 95.389610,65.909091 95.292208,65.681818"
-class="NoHomologyInWindow6" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow17" style="stroke-width:0.0324675324675"/>
   <text x="95.129870" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 95.519481,65.909091 95.616883,66.136364 96.038961,66.136364 96.038961,65.681818 95.616883,65.681818"
-class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
+<polygon points=" 95.519481,65.681818 95.519481,66.136364 96.038961,66.136364 96.038961,65.681818"
+class="HomologGroup7" style="stroke-width:0.0324675324675"/>
   <text x="95.779221" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   3
   </text>
-<polygon points=" 96.168831,65.681818 96.168831,66.136364 96.688312,66.136364 96.688312,65.681818"
-class="NoHomologyInWindow12" style="stroke-width:0.0324675324675"/>
+<polygon points=" 96.168831,65.909091 96.266234,66.136364 96.688312,66.136364 96.688312,65.681818 96.266234,65.681818"
+class="NoHomologyInWindow20" style="stroke-width:0.0324675324675"/>
   <text x="96.428571" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   2
+   1
   </text>
 <polygon points=" 96.818182,65.681818 96.818182,66.136364 97.240260,66.136364 97.337662,65.909091 97.240260,65.681818"
-class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow23" style="stroke-width:0.0324675324675"/>
   <text x="97.077922" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   2
   </text>
-<polygon points=" 97.467532,65.681818 97.467532,66.136364 97.987013,66.136364 97.987013,65.681818"
-class="NoHomologyInWindow0" style="stroke-width:0.0324675324675"/>
+<polygon points=" 97.467532,65.681818 97.467532,66.136364 97.889610,66.136364 97.987013,65.909091 97.889610,65.681818"
+class="NoHomologyInWindow26" style="stroke-width:0.0324675324675"/>
   <text x="97.727273" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    2
   </text>
-<polygon points=" 98.116883,65.681818 98.116883,66.136364 98.636364,66.136364 98.636364,65.681818"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 98.116883,65.681818 98.116883,66.136364 98.538961,66.136364 98.636364,65.909091 98.538961,65.681818"
+class="NoHomologyInWindow29" style="stroke-width:0.0324675324675"/>
   <text x="98.376623" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   3
+   1
   </text>
-<polygon points=" 98.766234,65.909091 98.863636,66.136364 99.285714,66.136364 99.285714,65.681818 98.863636,65.681818"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+<polygon points=" 98.766234,65.681818 98.766234,66.136364 99.188312,66.136364 99.285714,65.909091 99.188312,65.681818"
+class="NoHomologyInWindow32" style="stroke-width:0.0324675324675"/>
   <text x="99.025974" y="66.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,65.519481 1.201299,65.519481 1.201299,65.000000 0.746753,65.000000"
-class="NoHomologyInWindow5" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,65.519481 1.201299,65.519481 1.201299,65.097403 0.974026,65.000000 0.746753,65.097403"
+class="NoHomologyInWindow35" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="65.441558" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    12
   </text>
 <polygon points=" 0.974026,64.870130 1.201299,64.772727 1.201299,64.350649 0.746753,64.350649 0.746753,64.772727"
-class="NoHomologyInWindow2" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow38" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="64.792208" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,64.220779 1.201299,64.220779 1.201299,63.798701 0.974026,63.701299 0.746753,63.798701"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow41" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="64.142857" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,63.571429 1.201299,63.571429 1.201299,63.149351 0.974026,63.051948 0.746753,63.149351"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="63.493506" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   2
   </text>
 <polygon points=" 0.974026,62.922078 1.201299,62.824675 1.201299,62.402597 0.746753,62.402597 0.746753,62.824675"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup5" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="62.844156" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,62.272727 1.201299,62.175325 1.201299,61.753247 0.746753,61.753247 0.746753,62.175325"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,62.272727 1.201299,62.272727 1.201299,61.850649 0.974026,61.753247 0.746753,61.850649"
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="62.194805" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,61.623377 1.201299,61.525974 1.201299,61.103896 0.746753,61.103896 0.746753,61.525974"
-class="HomologGroup32" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,61.623377 1.201299,61.623377 1.201299,61.201299 0.974026,61.103896 0.746753,61.201299"
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="61.545455" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,60.974026 1.201299,60.974026 1.201299,60.551948 0.974026,60.454545 0.746753,60.551948"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,60.974026 1.201299,60.876623 1.201299,60.454545 0.746753,60.454545 0.746753,60.876623"
+class="HomologGroup2" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="60.896104" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,60.324675 1.201299,60.324675 1.201299,59.902597 0.974026,59.805195 0.746753,59.902597"
-class="NoHomologyInWindow7" style="stroke-width:0.0324675324675"/>
+class="HomologGroup44" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="60.246753" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,59.675325 1.201299,59.577922 1.201299,59.155844 0.746753,59.155844 0.746753,59.577922"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup43" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="59.597403" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,59.025974 1.201299,59.025974 1.201299,58.603896 0.974026,58.506494 0.746753,58.603896"
-class="HomologGroup32" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,59.025974 1.201299,58.928571 1.201299,58.506494 0.746753,58.506494 0.746753,58.928571"
+class="HomologGroup42" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="58.948052" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,58.376623 1.201299,58.279221 1.201299,57.857143 0.746753,57.857143 0.746753,58.279221"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup41" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="58.298701" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,57.727273 1.201299,57.629870 1.201299,57.207792 0.746753,57.207792 0.746753,57.629870"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,57.727273 1.201299,57.727273 1.201299,57.305195 0.974026,57.207792 0.746753,57.305195"
+class="HomologGroup40" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="57.649351" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,57.077922 1.201299,56.980519 1.201299,56.558442 0.746753,56.558442 0.746753,56.980519"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup39" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="57.000000" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
@@ -1460,720 +1460,720 @@ class="HomologGroup38" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="56.350649" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,55.779221 1.201299,55.681818 1.201299,55.259740 0.746753,55.259740 0.746753,55.681818"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,55.779221 1.201299,55.779221 1.201299,55.357143 0.974026,55.259740 0.746753,55.357143"
+class="HomologGroup37" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="55.701299" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,55.129870 1.201299,55.129870 1.201299,54.707792 0.974026,54.610390 0.746753,54.707792"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup36" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="55.051948" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,54.480519 1.201299,54.480519 1.201299,54.058442 0.974026,53.961039 0.746753,54.058442"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,54.480519 1.201299,54.383117 1.201299,53.961039 0.746753,53.961039 0.746753,54.383117"
+class="HomologGroup35" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="54.402597" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,53.831169 1.201299,53.831169 1.201299,53.409091 0.974026,53.311688 0.746753,53.409091"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,53.831169 1.201299,53.733766 1.201299,53.311688 0.746753,53.311688 0.746753,53.733766"
+class="HomologGroup34" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="53.753247" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,53.181818 1.201299,53.084416 1.201299,52.662338 0.746753,52.662338 0.746753,53.084416"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,53.181818 1.201299,53.181818 1.201299,52.759740 0.974026,52.662338 0.746753,52.759740"
+class="HomologGroup33" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="53.103896" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,52.532468 1.201299,52.435065 1.201299,52.012987 0.746753,52.012987 0.746753,52.435065"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,52.532468 1.201299,52.532468 1.201299,52.110390 0.974026,52.012987 0.746753,52.110390"
+class="HomologGroup31" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="52.454545" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,51.883117 1.201299,51.883117 1.201299,51.461039 0.974026,51.363636 0.746753,51.461039"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="HomologGroup32" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="51.805195" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,51.233766 1.201299,51.233766 1.201299,50.811688 0.974026,50.714286 0.746753,50.811688"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,51.233766 1.201299,51.136364 1.201299,50.714286 0.746753,50.714286 0.746753,51.136364"
+class="HomologGroup30" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="51.155844" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,50.584416 1.201299,50.584416 1.201299,50.162338 0.974026,50.064935 0.746753,50.162338"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup29" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="50.506494" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,49.935065 1.201299,49.837662 1.201299,49.415584 0.746753,49.415584 0.746753,49.837662"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,49.935065 1.201299,49.935065 1.201299,49.512987 0.974026,49.415584 0.746753,49.512987"
+class="HomologGroup28" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="49.857143" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,49.285714 1.201299,49.285714 1.201299,48.863636 0.974026,48.766234 0.746753,48.863636"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup27" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="49.207792" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,48.636364 1.201299,48.636364 1.201299,48.214286 0.974026,48.116883 0.746753,48.214286"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup26" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="48.558442" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,47.987013 1.201299,47.987013 1.201299,47.564935 0.974026,47.467532 0.746753,47.564935"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+class="HomologGroup25" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="47.909091" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,47.337662 1.201299,47.337662 1.201299,46.915584 0.974026,46.818182 0.746753,46.915584"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup24" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="47.259740" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,46.688312 1.201299,46.688312 1.201299,46.266234 0.974026,46.168831 0.746753,46.266234"
-class="HomologGroup26" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,46.688312 1.201299,46.590909 1.201299,46.168831 0.746753,46.168831 0.746753,46.590909"
+class="HomologGroup23" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="46.610390" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,46.038961 1.201299,46.038961 1.201299,45.616883 0.974026,45.519481 0.746753,45.616883"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+class="HomologGroup22" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="45.961039" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,45.389610 1.201299,45.292208 1.201299,44.870130 0.746753,44.870130 0.746753,45.292208"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,45.389610 1.201299,45.389610 1.201299,44.967532 0.974026,44.870130 0.746753,44.967532"
+class="HomologGroup21" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="45.311688" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,44.740260 1.201299,44.740260 1.201299,44.318182 0.974026,44.220779 0.746753,44.318182"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,44.740260 1.201299,44.642857 1.201299,44.220779 0.746753,44.220779 0.746753,44.642857"
+class="HomologGroup20" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="44.662338" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,44.090909 1.201299,44.090909 1.201299,43.668831 0.974026,43.571429 0.746753,43.668831"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,44.090909 1.201299,43.993506 1.201299,43.571429 0.746753,43.571429 0.746753,43.993506"
+class="HomologGroup19" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="44.012987" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,43.441558 1.201299,43.344156 1.201299,42.922078 0.746753,42.922078 0.746753,43.344156"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup18" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="43.363636" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,42.792208 1.201299,42.694805 1.201299,42.272727 0.746753,42.272727 0.746753,42.694805"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+class="HomologGroup17" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="42.714286" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,42.142857 1.201299,42.045455 1.201299,41.623377 0.746753,41.623377 0.746753,42.045455"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup16" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="42.064935" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,41.493506 1.201299,41.396104 1.201299,40.974026 0.746753,40.974026 0.746753,41.396104"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup15" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="41.415584" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,40.844156 1.201299,40.746753 1.201299,40.324675 0.746753,40.324675 0.746753,40.746753"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+class="HomologGroup14" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="40.766234" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,40.194805 1.201299,40.097403 1.201299,39.675325 0.746753,39.675325 0.746753,40.097403"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup13" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="40.116883" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,39.545455 1.201299,39.448052 1.201299,39.025974 0.746753,39.025974 0.746753,39.448052"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup12" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="39.467532" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,38.896104 1.201299,38.798701 1.201299,38.376623 0.746753,38.376623 0.746753,38.798701"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup11" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="38.818182" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,38.246753 1.201299,38.149351 1.201299,37.727273 0.746753,37.727273 0.746753,38.149351"
-class="HomologGroup16" style="stroke-width:0.0324675324675"/>
+class="HomologGroup10" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="38.168831" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,37.597403 1.201299,37.500000 1.201299,37.077922 0.746753,37.077922 0.746753,37.500000"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+class="HomologGroup9" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="37.519481" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,36.948052 1.201299,36.850649 1.201299,36.428571 0.746753,36.428571 0.746753,36.850649"
+<polygon points=" 0.746753,36.948052 1.201299,36.948052 1.201299,36.525974 0.974026,36.428571 0.746753,36.525974"
 class="HomologGroup8" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="36.870130" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,36.298701 1.201299,36.201299 1.201299,35.779221 0.746753,35.779221 0.746753,36.201299"
-class="HomologGroup16" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,36.298701 1.201299,36.298701 1.201299,35.876623 0.974026,35.779221 0.746753,35.876623"
+class="HomologGroup7" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="36.220779" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
-  </text>
-<polygon points=" 0.746753,35.649351 1.201299,35.649351 1.201299,35.227273 0.974026,35.129870 0.746753,35.227273"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
-  <text x="0.974026" y="35.571429" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
-  </text>
-<polygon points=" 0.746753,35.000000 1.201299,35.000000 1.201299,34.480519 0.746753,34.480519"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
-  <text x="0.974026" y="34.922078" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    12
   </text>
-<polygon points=" 0.746753,34.350649 1.201299,34.350649 1.201299,33.831169 0.746753,33.831169"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
-  <text x="0.974026" y="34.272727" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+<polygon points=" 0.746753,35.649351 1.201299,35.649351 1.201299,35.129870 0.746753,35.129870"
+class="HomologGroup2" style="stroke-width:0.0324675324675"/>
+  <text x="0.974026" y="35.571429" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    5
   </text>
+<polygon points=" 0.746753,35.000000 1.201299,35.000000 1.201299,34.577922 0.974026,34.480519 0.746753,34.577922"
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
+  <text x="0.974026" y="34.922078" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   1
+  </text>
+<polygon points=" 0.746753,34.350649 1.201299,34.350649 1.201299,33.928571 0.974026,33.831169 0.746753,33.928571"
+class="HomologGroup5" style="stroke-width:0.0324675324675"/>
+  <text x="0.974026" y="34.272727" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   1
+  </text>
 <polygon points=" 0.746753,33.701299 1.201299,33.701299 1.201299,33.279221 0.974026,33.181818 0.746753,33.279221"
-class="HomologGroup10" style="stroke-width:0.0324675324675"/>
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="33.623377" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,33.051948 1.201299,33.051948 1.201299,32.629870 0.974026,32.532468 0.746753,32.629870"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow44" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="32.974026" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   2
   </text>
-<polygon points=" 0.746753,32.402597 1.201299,32.402597 1.201299,31.980519 0.974026,31.883117 0.746753,31.980519"
-class="HomologGroup16" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,32.402597 1.201299,32.305195 1.201299,31.883117 0.746753,31.883117 0.746753,32.305195"
+class="HomologGroup7" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="32.324675" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,31.753247 1.201299,31.753247 1.201299,31.331169 0.974026,31.233766 0.746753,31.331169"
-class="NoHomologyInWindow0" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,31.753247 1.201299,31.655844 1.201299,31.233766 0.746753,31.233766 0.746753,31.655844"
+class="NoHomologyInWindow3" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="31.675325" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   2
+   1
   </text>
 <polygon points=" 0.974026,31.103896 1.201299,31.006494 1.201299,30.584416 0.746753,30.584416 0.746753,31.006494"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup8" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="31.025974" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,30.454545 1.201299,30.357143 1.201299,29.935065 0.746753,29.935065 0.746753,30.357143"
-class="NoHomologyInWindow11" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,30.454545 1.201299,30.454545 1.201299,30.032468 0.974026,29.935065 0.746753,30.032468"
+class="HomologGroup9" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="30.376623" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,29.805195 1.201299,29.707792 1.201299,29.285714 0.746753,29.285714 0.746753,29.707792"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,29.805195 1.201299,29.805195 1.201299,29.383117 0.974026,29.285714 0.746753,29.383117"
+class="NoHomologyInWindow6" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="29.727273" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,29.155844 1.201299,29.155844 1.201299,28.733766 0.974026,28.636364 0.746753,28.733766"
-class="HomologGroup22" style="stroke-width:0.0324675324675"/>
+class="HomologGroup10" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="29.077922" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,28.506494 1.201299,28.506494 1.201299,28.084416 0.974026,27.987013 0.746753,28.084416"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,28.506494 1.201299,28.409091 1.201299,27.987013 0.746753,27.987013 0.746753,28.409091"
+class="HomologGroup11" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="28.428571" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,27.857143 1.201299,27.857143 1.201299,27.435065 0.974026,27.337662 0.746753,27.435065"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,27.857143 1.201299,27.759740 1.201299,27.337662 0.746753,27.337662 0.746753,27.759740"
+class="HomologGroup12" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="27.779221" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,27.207792 1.201299,27.110390 1.201299,26.688312 0.746753,26.688312 0.746753,27.110390"
-class="HomologGroup26" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,27.207792 1.201299,27.207792 1.201299,26.785714 0.974026,26.688312 0.746753,26.785714"
+class="HomologGroup13" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="27.129870" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,26.558442 1.201299,26.461039 1.201299,26.038961 0.746753,26.038961 0.746753,26.461039"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,26.558442 1.201299,26.558442 1.201299,26.136364 0.974026,26.038961 0.746753,26.136364"
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="26.480519" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,25.909091 1.201299,25.909091 1.201299,25.487013 0.974026,25.389610 0.746753,25.487013"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+class="HomologGroup14" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="25.831169" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,25.259740 1.201299,25.259740 1.201299,24.837662 0.974026,24.740260 0.746753,24.837662"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="25.181818" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   1
+   10
   </text>
-<polygon points=" 0.746753,24.610390 1.201299,24.610390 1.201299,24.188312 0.974026,24.090909 0.746753,24.188312"
-class="HomologGroup32" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,24.610390 1.201299,24.512987 1.201299,24.090909 0.746753,24.090909 0.746753,24.512987"
+class="HomologGroup15" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="24.532468" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,23.961039 1.201299,23.961039 1.201299,23.538961 0.974026,23.441558 0.746753,23.538961"
-class="NoHomologyInWindow8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup16" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="23.883117" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   10
+   1
   </text>
 <polygon points=" 0.974026,23.311688 1.201299,23.214286 1.201299,22.792208 0.746753,22.792208 0.746753,23.214286"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+class="HomologGroup17" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="23.233766" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,22.662338 1.201299,22.662338 1.201299,22.240260 0.974026,22.142857 0.746753,22.240260"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,22.662338 1.201299,22.564935 1.201299,22.142857 0.746753,22.142857 0.746753,22.564935"
+class="HomologGroup18" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="22.584416" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,22.012987 1.201299,21.915584 1.201299,21.493506 0.746753,21.493506 0.746753,21.915584"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,22.012987 1.201299,22.012987 1.201299,21.590909 0.974026,21.493506 0.746753,21.590909"
+class="HomologGroup19" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="21.935065" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,21.363636 1.201299,21.266234 1.201299,20.844156 0.746753,20.844156 0.746753,21.266234"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,21.363636 1.201299,21.363636 1.201299,20.941558 0.974026,20.844156 0.746753,20.941558"
+class="HomologGroup20" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="21.285714" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,20.714286 1.201299,20.714286 1.201299,20.292208 0.974026,20.194805 0.746753,20.292208"
-class="HomologGroup38" style="stroke-width:0.0324675324675"/>
+class="HomologGroup21" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="20.636364" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,20.064935 1.201299,20.064935 1.201299,19.642857 0.974026,19.545455 0.746753,19.642857"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,20.064935 1.201299,19.967532 1.201299,19.545455 0.746753,19.545455 0.746753,19.967532"
+class="HomologGroup22" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="19.987013" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,19.415584 1.201299,19.415584 1.201299,18.993506 0.974026,18.896104 0.746753,18.993506"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup23" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="19.337662" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,18.766234 1.201299,18.668831 1.201299,18.246753 0.746753,18.246753 0.746753,18.668831"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,18.766234 1.201299,18.766234 1.201299,18.344156 0.974026,18.246753 0.746753,18.344156"
+class="HomologGroup24" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="18.688312" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,18.116883 1.201299,18.116883 1.201299,17.694805 0.974026,17.597403 0.746753,17.694805"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="NoHomologyInWindow12" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="18.038961" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,17.467532 1.201299,17.467532 1.201299,17.045455 0.974026,16.948052 0.746753,17.045455"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup25" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="17.389610" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,16.818182 1.201299,16.818182 1.201299,16.396104 0.974026,16.298701 0.746753,16.396104"
-class="NoHomologyInWindow9" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,16.818182 1.201299,16.720779 1.201299,16.298701 0.746753,16.298701 0.746753,16.720779"
+class="HomologGroup26" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="16.740260" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,16.168831 1.201299,16.168831 1.201299,15.746753 0.974026,15.649351 0.746753,15.746753"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,16.168831 1.201299,16.071429 1.201299,15.649351 0.746753,15.649351 0.746753,16.071429"
+class="HomologGroup27" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="16.090909" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,15.519481 1.201299,15.422078 1.201299,15.000000 0.746753,15.000000 0.746753,15.422078"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+class="HomologGroup28" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="15.441558" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,14.870130 1.201299,14.772727 1.201299,14.350649 0.746753,14.350649 0.746753,14.772727"
-class="HomologGroup28" style="stroke-width:0.0324675324675"/>
+class="HomologGroup29" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="14.792208" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,14.220779 1.201299,14.123377 1.201299,13.701299 0.746753,13.701299 0.746753,14.123377"
-class="HomologGroup14" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,14.220779 1.201299,14.220779 1.201299,13.798701 0.974026,13.701299 0.746753,13.798701"
+class="HomologGroup30" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="14.142857" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,13.571429 1.201299,13.474026 1.201299,13.051948 0.746753,13.051948 0.746753,13.474026"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,13.571429 1.201299,13.571429 1.201299,13.149351 0.974026,13.051948 0.746753,13.149351"
+class="HomologGroup31" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="13.493506" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,12.922078 1.201299,12.922078 1.201299,12.500000 0.974026,12.402597 0.746753,12.500000"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,12.922078 1.201299,12.824675 1.201299,12.402597 0.746753,12.402597 0.746753,12.824675"
+class="HomologGroup32" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="12.844156" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,12.272727 1.201299,12.272727 1.201299,11.850649 0.974026,11.753247 0.746753,11.850649"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,12.272727 1.201299,12.175325 1.201299,11.753247 0.746753,11.753247 0.746753,12.175325"
+class="NoHomologyInWindow15" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="12.194805" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,11.623377 1.201299,11.525974 1.201299,11.103896 0.746753,11.103896 0.746753,11.525974"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,11.623377 1.201299,11.623377 1.201299,11.201299 0.974026,11.103896 0.746753,11.201299"
+class="HomologGroup33" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="11.545455" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,10.974026 1.201299,10.876623 1.201299,10.454545 0.746753,10.454545 0.746753,10.876623"
-class="NoHomologyInWindow0" style="stroke-width:0.0324675324675"/>
+class="HomologGroup34" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="10.896104" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,10.324675 1.201299,10.324675 1.201299,9.902597 0.974026,9.805195 0.746753,9.902597"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup35" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="10.246753" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,9.675325 1.201299,9.577922 1.201299,9.155844 0.746753,9.155844 0.746753,9.577922"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,9.675325 1.201299,9.675325 1.201299,9.253247 0.974026,9.155844 0.746753,9.253247"
+class="HomologGroup36" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="9.597403" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,9.025974 1.201299,9.025974 1.201299,8.603896 0.974026,8.506494 0.746753,8.603896"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+class="HomologGroup37" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="8.948052" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,8.376623 1.201299,8.376623 1.201299,7.954545 0.974026,7.857143 0.746753,7.954545"
-class="HomologGroup30" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,8.376623 1.201299,8.279221 1.201299,7.857143 0.746753,7.857143 0.746753,8.279221"
+class="HomologGroup38" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="8.298701" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,7.727273 1.201299,7.727273 1.201299,7.305195 0.974026,7.207792 0.746753,7.305195"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup39" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="7.649351" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.974026,7.077922 1.201299,6.980519 1.201299,6.558442 0.746753,6.558442 0.746753,6.980519"
-class="HomologGroup20" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.746753,7.077922 1.201299,7.077922 1.201299,6.655844 0.974026,6.558442 0.746753,6.655844"
+class="HomologGroup40" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="7.000000" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,6.428571 1.201299,6.428571 1.201299,6.006494 0.974026,5.909091 0.746753,6.006494"
-class="HomologGroup26" style="stroke-width:0.0324675324675"/>
+class="HomologGroup41" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="6.350649" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,5.779221 1.201299,5.779221 1.201299,5.357143 0.974026,5.259740 0.746753,5.357143"
-class="HomologGroup34" style="stroke-width:0.0324675324675"/>
+class="HomologGroup42" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="5.701299" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,5.129870 1.201299,5.129870 1.201299,4.707792 0.974026,4.610390 0.746753,4.707792"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+class="HomologGroup43" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="5.051948" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,4.480519 1.201299,4.480519 1.201299,4.058442 0.974026,3.961039 0.746753,4.058442"
-class="HomologGroup8" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,4.480519 1.201299,4.383117 1.201299,3.961039 0.746753,3.961039 0.746753,4.383117"
+class="HomologGroup44" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="4.402597" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.746753,3.831169 1.201299,3.831169 1.201299,3.409091 0.974026,3.311688 0.746753,3.409091"
-class="HomologGroup24" style="stroke-width:0.0324675324675"/>
+class="HomologGroup2" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="3.753247" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,3.181818 1.201299,3.084416 1.201299,2.662338 0.746753,2.662338 0.746753,3.084416"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+class="HomologGroup3" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="3.103896" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-<polygon points=" 0.746753,2.532468 1.201299,2.532468 1.201299,2.110390 0.974026,2.012987 0.746753,2.110390"
-class="HomologGroup36" style="stroke-width:0.0324675324675"/>
+<polygon points=" 0.974026,2.532468 1.201299,2.435065 1.201299,2.012987 0.746753,2.012987 0.746753,2.435065"
+class="HomologGroup4" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="2.454545" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,1.883117 1.201299,1.785714 1.201299,1.363636 0.746753,1.363636 0.746753,1.785714"
-class="HomologGroup18" style="stroke-width:0.0324675324675"/>
+class="HomologGroup5" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="1.805195" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
 <polygon points=" 0.974026,1.233766 1.201299,1.136364 1.201299,0.714286 0.746753,0.714286 0.746753,1.136364"
-class="HomologGroup12" style="stroke-width:0.0324675324675"/>
+class="HomologGroup6" style="stroke-width:0.0324675324675"/>
   <text x="0.974026" y="1.155844" font-size="0.363636" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    1
   </text>
-  <text x="19.805195" y="34.289610" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="19.805195" y="35.588312" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    ?
   </text>
-  <text x="21.103896" y="33.640260" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="21.103896" y="34.938961" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="22.402597" y="33.640260" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="22.402597" y="34.938961" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="25.649351" y="33.640260" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="25.649351" y="34.938961" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="26.298701" y="25.198701" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="26.298701" y="26.497403" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="27.597403" y="32.990909" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="27.597403" y="34.289610" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="28.246753" y="32.341558" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="28.246753" y="33.640260" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="28.896104" y="31.042857" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="28.896104" y="32.341558" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="29.545455" y="29.744156" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="29.545455" y="31.042857" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="30.194805" y="29.094805" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="30.194805" y="30.393506" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="30.844156" y="27.796104" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="30.844156" y="29.094805" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="31.493506" y="27.146753" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="31.493506" y="28.445455" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="32.142857" y="26.497403" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="32.142857" y="27.796104" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="32.792208" y="25.848052" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="32.792208" y="27.146753" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="33.441558" y="25.198701" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="33.441558" y="26.497403" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="34.090909" y="24.549351" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="34.090909" y="25.848052" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="34.740260" y="23.250649" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="34.740260" y="24.549351" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="35.389610" y="22.601299" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="35.389610" y="23.900000" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="36.038961" y="21.951948" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="36.038961" y="23.250649" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="36.688312" y="21.302597" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="36.688312" y="22.601299" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="37.337662" y="20.653247" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="37.337662" y="21.951948" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="37.987013" y="20.003896" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="37.987013" y="21.302597" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="38.636364" y="19.354545" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="38.636364" y="20.653247" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="39.285714" y="18.705195" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="39.285714" y="20.003896" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="39.935065" y="18.055844" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="39.935065" y="19.354545" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="40.584416" y="17.406494" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="40.584416" y="18.705195" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="41.233766" y="16.107792" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="41.233766" y="17.406494" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="41.883117" y="15.458442" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="41.883117" y="16.757143" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="42.532468" y="14.809091" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="42.532468" y="16.107792" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="43.181818" y="14.159740" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="43.181818" y="15.458442" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="43.831169" y="13.510390" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="43.831169" y="14.809091" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="44.480519" y="12.861039" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="44.480519" y="14.159740" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="45.129870" y="12.211688" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="45.129870" y="13.510390" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="45.779221" y="11.562338" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="45.779221" y="12.861039" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="47.727273" y="10.263636" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="47.727273" y="11.562338" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="48.376623" y="9.614286" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="48.376623" y="10.912987" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="49.025974" y="8.964935" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="49.025974" y="10.263636" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="49.675325" y="8.315584" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="49.675325" y="9.614286" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="50.324675" y="7.666234" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="50.324675" y="8.964935" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="50.974026" y="7.016883" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="50.974026" y="8.315584" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="51.623377" y="6.367532" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="51.623377" y="7.666234" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="52.272727" y="5.718182" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="52.272727" y="7.016883" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="52.922078" y="5.068831" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="52.922078" y="6.367532" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="53.571429" y="4.419481" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="53.571429" y="5.718182" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="56.168831" y="3.770130" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="55.519481" y="5.068831" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="56.818182" y="3.120779" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="56.168831" y="4.419481" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="57.467532" y="2.471429" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="56.818182" y="3.770130" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="58.116883" y="1.822078" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="57.467532" y="3.120779" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="58.766234" y="1.172727" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="58.116883" y="2.471429" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    +
   </text>
-  <text x="62.662338" y="34.938961" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="58.766234" y="1.822078" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   +
+  </text>
+  <text x="60.064935" y="1.172727" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   +
+  </text>
+  <text x="62.662338" y="36.237662" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    ?
   </text>
-  <text x="63.961039" y="34.938961" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   ?
-  </text>
-  <text x="64.610390" y="35.588312" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="63.311688" y="36.887013" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="65.259740" y="36.237662" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="63.961039" y="37.536364" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="65.909091" y="36.887013" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="64.610390" y="38.185714" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="66.558442" y="37.536364" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="65.259740" y="38.835065" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="67.207792" y="38.185714" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="65.909091" y="39.484416" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="68.506494" y="38.835065" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="66.558442" y="40.133766" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="69.155844" y="39.484416" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="67.207792" y="40.783117" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="69.805195" y="40.133766" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="67.857143" y="41.432468" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="70.454545" y="40.783117" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="68.506494" y="42.081818" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="71.103896" y="41.432468" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="69.155844" y="42.731169" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="71.753247" y="42.081818" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="69.805195" y="43.380519" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="72.402597" y="42.731169" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="70.454545" y="44.029870" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="73.051948" y="43.380519" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="71.103896" y="44.679221" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="73.701299" y="44.029870" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="71.753247" y="45.328571" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="74.350649" y="44.679221" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="72.402597" y="45.977922" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="75.000000" y="45.328571" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="73.051948" y="46.627273" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="75.649351" y="45.977922" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="73.701299" y="47.276623" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="76.298701" y="46.627273" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="74.350649" y="47.925974" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="76.948052" y="47.276623" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="75.000000" y="48.575325" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="77.597403" y="47.925974" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="75.649351" y="49.224675" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="78.246753" y="48.575325" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="76.298701" y="49.874026" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="78.896104" y="49.224675" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="76.948052" y="50.523377" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="79.545455" y="49.874026" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="77.597403" y="51.172727" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="80.194805" y="50.523377" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="78.246753" y="52.471429" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="80.844156" y="51.172727" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="78.896104" y="51.822078" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="81.493506" y="51.822078" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="79.545455" y="52.471429" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="82.142857" y="52.471429" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="80.194805" y="53.120779" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="82.792208" y="53.120779" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="80.844156" y="53.770130" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="83.441558" y="53.770130" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="81.493506" y="54.419481" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="84.090909" y="54.419481" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="82.142857" y="55.068831" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="84.740260" y="55.068831" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="82.792208" y="55.718182" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="85.389610" y="55.718182" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="83.441558" y="56.367532" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="86.038961" y="56.367532" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="84.090909" y="57.016883" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="86.688312" y="57.016883" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="84.740260" y="57.666234" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="88.636364" y="57.666234" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="85.389610" y="58.315584" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="89.285714" y="58.315584" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="86.688312" y="58.964935" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="89.935065" y="58.964935" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="87.337662" y="59.614286" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="90.584416" y="59.614286" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="87.987013" y="60.263636" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="91.233766" y="60.912987" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="88.636364" y="60.912987" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="91.883117" y="61.562338" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="89.285714" y="61.562338" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
+  </text>
+  <text x="89.935065" y="62.211688" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   -
+  </text>
+  <text x="90.584416" y="62.861039" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   -
+  </text>
+  <text x="91.233766" y="63.510390" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+   +
   </text>
   <text x="92.532468" y="63.510390" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   +
-  </text>
-  <text x="92.532468" y="62.211688" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    -
   </text>
-  <text x="93.181818" y="62.861039" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   -
-  </text>
-  <text x="93.831169" y="63.510390" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   -
-  </text>
-  <text x="93.831169" y="62.211688" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
-   +
-  </text>
-  <text x="98.376623" y="34.938961" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
+  <text x="95.779221" y="36.237662" font-size="0.584416" text-anchor="middle" fill="#000" stroke="none" font-weight="800" font-family="Arial" transform="" >
    ?
   </text>
  </g>

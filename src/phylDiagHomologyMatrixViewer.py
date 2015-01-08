@@ -22,12 +22,11 @@ import drawHomologyMatrixWithSBs
 
 __doc__= """
         Show the homology matrix with coloured synteny blocks (also called diagonals).
-        - Each colour represents a synteny block.
         - On the x-axis are the genes of the 1st genome in the desired window
         - On the y-axis are the genes of the 2nd genome in the desired window
-        - Each coloured rectangle in the matrix represents a filiation relationship restricted to the ancGene species. Couloured rectangle means the corresponding horizontal and vertical genes come from the same ancestral gene in the ancGene species. Take care that coulour genes are not homology relationship. For instance if the ancestor had two paralogs in its genome, there will be two distinct filiation relationships for genes herited from these genes. Genes are coloured if they are in the same filiation relationship class.
-        - '+' indicates filiation relationships that have horizontal gene and vertical gene in the same direction on both chromosomes
-          '-' indicates filiation relationships that have horizontal gene and vertical gene in opposite directions on each chromosomes
+        - Each coloured rectangle in the matrix represents a homology
+        - '+' indicates homology that have horizontal gene and vertical gene in the same direction on both chromosomes
+          '-' indicates homology that have horizontal gene and vertical gene in opposite directions on each chromosomes
         """
 
 # parse the user input (text) for the chromosome range and asses if this query is consistent with the genome data
@@ -114,17 +113,16 @@ def TbComputeHomologyInformations(chrom1_tb, chrom2_tb):
 
     return (MHP, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow)
 
-def TbComputeDiagIndices(TbListOfDiags):
+def TbComputeDiagIndices(sbsInPairComp):
     ###
     # Build TbDiagIndices = [..., [...,(i16,j16),...], ...] list of diagonals
     # with diagonals = list of all the points of the diagonal
     ###
     TbDiagIndices = []
-    for TbDiag in TbListOfDiags:
-        ((c1,tbs1),(c2,tbs2),tbsA,pVal) = TbDiag
+    for (_, sb) in sbsInPairComp.iteritems2d():
         TbDiagIndices.append([])
-        for (indx,(_,_,_)) in enumerate(tbsA):
-            TbDiagIndices[-1].append((tbs1[indx],tbs2[indx]))
+        for (indx,_) in enumerate(sb.la):
+            TbDiagIndices[-1].append((sb.l1[indx], sb.l2[indx]))
     return TbDiagIndices
 
 def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, ancGenes,
@@ -222,17 +220,16 @@ def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, ancGenes,
             (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
             genesHomologyGroupsInWindow)
 
-def genesComputeDiagIndices(listOfDiags):
+def genesComputeDiagIndices(diagsInPairComp):
     ###
     # Build diagIndices = [..., [...,(i16,j16),...], ...] mist of diagonals with
     #   diagonals = list of all the points of the diagonal
     ###
     diagIndices = []
-    for diag in listOfDiags:
-        ((c1,l1), (c2,l2), la, pVal) = diag
+    for (_, diag) in diagsInPairComp.iteritems2d():
         diagIndices.append([])
-        for (idxHp, (anc, strand, dist)) in enumerate(la):
-            diagIndices[-1].extend(itertools.product(l1[idxHp], l2[idxHp]))
+        for (idxHp, _) in enumerate(diag.la):
+            diagIndices[-1].extend(itertools.product(diag.l1[idxHp], diag.l2[idxHp]))
     return diagIndices
 
 if __name__ == '__main__':
@@ -241,12 +238,16 @@ if __name__ == '__main__':
         [("genome1", file), ("genome2", file),
          ("ancGenes", file), ("chr1:deb1-fin1", str),
          ("chr2:deb2-fin2", str)],
-        [("gapMax", str, 'None'),
+        [("filterType", str, 'InCommonAncestor'),
          ("tandemGapMax", int, 0),
+         ("gapMax", str, 'None'),
+         ('identifyBreakpointsWithinGaps', bool, False),
+         ("nonOverlappingSbs", bool, False),
+         ("overlapMax", int, 0),
          ("consistentSwDType", bool, True),
-         ("filterType", str, 'InCommonAncestor'),
          ("minChromLength", int, 1),
          ("pThreshold", float, 0.001),
+         ("validateImpossToCalc_mThreshold", int, 3),
          ("out:SyntenyBlocks", str, "./res/syntenyBlocksDrawer.txt"),
          ("mode:chromosomesRewrittenInTbs", bool, False),
          ('convertGenicToTbCoordinates', bool, False),
@@ -319,32 +320,51 @@ if __name__ == '__main__':
          (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
          genesHomologyGroupsInWindow) =\
             genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
-                                             ancGenes, filterType,
+                                             ancGenes,
+                                             filterType,
                                              arguments['minChromLength'],
                                              arguments['tandemGapMax'])
 
         # Search diagonals
         #FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
-        listOfDiags = list(myDiags.extractSbsInPairCompGenomes(chrom1,
-                                                               chrom2,
-                                                               ancGenes,
-                                                               tandemGapMax=arguments['tandemGapMax'],
-                                                               gapMax=arguments['gapMax'],
-                                                               consistentSwDType=arguments["consistentSwDType"],
-                                                               filterType=filterType,
-                                                               minChromLength=arguments["minChromLength"],
-                                                               distanceMetric=arguments["distanceMetric"],
-                                                               pThreshold=arguments["pThreshold"],
-                                                               verbose=arguments['verbose']))
-        genesDiagIndices = genesComputeDiagIndices(listOfDiags)
+        diagsInPairComp = myDiags.extractSbsInPairCompGenomes(chrom1,
+                                                              chrom2,
+                                                              ancGenes,
+                                                              tandemGapMax=arguments['tandemGapMax'],
+                                                              gapMax=arguments['gapMax'],
+                                                              identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
+                                                              nonOverlappingSbs=arguments['nonOverlappingSbs'],
+                                                              overlapMax=arguments['overlapMax'],
+                                                              consistentSwDType=arguments["consistentSwDType"],
+                                                              filterType=filterType,
+                                                              minChromLength=arguments["minChromLength"],
+                                                              distanceMetric=arguments["distanceMetric"],
+                                                              pThreshold=arguments["pThreshold"],
+                                                              validateImpossToCalc_mThreshold=arguments["validateImpossToCalc_mThreshold"],
+                                                              verbose=arguments['verbose'])
 
-        strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix(
-            (range1, range2), (genesStrandsC1, genesStrandsC2),
-            (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
-            (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
-            genesHomologiesHpSign, genesHomologyGroupsInWindow,
-            genesDiagIndices,
-            outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
+        #print >> sys.stderr, "Warning the p-value calculation is performed on the ROI defined by the user ranges"
+        #sbsInPairComp = myDiags.statisticalValidation(diagsInPairComp,
+        #                                              chrom1,
+        #                                              chrom2,
+        #                                              N12s,
+        #                                              p_hpSign,
+        #                                              pThreshold=arguments['pThreshold'],
+        #                                              NbOfHomologiesThreshold=50,
+        #                                              verbose=arguments['verbose'])
+        sbsInPairComp = diagsInPairComp
+        genesDiagIndices = genesComputeDiagIndices(sbsInPairComp)
+
+        strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2),
+                                                                (genesStrandsC1, genesStrandsC2),
+                                                                (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
+                                                                (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
+                                                                genesHomologiesHpSign,
+                                                                genesHomologyGroupsInWindow,
+                                                                genesDiagIndices,
+                                                                outputFileName=arguments["out:ImageName"],
+                                                                maxWidth=100,
+                                                                maxHeight=100 )
 
     else:
         #chromosomes are shown as lists of tbs
@@ -437,8 +457,10 @@ if __name__ == '__main__':
         # compute the recommended gapMax parameter
         #########################################
         N12s, N12_g = myDiags.numberOfHomologies(chrom1_tb, chrom2_tb)
-        (p_hpSign,p_hpSign_g,(sTBG1, sTBG1_g),(sTBG2, sTBG2_g)) = myProbas.statsHpSign(chrom1_tb,chrom1_tb)
-        p_hpSign={(chr1,chr2):p_hpSign[(1,1)]}#FIXME
+        (p_hpSign, p_hpSign_g, (sTBG1, sTBG1_g), (sTBG2, sTBG2_g)) = myProbas.statsHpSign(chrom1_tb, chrom2_tb)
+        #FIXME ???
+        #p_hpSign = myTools.Dict2d(list)
+        #p_hpSign[chr1][chr2] = p_hpSign[1][1]
         print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
         print >> sys.stderr, "genome 2 tb orientation proba = {+1=%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG2_g[+1], sTBG2_g[-1], sTBG2_g[None])
         print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%s,-1:%s,None:%s) (probabilities are for pairwise mhp)" % (p_hpSign_g[+1], p_hpSign_g[-1], p_hpSign_g[None])
@@ -461,26 +483,45 @@ if __name__ == '__main__':
         print >> sys.stderr, "used gapMax = %s" % gapMax
 
         # Search diagonals
-        listOfDiags = myDiags.extractSbsInPairCompChr(chr1,
-                                                      chr2,
-                                                      chrom1_tb[chr1],
+        listOfDiags = myDiags.extractSbsInPairCompChr(chrom1_tb[chr1],
                                                       chrom2_tb[chr2],
-                                                      consistentSwDType=arguments['consistentSwDType'],
                                                       gapMax=arguments['gapMax'],
                                                       distanceMetric=arguments["distanceMetric"],
+                                                      consistentSwDType=arguments['consistentSwDType'],
                                                       verbose=arguments['verbose'])
         # statistical validation (SV)
         #FIXME : calculate p-values before, on the whole chromosome, not the ROI specified by the user ranges
+        diagsInPairComp = myTools.Dict2d(list)
+        diagsInPairComp[chr1][chr2] = listOfDiags
         print >> sys.stderr, "Warning the p-value calculation is performed on the ROI defined by the user ranges"
-        listOfDiags = list(myDiags.statisticalValidation(listOfDiags,
-                                                         chrom1_tb,
-                                                         chrom2_tb,
-                                                         N12s,
-                                                         p_hpSign,
-                                                         pThreshold=arguments['pThreshold'],
-                                                         NbOfHomologiesThreshold=50,
-                                                         verbose=arguments['verbose']))
-        TbDiagIndices = TbComputeDiagIndices(listOfDiags)
+        sbsInPairComp = myDiags.statisticalValidation(diagsInPairComp,
+                                                      chrom1_tb,
+                                                      chrom2_tb,
+                                                      N12s,
+                                                      p_hpSign,
+                                                      pThreshold=arguments['pThreshold'],
+                                                      NbOfHomologiesThreshold=50,
+                                                      validateImpossToCalc_mThreshold=arguments["validateImpossToCalc_mThreshold"],
+                                                      verbose=arguments['verbose'])
+
+        # Do this task until no more change (stability!)
+        if arguments['identifyBreakpointsWithinGaps']:
+            while True:
+                nbSbsOld = len(list(sbsInPairComp.iteritems2d()))
+                sbsInPairComp = myDiags.fIdentifyBreakpointsWithinGaps(sbsInPairComp)
+                nbSbsNew = len(list(sbsInPairComp.iteritems2d()))
+                if nbSbsNew == nbSbsOld:
+                    break
+
+        if arguments['nonOverlappingSbs']:
+            # TODO, compute the variation of the coverage before and after this step
+            sbsInPairComp = myDiags.filterOverlappingSbs(sbsInPairComp, overlapMax=arguments['overlapMax'], verbose=arguments['verbose'])
+            # DEBUG, verify that the filtered sbs are not overlapping
+            (_, _, N, O, _, _) = myDiags.buildConflictGraph(sbsInPairComp, overlapMax=0, verbose=arguments['verbose'])
+            assert len(N) == 0
+            assert len(O) == 0
+
+        TbDiagIndices = TbComputeDiagIndices(sbsInPairComp)
 
         strArray =\
             drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2),
@@ -491,7 +532,8 @@ if __name__ == '__main__':
                                                          TbHomologyGroupsInWindow,
                                                          TbDiagIndices,
                                                          outputFileName=arguments["out:ImageName"],
-                                                         maxWidth=100, maxHeight=100,
+                                                         maxWidth=100,
+                                                         maxHeight=100,
                                                          symbolsInGenes=(TbNumberOfGenesInEachTbC1, TbNumberOfGenesInEachTbC2))
 
     #copy the css style sheet
@@ -505,13 +547,11 @@ if __name__ == '__main__':
     print >> f, "Mode : %s" %  'Genic scale' if arguments['mode:chromosomesRewrittenInTbs'] == False else 'Tandem Blocks scale'
     print >> f, "chromosome %s de %s\t%s\t%s\tchromosome %s de %s\t%s\t%s\t%s" % (chr1, genome1Name, 'beginC1', 'endC1', chr2, genome2Name, 'beginC2', 'endC2','length in ancestral genes')
     print >> f, "c1\tbeg1\tend1\tc2\tbeg2\tend2\thps\tpVal"
-    listOfDiags = [l for l in listOfDiags]
-    listOfDiags = sorted(list(listOfDiags), key=lambda x:len(x[2]), reverse=True)
-    for diag in listOfDiags:
-        ((c1,l1), (c2,l2), la, pVal) = diag
-        min_l2 = min(l2[0],l2[-1])
-        max_l2 = max(l2[0],l2[-1])
-        print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (c1,l1[0],l1[-1],c2,min_l2,max_l2,len(la),pVal)
+
+    for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
+        min_l2 = min(sb.l2[0],sb.l2[-1])
+        max_l2 = max(sb.l2[0],sb.l2[-1])
+        print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (c1,sb.l1[0],sb.l1[-1],c2,min_l2,max_l2,len(sb.la),sb.pVal)
     f.close()
 
     # Add lengends and title to the ouput matrix
@@ -531,26 +571,28 @@ if __name__ == '__main__':
     #Title
     if not arguments['mode:chromosomesRewrittenInTbs']:
         title =\
-            "%s, tandemGapMax=%s tbs, gapMax=%s%s, %s sbs" %\
+            "%s, tandemGapMax=%s tbs, gapMax=%s%s, overlapMax=%s tbs, %s sbs" %\
             ('MH',
              arguments['tandemGapMax'],
              arguments['gapMax'],
              arguments['distanceMetric'],
-             len(listOfDiags))
+             arguments['overlapMax'],
+             len(list(sbsInPairComp.iteritems2d())))
     else:
         title =\
-            "%s, tandemGapMax=%s tbs, gapMax=%s%s, %s sbs" %\
+            "%s, tandemGapMax=%s tbs, gapMax=%s%s, overlapMax=%s tbs, %s sbs" %\
             ('MHP',
              arguments['tandemGapMax'],
              arguments['gapMax'],
              arguments['distanceMetric'],
-             len(listOfDiags))\
+             arguments['overlapMax'],
+             len(list(sbsInPairComp.iteritems2d())))\
 
     var += ['<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
                     '<foreignObject x="0" y="0" width="95" height="5">\n',
                     '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
                             '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                            '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + title + '\n',
+                            '<xhtml:div style="color:black; word-wrap:break-word; font-size:1.5px; font-family:Arial" >' + title + '\n',
                                             '</xhtml:div>\n',
                                     '</xhtml:div>\n',
                             '</xhtml:div>\n',

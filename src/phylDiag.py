@@ -20,11 +20,20 @@ import utils.myGenomes as myGenomes
 modesOrthos = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs( \
                 [("genome1",file), ("genome2",file), ("ancGenes",file)], \
-                [("tandemGapMax", int, 0),
+                [("filterType",str,modesOrthos),
+                 ("tandemGapMax", int, 0),
                  ("gapMax",str,'None'),
-                 ("sameStrand",bool,True), ("filterType",str,modesOrthos), ("minChromLength",int,1), ('distanceMetric',str,'CD'), ('pThreshold',float, 0.001),\
-                ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),\
-                ('validateImpossToCalc_mThreshold',int,3),\
+                 ('distanceMetric',str,'CD'),
+                 ('pThreshold',float, 0.001),
+                 # TODO
+                 # ('overlappingMerge', bool, False),
+                 ('identifyBreakpointsWithinGaps', bool, False),
+                 ('nonOverlappingSbs', bool, False),
+                 ('overlapMax', int, 0),
+                 ("minChromLength",int,1),
+                 ("sameStrand",bool,True),
+                 ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),
+                 ('validateImpossToCalc_mThreshold',int,3),\
                  # TODO
                  # Update functions using the multiprocess package of python to
                  # allow usage of multiprocessing. For the moment, since it is
@@ -44,32 +53,34 @@ else:
     except:
         raise TypeError('gapMax is either an int or None')
 
-genome1 = myGenomes.Genome(arguments["genome1"])
+genome1 = myGenomes.Genome(arguments["genome1"], withDict=False)
 print >> sys.stderr, "Genome1"
 print >> sys.stderr, "nb of Chr = ", len(genome1.chrList[myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome1.chrList[myGenomes.ContigType.Scaffold])
-genome2 = myGenomes.Genome(arguments["genome2"])
+genome2 = myGenomes.Genome(arguments["genome2"], withDict=False)
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "nb of Chr = ", len(genome2.chrList[myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome2.chrList[myGenomes.ContigType.Scaffold])
-ancGenes = myGenomes.Genome(arguments["ancGenes"])
+ancGenes = myGenomes.Genome(arguments["ancGenes"], withDict=True)
 filterType = myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
 listOfSbs =\
-    list(myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes,
-                                             tandemGapMax=arguments['tandemGapMax'],
-                                             gapMax=arguments["gapMax"],
-                                             distanceMetric=arguments['distanceMetric'],
-                                             pThreshold=arguments['pThreshold'],
-                                             filterType=filterType,
-                                             minChromLength=arguments["minChromLength"],
-                                             consistentSwDType=arguments["sameStrand"],
-                                             nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
-                                             targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
-                                             validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
-                                             multiProcess=arguments['multiProcess'],
-                                             verbose=arguments['verbose']))
+    myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes,
+                                        tandemGapMax=arguments['tandemGapMax'],
+                                        gapMax=arguments["gapMax"],
+                                        distanceMetric=arguments['distanceMetric'],
+                                        pThreshold=arguments['pThreshold'],
+                                        identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
+                                        nonOverlappingSbs=arguments['nonOverlappingSbs'],
+                                        overlapMax=arguments['overlapMax'],
+                                        filterType=filterType,
+                                        minChromLength=arguments["minChromLength"],
+                                        consistentSwDType=arguments["sameStrand"],
+                                        nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
+                                        targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
+                                        validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
+                                        multiProcess=arguments['multiProcess'],
+                                        verbose=arguments['verbose'])
 print >> sys.stderr, "End of the synteny block research"
-listOfSbs.sort(key=lambda x: len(x[2]), reverse=True)
-
-myDiags.printSbsFile(listOfSbs, genome1, genome2)
+print >> sys.stderr, "Number of synteny blocks = %s" % len(list(listOfSbs.iteritems2d()))
+myDiags.printSbsFile(listOfSbs, genome1, genome2, sortByDecrLengths=True)

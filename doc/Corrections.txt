@@ -12,11 +12,17 @@
 		*tandemGapMax. This option overcomes annotation errors in rows of tandem
 			duplicates. And when this option is activated, pylDiag does not count
 			small segmental tandem duplications as events that break the synteny.
-			One advantage is that there won't be pralogs any more in small extracted 
-			sbs, thus the previously impossible to calculate statistical validation 
+			One advantage is that there won't be pralogs any more in small extracted
+			sbs, thus the previously impossible to calculate statistical validation
 			could be performed for sbs that had paralogs.
 		*Weighted average
 		*ancestral gene sign is also infered during the merging process of diagonals
 		*explain the output file format, analog of genes.%s/list.bz2
+		*identifyBreakpointsWithinGaps
+		*nonOverlapping sbs
 
 5) Explain better probabilities using the thesis of Hobermann rather than her paper
+6) Include The work of Claire Lemaitre in the bibliography. Her thesis and her paper.
+   (paper: Precise detection of rearranged breakpoints in mammalian chromosomes.
+		BMC Bioinformatics 2008)
+

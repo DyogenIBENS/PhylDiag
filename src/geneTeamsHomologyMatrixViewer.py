@@ -21,13 +21,12 @@ import phylDiagHomologyMatrixViewer as PMHV
 import drawHomologyMatrixWithSBs
 
 __doc__= """
-        Show the homology matrix with coloured synteny blocks (also called diagonals).
-        - Each colour represents a synteny block.
+        Show the homology matrix with coloured gene teams.
         - On the x-axis are the genes of the 1st genome in the desired window
         - On the y-axis are the genes of the 2nd genome in the desired window
-        - Each coloured rectangle in the matrix represents a filiation relationship restricted to the ancGene species. Couloured rectangle means the corresponding horizontal and vertical genes come from the same ancestral gene in the ancGene species. Take care that coulour genes are not homology relationship. For instance if the ancestor had two paralogs in its genome, there will be two distinct filiation relationships for genes herited from these genes. Genes are coloured if they are in the same filiation relationship class.
-        - '+' indicates filiation relationships that have horizontal gene and vertical gene in the same direction on both chromosomes
-          '-' indicates filiation relationships that have horizontal gene and vertical gene in opposite directions on each chromosomes
+        - Each coloured rectangle in the matrix represents a homology
+        - '+' indicates homology that have horizontal gene and vertical gene in the same direction on both chromosomes
+          '-' indicates homology that have horizontal gene and vertical gene in opposite directions on each chromosomes
         """
 
 

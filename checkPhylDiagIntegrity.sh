@@ -4,47 +4,159 @@ set -e
 # Any subsequent commands which fail will cause the shell script to exit
 # immediately
 red='\e[0;31m'
+green='\e[0;32m'
 NC='\e[0m' # No Color
 
-# TODO for each command line, avoid duplicates
-#commandLine = "cmd"
-##echo -e "${cmd}${NC}"
-#${cmd}
+#############################################
+#	Check integrity of pre-processing scripts #
+#############################################
 
-#echo -e "${red}src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree${NC}"
-#src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree
-#echo -e "${red}src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree${NC}"
-#src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree
-#echo -e "${red}src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree${NC}"
-#src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree
-#
-#echo -e "${red}src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -filterType=InCommonAncestor > res/syntenyBlocks.txt${NC}"
-#src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -filterType=InCommonAncestor > res/syntenyBlocks.txt
-#echo -e "${red}src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks_MD11.txt${NC}"
-#src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=11 -distanceMetric=MD -filterType=InCommonAncestor > res/syntenyBlocks_MD11.txt
-#echo -e "${red}src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -distanceMetric=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks_DPD11.txt 2> res/logErr_DPD11.txt${NC}"
-#src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -distanceMetric=DPD -gapMax=5 -pThreshold=0.001 +verbose -filterType=InCommonAncestor > res/syntenyBlocks_DPD11.txt
-#
-#echo -e "${red}src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=5 -distanceMetric=MD -out:ImageName=res/MH_MD5.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_MD5.txt${NC}"
-#src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=5 -distanceMetric=MD -out:ImageName=res/MH_MD5.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_MD5.txt
-#echo -e "${red}src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -distanceMetric=MD -gapMax=5 -out:ImageName=./res/MHP_MD5.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP_MD5.txt${NC}"
-#src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -distanceMetric=MD -gapMax=5 -out:ImageName=./res/MHP_MD5.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP_MD5.txt
-#
-#Title=PhylDiag
-#S1=Homo.sapiens
-#S2=Mus.musculus
-#C1=X
-#R1="100-250"
-#C2=X
-#R2="1-100"
-#DM="DPD"
-#D=10
-#echo -e "${red}Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && C2=X && R2="1-100" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001${NC}"
-#src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001
+preProcessCommandLines=(
+# convet a .nhx tree into a protTree (forest of gene trees)
+"src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree"
+# convet a .nwk tree into a phylTree
+"src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree"
+# extract ancGenes (family)  from the species tree and the forest of gene trees
+"src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree"
+)
+for line in "${preProcessCommandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
 
-# check geneTeams integrity
+#############################################
+#	Check integrity of phylDiag.py					  #
+#############################################
+
+sbFileName(){
+	if (( $# != 8 )); then
+		    echo "Illegal number of parameters"
+	fi
+	s1=$1
+	s2=$2
+	a=$3
+	# tandem gap max
+	tgm=$4
+	# gap max
+	gm=$5
+	# distance metric
+	dm=$6
+	#echo "${s1}_${s2}_f${a}_Tgm${tgm}Gm${gm}${dm}.sbs"
+	# identify breakpoints within gaps
+	ibwg=$7
+	# overlap max
+	om=$8
+	if [ "${ibwg}" == "+" ]; then
+		echo "${s1}_${s2}_f${a}_Tgm${tgm}Gm${gm}${dm}IbwgOm${om}.sbs"
+	else
+		echo "${s1}_${s2}_f${a}_Tgm${tgm}Gm${gm}${dm}Om${om}.sbs"
+	fi
+}
+
+S1=Homo.sapiens
+S2=Mus.musculus
+A=Euarchontoglires
+phylDiagCommandLines=(
+# phylDiag with default options
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 > res/${S1}_${S2}_f${A}.sbs"
+)
+gm=5
+dm=CD
+phylDiagCommandLines+=(
+# phylDiag with some options
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InCommonAncestor -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_f${A}_Gm${gm}${dm}.sbs"
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InBothSpecies -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_fIBS${A}_Gm${gm}${dm}.sbs"
+)
+tgm=9
+gm=10
+dm=CD
+ibwg='+'
+om=10
+phylDiagCommandLines+=(
+# phylDiag with all options -- options that yield the best synteny blocks for the human mouse comparison
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InCommonAncestor -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
+)
+for line in "${phylDiagCommandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
+
+######################################################
+#	Check integrity of phylDiagHomologyMatrixViewer.py #
+######################################################
+
+S1=Homo.sapiens
+S2=Mus.musculus
+A=Euarchontoglires
+gm=5
+dm=CD
+phylDiagHomologyMatrixViewerCommandLines=(
+# phylDiagHomologyMatrixViewer -- MH
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} -out:ImageName=res/MH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
+# phylDiagHomologyMatrixViewer -- MHP
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
+)
+tgm=9
+gm=10
+dm=CD
+ibwg='+'
+om=10
+phylDiagHomologyMatrixViewerCommandLines+=(
+# phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
+)
+Title=PhylDiag
+gm=5
+C1=X
+R1="100-250"
+C2=X
+R2="1-100"
+phylDiagHomologyMatrixViewerCommandLines+=(
+# phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om}"
+)
+for line in "${phylDiagHomologyMatrixViewerCommandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
+
+###################################
+#	Check integrity of geneTeams.py #
+###################################
+#TODO
+
+####################################################
+#	Check integrity of geneTeamsHomologyMatrixViewer #
+####################################################
 Title=GeneTeams
-echo -e "${red}src/geneTeamsHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=3 -out:ImageName=res/${NC}"
-src/geneTeamsHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -gapMax=5 -out:ImageName=res/${Title}_${S1}_${C1}_${S2}_${C2}_${D}_MH.svg -out:GeneTeams=res/geneTeams.txt
-echo -e "${red}src/geneTeams.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=5 +verbose -filterType=InCommonAncestor > res/geneTeams.txt${NC}"
-src/geneTeams.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -gapMax=5 +verbose -filterType=InCommonAncestor > res/geneTeams.txt
+S1=Homo.sapiens
+S2=Mus.musculus
+A=Euarchontoglires
+gm=4
+C1=X
+R1="1-~"
+C2=X
+R2="1-~"
+geneTeamsCommandLines=(
+"src/geneTeams.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InCommonAncestor -gapMax=${gm} +verbose > res/geneTeams.txt"
+)
+for line in "${geneTeamsCommandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
+
+####################################################
+#	Check integrity of geneTeamsHomologyMatrixViewer #
+####################################################
+geneTeamsHomologyMatrixViewerCommandLines=(
+"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:ImageName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:GeneTeams=res/geneTeamsHomologyMatrixViewer.txt"
+)
+for line in "${geneTeamsHomologyMatrixViewerCommandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done

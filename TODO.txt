@@ -1,11 +1,18 @@
+Highly important:
+-----------------
+Update the README to consider 'identifyBreakpointsWithinGaps' and 
+'nonOverlappingSbs' new options in phylDiag.
+
+
 For sbs file names, always mention the two extant species, the ancestor, the
 filtering, the tandemGapMax, the gapMax and the distance metric used.
 Example:
-Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm2Gm5CD.sbs : synteny blocks 
-extracted in the comparison between the genomes of Homo.sapiens and 
-Mus.musculus, using the filtering, 'InCommonAncestor' Euarchontoglires, 
+Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm2Gm5CD.sbs : synteny blocks
+extracted in the comparison between the genomes of Homo.sapiens and
+Mus.musculus, using the filtering, 'InCommonAncestor' Euarchontoglires,
 a (t)andem(G)ap(M)ax=2, a (g)ap(M)ax=5 and the 2D distance metric CD.
-Anolis.carolinensisc_Monodelphis.domestica_fIBS_Tgm5Gm5MD.sbs : Anolis.carolinensis vs Monodelphis.domestica, using
+Anolis.carolinensisc_Monodelphis.domestica_fIBS_Tgm5Gm5MD.sbs :
+	Anolis.carolinensis vs Monodelphis.domestica, using
 the filtering '(I)n(B)oth(S)pecies'.
 Gallus.gallus_Monodelphis.domestica_fNone_Tgm0Gm3DPD.sbs : using no filtering
 
@@ -100,10 +107,6 @@ Small issues:
 	are not the absolute coordinates of synteny blocks
 *check if the option -filterType=InBothSpecies works well with the viewer
 
-Code refactoring:
------------------
-*Cut-paste the part of myDiags.py that manages the multiprocess into myTools.py
-
 Use the Cairo library to render svg graphics:
 ---------------------------------------------
 Instead of using mySvgDrawer.py use Cairo, a widely used library to draw
@@ -113,10 +116,39 @@ together (http://www.pango.org/)
 
 TODO:
 -----
-*Create a class for synteny blocks ?
-*Change the colors in the viewer (avoid yellow because there is not enough
-	contrast on a white background)
-*Add red rectangles around diagonals that did not pass the statistical validation
-*Update src/newickSpeciesTree2phylTreeSpeciesTree.py to tackle branch lengths
-*verify comments after the change of format of diags/sbs
-	la=[...(aGIdx,aGs,dist)...], lX=[...[...i1...]...] and the output format
+* Change the colors in the viewer (avoid yellow because there is not enough
+		contrast on a white background)
+* Add red rectangles around diagonals that did not pass the statistical validation
+* Update src/newickSpeciesTree2phylTreeSpeciesTree.py to tackle branch lengths
+* verify comments after the change of format of diags/sbs
+		la=[...(aGIdx,aGs,dist)...], lX=[...[...i1...]...] and the output format
+* If genome1 == genome2, ie, if genome comparison with itself,
+		homologies between self genes, should be discarded and the analysis should
+		only be performed on half of the homology matrix. Statistical validation of 
+		diagonals and the apriori finding of the gapMax should also take care of
+		this specific fonctionning.
+* The multiProcess option has been set to False by default because it seems
+	  that in newest versions of python the package multiprocess has changed.
+		It would be nice to make some changes to allow the multiprocess option for
+		newest versions of python.
+* Add an option to count distances in bp (nucleotides)
+* Add an option to keep only anchors (genes that have no paralogs within the
+		same genome)
+* Add an option to consider only genes over a certain length (for resolution
+		purposes)
+* Check that genes are not overlapping in raw data
+* Create a myLightGenome.py file with a LightGenome class that is more adapted
+		to my own use. (Load faster, perform my own operations...)
+* Use single hps to infer micro-inversion within the function
+		'identifyBreakpointsWithinGaps'of synteny blocks.
+* Allow more cases of micro-rearrangements (not only intra-sb-inversion,
+	  intra-sb-transposition and transpositions)
+* code a viewer of the results of phylDiag.py that take sbFile.sbs as input
+* implement the 'rewrittenInTbs' option in geneTeamsHomologyMatrixViewer.py
+
+####################
+Update Data Base:
+: DB=data78
+: for n in Canis.lupus.familiaris Danio.rerio Homo.sapiens Mus.musculus Oryctolagus.cuniculus Pan.troglodytes Drosophila.melanogaster ; do cp $gen/data${DB}/genes/genesST.${n}.list.bz2 data/; done
+: for n in Euarchontoglires Euteleostomi HomoPan Glires Boreoeutheria; do cp $gen/${DB}/trees/0.30/ancGenes/all/ancGenes.${n}.list.bz2 data/; done
+: for n in Canis.lupus.familiaris Danio.rerio Homo.sapiens Mus.musculus Oryctolagus.cuniculus Pan.troglodytes Drosophila.melanogaster ; do cp $gen/${DB}/genes/names/names.${n}.list.bz2 data/; done
