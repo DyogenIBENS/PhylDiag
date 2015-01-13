@@ -258,21 +258,6 @@ if __name__ == '__main__':
          ('verbose', bool, True)],
         __doc__)
 
-    #by convention:
-    if arguments['gapMax'] == 'None':
-        arguments['gapMax'] = None
-    else:
-        try:
-            arguments['gapMax'] = int(arguments['gapMax'])
-        except:
-            raise ValueError('gapMax must be an int or None')
-
-    assert arguments["distanceMetric"] == 'DPD' or arguments["distanceMetric"] == 'MD'\
-        or arguments["distanceMetric"] == 'CD' or arguments["distanceMetric"] == 'ED'
-    assert (arguments["convertGenicToTbCoordinates"] and
-            arguments["mode:chromosomesRewrittenInTbs"])\
-            or not arguments["convertGenicToTbCoordinates"]
-
     # Load genomes
     genome1 = myGenomes.Genome(arguments["genome1"])
     genome2 = myGenomes.Genome(arguments["genome2"])
@@ -292,7 +277,38 @@ if __name__ == '__main__':
     ancGenes = myGenomes.Genome(arguments["ancGenes"])
     modesFilter = list(myDiags.FilterType._keys)
     filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
+
+    tandemGapMax = arguments['tandemGapMax']
+    gapMax = arguments['gapMax']
+    identifyBreakpointsWithinGaps = arguments['identifyBreakpointsWithinGaps']
+    nonOverlappingSbs = arguments['nonOverlappingSbs']
+    overlapMax = arguments['overlapMax']
+    consistentSwDType = arguments['consistentSwDType']
+    minChromLength = arguments['minChromLength']
+    pThreshold = arguments['pThreshold']
+    validateImpossToCalc_mThreshold = arguments['validateImpossToCalc_mThreshold']
+    chromosomesRewrittenInTbs = arguments['mode:chromosomesRewrittenInTbs']
+    convertGenicToTbCoordinates = arguments['convertGenicToTbCoordinates']
+    distanceMetric = arguments['distanceMetric']
+    nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
+    targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
+
     thresholdChr = 50
+
+    #by convention:
+    if gapMax == 'None':
+        gapMax = None
+    else:
+        try:
+            gapMax = int(gapMax)
+        except:
+            raise ValueError('gapMax must be an int or None')
+
+    assert distanceMetric == 'DPD' or distanceMetric == 'MD'\
+        or distanceMetric == 'CD' or distanceMetric == 'ED'
+    assert (convertGenicToTbCoordinates and chromosomesRewrittenInTbs)\
+            or not convertGenicToTbCoordinates
+
 
     if not arguments['mode:chromosomesRewrittenInTbs']:
         #chromosomes are shown as a list of genes
@@ -322,26 +338,25 @@ if __name__ == '__main__':
             genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
                                              ancGenes,
                                              filterType,
-                                             arguments['minChromLength'],
-                                             arguments['tandemGapMax'])
+                                             minChromLength,
+                                             tandemGapMax)
 
         # Search diagonals
         #FIXME : calculate synteny blocks before, on the whole chromosome, not the ROI specified by the user ranges
         diagsInPairComp = myDiags.extractSbsInPairCompGenomes(chrom1,
                                                               chrom2,
                                                               ancGenes,
-                                                              tandemGapMax=arguments['tandemGapMax'],
-                                                              gapMax=arguments['gapMax'],
-                                                              identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
-                                                              nonOverlappingSbs=arguments['nonOverlappingSbs'],
-                                                              overlapMax=arguments['overlapMax'],
-                                                              consistentSwDType=arguments["consistentSwDType"],
+                                                              tandemGapMax=tandemGapMax,
+                                                              gapMax=gapMax,
+                                                              identifyBreakpointsWithinGaps=identifyBreakpointsWithinGaps,
+                                                              nonOverlappingSbs=nonOverlappingSbs,
+                                                              overlapMax=overlapMax,
+                                                              consistentSwDType=consistentSwDType,
                                                               filterType=filterType,
-                                                              minChromLength=arguments["minChromLength"],
-                                                              distanceMetric=arguments["distanceMetric"],
-                                                              pThreshold=arguments["pThreshold"],
-                                                              validateImpossToCalc_mThreshold=arguments["validateImpossToCalc_mThreshold"],
-                                                              verbose=arguments['verbose'])
+                                                              minChromLength=minChromLength,
+                                                              distanceMetric=distanceMetric,
+                                                              pThreshold=pThreshold,
+                                                              validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold)
 
         #print >> sys.stderr, "Warning the p-value calculation is performed on the ROI defined by the user ranges"
         #sbsInPairComp = myDiags.statisticalValidation(diagsInPairComp,
@@ -374,15 +389,15 @@ if __name__ == '__main__':
          (g2f, gf2gaID2, (nCL2, nGL2))) =\
             myDiags.filter2D(g1aID, g2aID,
                              filterType,
-                             arguments["minChromLength"],
+                             minChromLength,
                              keepOriginal=True)
         (g1tb, gtb2gf1, nGTD1) =\
             myMapping.remapRewriteInTb(g1f,
-                                       tandemGapMax=arguments['tandemGapMax'],
+                                       tandemGapMax=tandemGapMax,
                                        mOld=None)
         (g2tb, gtb2gf2, nGTD2) =\
             myMapping.remapRewriteInTb(g2f,
-                                       tandemGapMax=arguments['tandemGapMax'],
+                                       tandemGapMax=tandemGapMax,
                                        mOld=None)
         gtb2gaID1 = {}
         for c in gtb2gf1:
@@ -393,7 +408,7 @@ if __name__ == '__main__':
             # see Mapping class addition
             gtb2gaID2[c] = gtb2gf2[c] + gf2gaID2[c]
 
-        if not arguments['convertGenicToTbCoordinates']:
+        if not convertGenicToTbCoordinates:
             (chr1,range1) = parseChrRange(arguments["chr1:deb1-fin1"], g1tb)
             (chr2,range2) = parseChrRange(arguments["chr2:deb2-fin2"], g2tb)
         else:
@@ -454,72 +469,17 @@ if __name__ == '__main__':
         TbNoHomologiesInWindowC1 = [[tb1] for tb1 in TbNoHomologiesInWindowC1]
         TbNoHomologiesInWindowC2 = [[tb2] for tb2 in TbNoHomologiesInWindowC2]
 
-        # compute the recommended gapMax parameter
-        #########################################
-        N12s, N12_g = myDiags.numberOfHomologies(chrom1_tb, chrom2_tb)
-        (p_hpSign, p_hpSign_g, (sTBG1, sTBG1_g), (sTBG2, sTBG2_g)) = myProbas.statsHpSign(chrom1_tb, chrom2_tb)
-        #FIXME ???
-        #p_hpSign = myTools.Dict2d(list)
-        #p_hpSign[chr1][chr2] = p_hpSign[1][1]
-        print >> sys.stderr, "genome 1 tb orientation proba = {+1:%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG1_g[+1], sTBG1_g[-1], sTBG1_g[None])
-        print >> sys.stderr, "genome 2 tb orientation proba = {+1=%s,-1:%s,None:%s} (stats are also calculated for each chromosome)" % (sTBG2_g[+1], sTBG2_g[-1], sTBG2_g[None])
-        print >> sys.stderr, "hp sign proba in the 'global' mhp = {+1:%s,-1:%s,None:%s) (probabilities are for pairwise mhp)" % (p_hpSign_g[+1], p_hpSign_g[-1], p_hpSign_g[None])
-        N1_g=sum([len(chrom1_tb[c1]) for c1 in chrom1_tb])
-        N2_g=sum([len(chrom2_tb[c2]) for c2 in chrom2_tb])
-        m=2
-        #FIXME : calculate adviced gapMax before, on the whole chromosome, not the ROI specified by the user ranges
-        gap = myDiags.recommendedGap(arguments["nbHpsRecommendedGap"],
-                                     arguments["targetProbaRecommendedGap"],
-                                     N12_g,
-                                     N1_g,
-                                     N2_g,
-                                     p_hpSign=p_hpSign_g,
-                                     verbose=arguments['verbose'])
-        print >> sys.stderr, "recommended gapMax = %s tbs" % gap
-        if arguments['gapMax'] == None:
-            gapMax = gap
-        else:
-            gapMax = arguments['gapMax']
-        print >> sys.stderr, "used gapMax = %s" % gapMax
-
-        # Search diagonals
-        listOfDiags = myDiags.extractSbsInPairCompChr(chrom1_tb[chr1],
-                                                      chrom2_tb[chr2],
-                                                      gapMax=arguments['gapMax'],
-                                                      distanceMetric=arguments["distanceMetric"],
-                                                      consistentSwDType=arguments['consistentSwDType'],
-                                                      verbose=arguments['verbose'])
-        # statistical validation (SV)
-        #FIXME : calculate p-values before, on the whole chromosome, not the ROI specified by the user ranges
-        diagsInPairComp = myTools.Dict2d(list)
-        diagsInPairComp[chr1][chr2] = listOfDiags
-        print >> sys.stderr, "Warning the p-value calculation is performed on the ROI defined by the user ranges"
-        sbsInPairComp = myDiags.statisticalValidation(diagsInPairComp,
-                                                      chrom1_tb,
-                                                      chrom2_tb,
-                                                      N12s,
-                                                      p_hpSign,
-                                                      pThreshold=arguments['pThreshold'],
-                                                      NbOfHomologiesThreshold=50,
-                                                      validateImpossToCalc_mThreshold=arguments["validateImpossToCalc_mThreshold"],
-                                                      verbose=arguments['verbose'])
-
-        # Do this task until no more change (stability!)
-        if arguments['identifyBreakpointsWithinGaps']:
-            while True:
-                nbSbsOld = len(list(sbsInPairComp.iteritems2d()))
-                sbsInPairComp = myDiags.fIdentifyBreakpointsWithinGaps(sbsInPairComp)
-                nbSbsNew = len(list(sbsInPairComp.iteritems2d()))
-                if nbSbsNew == nbSbsOld:
-                    break
-
-        if arguments['nonOverlappingSbs']:
-            # TODO, compute the variation of the coverage before and after this step
-            sbsInPairComp = myDiags.filterOverlappingSbs(sbsInPairComp, overlapMax=arguments['overlapMax'], verbose=arguments['verbose'])
-            # DEBUG, verify that the filtered sbs are not overlapping
-            (_, _, N, O, _, _) = myDiags.buildConflictGraph(sbsInPairComp, overlapMax=0, verbose=arguments['verbose'])
-            assert len(N) == 0
-            assert len(O) == 0
+        sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(chrom1_tb, chrom2_tb, ancGenes,
+                                                                 gapMax=gapMax,
+                                                                 distanceMetric=distanceMetric,
+                                                                 pThreshold=pThreshold,
+                                                                 identifyBreakpointsWithinGaps=identifyBreakpointsWithinGaps,
+                                                                 nonOverlappingSbs=nonOverlappingSbs,
+                                                                 overlapMax=overlapMax,
+                                                                 consistentSwDType=consistentSwDType,
+                                                                 nbHpsRecommendedGap=nbHpsRecommendedGap,
+                                                                 targetProbaRecommendedGap=targetProbaRecommendedGap,
+                                                                 validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold)
 
         TbDiagIndices = TbComputeDiagIndices(sbsInPairComp)
 

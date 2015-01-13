@@ -145,6 +145,13 @@ TODO:
 	  intra-sb-transposition and transpositions)
 * code a viewer of the results of phylDiag.py that take sbFile.sbs as input
 * implement the 'rewrittenInTbs' option in geneTeamsHomologyMatrixViewer.py
+!!!!!!!!
+* gene indexation should be based on the coordinate of the beginning of
+  transcription, not the coordinate that is the closest to the coordinate 0.
+!!!!!!!!
+* when selecting sbs during the nonOverlapping, if two sbs have the same
+  number of homologies, take the sb that has the smalles bounding box, i.e. the 
+  sb whose extremities on G1 and G2 are the closest.
 
 ####################
 Update Data Base:

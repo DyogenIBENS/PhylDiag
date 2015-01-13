@@ -19,14 +19,14 @@ import utils.myGenomes as myGenomes
 # Arguments
 modesOrthos = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs( \
-                [("genome1",file), ("genome2",file), ("ancGenes",file)], \
+                [("genome1",file),
+                 ("genome2",file),
+                 ("ancGenes",file)], \
                 [("filterType",str,modesOrthos),
                  ("tandemGapMax", int, 0),
                  ("gapMax",str,'None'),
                  ('distanceMetric',str,'CD'),
                  ('pThreshold',float, 0.001),
-                 # TODO
-                 # ('overlappingMerge', bool, False),
                  ('identifyBreakpointsWithinGaps', bool, False),
                  ('nonOverlappingSbs', bool, False),
                  ('overlapMax', int, 0),

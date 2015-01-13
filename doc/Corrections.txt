@@ -25,4 +25,5 @@
 6) Include The work of Claire Lemaitre in the bibliography. Her thesis and her paper.
    (paper: Precise detection of rearranged breakpoints in mammalian chromosomes.
 		BMC Bioinformatics 2008)
-
+7) Neglecting dispersed duplicates underestimates the p-values of sbs and the sig-
+   nificance of sbs - are - (is) thus overestimated.
