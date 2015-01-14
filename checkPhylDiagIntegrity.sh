@@ -116,12 +116,28 @@ R2="1-100"
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
 "src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om}"
+#many computations known to be difficult
+"src/listOfDifficultSyntenies.sh"
 )
 for line in "${phylDiagHomologyMatrixViewerCommandLines[@]}"
 	do
 		echo -e "${green}${line}${NC}"
 		eval ${line}
 done
+
+# Check the graph construction of the distribution of the lengths of synteny
+# blocks
+commandLines=(
+"src/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm9Gm10CDIbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
+)
+for line in "${commandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
+
+# needs numpy and matplotlib
+
 
 ###################################
 #	Check integrity of geneTeams.py #
@@ -160,3 +176,6 @@ for line in "${geneTeamsHomologyMatrixViewerCommandLines[@]}"
 		echo -e "${green}${line}${NC}"
 		eval ${line}
 done
+
+
+

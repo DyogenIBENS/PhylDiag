@@ -24,22 +24,24 @@ args+=(
 "Homo.sapiens Gallus.gallus Amniota 16 1 ~ 11 1 ~"
 )
 # Mouse-Chicken comparison
-args=(
+args+=(
 #S1	S2	LCA	C1 beg1 end1 C2 beg2 end2
 "Mus.musculus Gallus.gallus Amniota X 1 ~ 4 1 ~"
 "Mus.musculus Gallus.gallus Amniota 5 1 ~ 4 1 ~"
 )
 
-Title=MHP
+Title=MH
 C1=X
-R1="100-250"
+#R1="100-250"
 C2=X
-R2="1-100"
+#R2="1-100"
 tgm=9
 gm=10
 dm=CD
 ibwg='+'
 om=10
+# p-value threshold
+pt=0.001
 
 commandLines=()
 for line in "${args[@]}"
@@ -58,7 +60,8 @@ do
 	R2="${beg2}-${end2}"
 
 	commandLines+=(
-	"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	#"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
 	)
 done
 
