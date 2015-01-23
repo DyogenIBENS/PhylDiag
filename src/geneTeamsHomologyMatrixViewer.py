@@ -16,7 +16,6 @@ import utils.myTools as myTools
 # PhylDiag core algorithm
 import utils.myDiags as myDiags
 import utils.myGeneTeams as myGeneTeams
-import phylDiagHomologyMatrixViewer as PMHV
 
 import drawHomologyMatrixWithSBs
 
@@ -102,8 +101,8 @@ filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
 #print >> sys.stderr, "List of (chromosomes, length in genes) of Genome 2, for chr of size > %s " % thresholdChr
 #for (chr2,len2) in [(key2, len(chr2)) for (key2,chr2) in genome2.items() if len(chr2) > thresholdChr]:
 #       print >> sys.stderr, "chr %s has %s genes" % (chr2,len2)
-(chr1,range1) = PMHV.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
-(chr2,range2) = PMHV.parseChrRange(arguments["chr2:deb2-fin2"], genome2)
+(chr1,range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
+(chr2,range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2)
 chrom1 ={}
 chrom2 ={}
 chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
@@ -119,7 +118,7 @@ genesStrandsC2 = [s for (_,s) in chrom2[chr2]]
  genesHomologiesHpSign,
  (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
  genesHomologyGroupsInWindow) =\
-    PMHV.genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
+    drawHomologyMatrixWithSBs.genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
                                           ancGenes,
                                           filterType,
                                           arguments['minChromLength'],

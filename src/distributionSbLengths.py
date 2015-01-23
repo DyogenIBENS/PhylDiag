@@ -26,14 +26,15 @@ import utils.myGenomes as myGenomes
 def lengthProjectionOnGenome(rankGenome, sb, c, genome):
     lGeneCoord = []
     sblX = sb.l1 if rankGenome == 1 else sb.l2
-    for gIdx in sblX:
-        #g1Pos = genome1.getPosition([g1n]).pop()
-        #chromosome = g1Pos.chromosome
-        #assert c1 == chromosome
-        #index = g1Pos.index
-        c = myGenomes.commonChrName(c)
-        g = genome.lstGenes[c][gIdx]
-        lGeneCoord.extend([g.beginning, g.end])
+    for tbX in sblX:
+        for gIdx in tbX:
+            #g1Pos = genome1.getPosition([g1n]).pop()
+            #chromosome = g1Pos.chromosome
+            #assert c1 == chromosome
+            #index = g1Pos.index
+            c = myGenomes.commonChrName(c)
+            g = genome.lstGenes[c][gIdx]
+            lGeneCoord.extend([g.beginning, g.end])
     minOnG = min(lGeneCoord)
     maxOnG = max(lGeneCoord)
     lengthG = maxOnG - minOnG
@@ -103,7 +104,7 @@ elif arguments['lengthUnit'] == 'Mb':
 #remove lengths higher than maxShownLength
 lSbsLengths = [sbLength for sbLength in lSbsLengths if sbLength <= maxShownLength]
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
-binwidth = 1.0
+binwidth = 2.5
 mindata=0
 maxdata=80
 bins = list(np.arange(mindata, maxdata + binwidth, binwidth))

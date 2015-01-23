@@ -152,6 +152,9 @@ TODO:
 * when selecting sbs during the nonOverlapping, if two sbs have the same
   number of homologies, take the sb that has the smalles bounding box, i.e. the 
   sb whose extremities on G1 and G2 are the closest.
+* In the MHP no overlap. Still some overlap between synteny blocks in the MH
+  because of the tandemGapMax parameter.
+* Typical usage of PhylDiag with misc.compareMatrix
 
 ####################
 Update Data Base:
