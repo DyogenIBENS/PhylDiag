@@ -352,7 +352,8 @@ if __name__ == '__main__':
             maxl1 = max(sb.l1)
             minl2 = min(sb.l2)
             maxl2 = max(sb.l2)
-        print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (chr1, minl1, maxl1, chr2, minl2, maxl2, len(sb.la), sb.pVal)
+        # indices of genes start at 1 to be coherent with the output image
+        print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (chr1, minl1 + 1, maxl1 + 1, chr2, minl2 + 1, maxl2 + 1, len(sb.la), sb.pVal)
     f.close()
 
     # Add lengends and title to the ouput matrix
