@@ -14,15 +14,16 @@ import sys
 
 import utils.myTools as myTools
 import utils.myDiags as myDiags
-import utils.myGenomes as myGenomes
+#import utils.myGenomes as myGenomes
+import utils.myLightGenomes as myLightGenomes
 
 # Arguments
-modesOrthos = list(myDiags.FilterType._keys)
+filterType = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs( \
                 [("genome1",file),
                  ("genome2",file),
-                 ("ancGenes",file)], \
-                [("filterType",str,modesOrthos),
+                 ("families",file)], \
+                [("filterType",str, filterType),
                  ("tandemGapMax", int, 0),
                  ("gapMax",str,'None'),
                  ('distanceMetric',str,'CD'),
@@ -53,19 +54,19 @@ else:
     except:
         raise TypeError('gapMax is either an int or None')
 
-genome1 = myGenomes.Genome(arguments["genome1"], withDict=False)
+genome1 = myLightGenomes.LightGenome(arguments["genome1"], withDict=False)
 print >> sys.stderr, "Genome1"
-print >> sys.stderr, "nb of Chr = ", len(genome1.chrList[myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome1.chrList[myGenomes.ContigType.Scaffold])
-genome2 = myGenomes.Genome(arguments["genome2"], withDict=False)
+print >> sys.stderr, "Nb of Chr = ", len(genome1.keys())
+genome2 = myLightGenomes.LightGenome(arguments["genome2"], withDict=False)
 print >> sys.stderr, "Genome2"
-print >> sys.stderr, "nb of Chr = ", len(genome2.chrList[myGenomes.ContigType.Chromosome])," nb of scaffolds = ", len(genome2.chrList[myGenomes.ContigType.Scaffold])
-ancGenes = myGenomes.Genome(arguments["ancGenes"], withDict=True)
-filterType = myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
+print >> sys.stderr, "Nb of Chr = ", len(genome2.keys())
+families = myLightGenomes.Families(arguments["families"])
+filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
 listOfSbs =\
-    myDiags.extractSbsInPairCompGenomes(genome1, genome2, ancGenes,
+    myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
                                         tandemGapMax=arguments['tandemGapMax'],
                                         gapMax=arguments["gapMax"],
                                         distanceMetric=arguments['distanceMetric'],
@@ -83,4 +84,4 @@ listOfSbs =\
                                         verbose=arguments['verbose'])
 print >> sys.stderr, "End of the synteny block research"
 print >> sys.stderr, "Number of synteny blocks = %s" % len(list(listOfSbs.iteritems2d()))
-myDiags.printSbsFile(listOfSbs, genome1, genome2, sortByDecrLengths=True)
+myDiags.printSbsFile(listOfSbs, genome1, genome2, families, sortByDecrLengths=True)

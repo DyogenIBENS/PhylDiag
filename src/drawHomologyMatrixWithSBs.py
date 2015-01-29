@@ -24,7 +24,7 @@ import utils.myMapping as myMapping
 # g2gtb is a dictionnary to convert indices from gene coordinates into tb coordinates
 def parseChrRange(text, genome, g2gtb=None):
     if len(text.split(":")) == 2:
-        chr = int(text.split(":")[0]) if text.split(":")[0].isdigit() else text.split(":")[0]
+        chr = text.split(":")[0]
         if chr not in genome.keys():
             print >> sys.stderr, "chr %s not in genome" % chr
             raise ValueError
@@ -106,54 +106,54 @@ def TbComputeHomologyInformations(chrom1_tb, chrom2_tb):
     return (MHP, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow)
 
 
-def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, ancGenes,
+def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, families,
                                      filterType,
                                      minChromLength, tandemGapMax):
-    c1_aID = myMapping.labelWithAncGeneID(chrom1, ancGenes)
-    c2_aID = myMapping.labelWithAncGeneID(chrom2, ancGenes)
+    c1_fID = myMapping.labelWithFamID(chrom1, families)
+    c2_fID = myMapping.labelWithFamID(chrom2, families)
     # Must be applied on the two genomes
-    ((c1_aID_filt, Cf2CaID1, (nCL1, nGL1)),
-     (c2_aID_filt, Cf2CaID2, (nCL2, nGL2))) = myDiags.filter2D(c1_aID, c2_aID,
+    ((c1_fID_filt, Cf2CfID1, (nCL1, nGL1)),
+     (c2_fID_filt, Cf2CfID2, (nCL2, nGL2))) = myDiags.filter2D(c1_fID, c2_fID,
                                                                filterType,
                                                                minChromLength,
                                                                keepOriginal=True)
-    (chrom1_tb, Ctb2Cf1, nGTD1) = myMapping.remapRewriteInTb(c1_aID_filt,
+    (chrom1_tb, Ctb2Cf1, nGTD1) = myMapping.remapRewriteInTb(c1_fID_filt,
                                                              tandemGapMax=tandemGapMax,
                                                              mOld=None)
-    (chrom2_tb, Ctb2Cf2, nGTD2) = myMapping.remapRewriteInTb(c2_aID_filt,
+    (chrom2_tb, Ctb2Cf2, nGTD2) = myMapping.remapRewriteInTb(c2_fID_filt,
                                                              tandemGapMax=tandemGapMax,
                                                              mOld=None)
-    Ctb2CaID1 = {}
+    Ctb2CfID1 = {}
     for c in Ctb2Cf1:
         # see Mapping class addition
-        Ctb2CaID1[c] = Ctb2Cf1[c] + Cf2CaID1[c]
-    Ctb2CaID2 = {}
+        Ctb2CfID1[c] = Ctb2Cf1[c] + Cf2CfID1[c]
+    Ctb2CfID2 = {}
     for c in Ctb2Cf2:
         # see Mapping class addition
-        Ctb2CaID2[c] = Ctb2Cf2[c] + Cf2CaID2[c]
+        Ctb2CfID2[c] = Ctb2Cf2[c] + Cf2CfID2[c]
 
     #Focus on the chromosome of the window
     chrom1_ = chrom1[chr1]
     chrom2_ = chrom2[chr2]
-    c1_aID = c1_aID[chr1]
-    c2_aID = c2_aID[chr2]
-    c1_aID_filt = c1_aID_filt[chr1]
-    c2_aID_filt = c2_aID_filt[chr2]
-    Cf2CaID1 = Cf2CaID1[chr1]
-    Cf2CaID2 = Cf2CaID2[chr2]
+    c1_fID = c1_fID[chr1]
+    c2_fID = c2_fID[chr2]
+    c1_fID_filt = c1_fID_filt[chr1]
+    c2_fID_filt = c2_fID_filt[chr2]
+    Cf2CfID1 = Cf2CfID1[chr1]
+    Cf2CfID2 = Cf2CfID2[chr2]
     chrom1_tb = chrom1_tb[chr1]
     chrom2_tb = chrom2_tb[chr2]
     Ctb2Cf1 = Ctb2Cf1[chr1]
     Ctb2Cf2 = Ctb2Cf2[chr2]
-    Ctb2CaID1 = Ctb2CaID1[chr1]
-    Ctb2CaID2 = Ctb2CaID2[chr2]
+    Ctb2CfID1 = Ctb2CfID1[chr1]
+    Ctb2CfID2 = Ctb2CfID2[chr2]
 
     ###
     # Build genesRemovedDuringFilteringCX = [..., i, ...] the list of genes that
     # have been removed during the filtering process
     ###
-    genesRemovedDuringFilteringC1 = [i1 for (i1, (anc, _)) in enumerate(c1_aID) if anc is None]
-    genesRemovedDuringFilteringC2 = [i2 for (i2, (anc, _)) in enumerate(c2_aID) if anc is None]
+    genesRemovedDuringFilteringC1 = [i1 for (i1, (anc, _)) in enumerate(c1_fID) if anc is None]
+    genesRemovedDuringFilteringC2 = [i2 for (i2, (anc, _)) in enumerate(c2_fID) if anc is None]
 
     (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow) =\
         TbComputeHomologyInformations(chrom1_tb, chrom2_tb)
@@ -161,8 +161,8 @@ def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, ancGenes,
     genesHomologiesHpSign = collections.defaultdict(lambda: collections.defaultdict(int))
     for i1_tb in TbHpSign:
         for i2_tb in TbHpSign[i1_tb]:
-            for (i1, i2) in itertools.product([ii1 for ii1 in Ctb2CaID1[i1_tb]],
-                                              [ii2 for ii2 in Ctb2CaID2[i2_tb]]):
+            for (i1, i2) in itertools.product([ii1 for ii1 in Ctb2CfID1[i1_tb]],
+                                              [ii2 for ii2 in Ctb2CfID2[i2_tb]]):
                 s1 = chrom1_[i1][1]
                 s2 = chrom2_[i2][1]
                 genesHomologiesHpSign[i1][i2] = s1*s2
@@ -173,9 +173,9 @@ def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, ancGenes,
     genesNoHomologiesInWindowC1 = []
     genesNoHomologiesInWindowC2 = []
     for i1_tb in TbNoHomologiesInWindowC1:
-        genesNoHomologiesInWindowC1.append([i1 for i1 in Ctb2CaID1[i1_tb]])
+        genesNoHomologiesInWindowC1.append([i1 for i1 in Ctb2CfID1[i1_tb]])
     for i2_tb in TbNoHomologiesInWindowC2:
-        genesNoHomologiesInWindowC2.append([i2 for i2 in Ctb2CaID2[i2_tb]])
+        genesNoHomologiesInWindowC2.append([i2 for i2 in Ctb2CfID2[i2_tb]])
 
     ###
     # Build genesHomologyGroupsInWindow : [..., ([tbC1_4,tbC1_46,tbC1_80],[tbC2_2,tbC2_7]), ...]
@@ -186,9 +186,9 @@ def genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2, ancGenes,
     for (tbs1, tbs2) in TbHomologyGroupsInWindow:
         genesHomologyGroupsInWindow.append(([], []))
         for i1_tb_group in tbs1:
-            genesHomologyGroupsInWindow[-1][0].append([i1 for i1 in Ctb2CaID1[i1_tb_group]])
+            genesHomologyGroupsInWindow[-1][0].append([i1 for i1 in Ctb2CfID1[i1_tb_group]])
         for i2_tb_group in tbs2:
-            genesHomologyGroupsInWindow[-1][1].append([i2 for i2 in Ctb2CaID2[i2_tb_group]])
+            genesHomologyGroupsInWindow[-1][1].append([i2 for i2 in Ctb2CfID2[i2_tb_group]])
 
     return ((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
             genesHomologiesHpSign,

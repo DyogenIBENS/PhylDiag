@@ -10,7 +10,7 @@ import os
 import sys
 import itertools
 
-import utils.myGenomes as myGenomes
+import utils.myLightGenomes as myLightGenomes
 import utils.myTools as myTools
 # PhylDiag core algorithm
 import utils.myDiags as myDiags
@@ -33,10 +33,10 @@ if __name__ == '__main__':
     arguments = myTools.checkArgs(
         [("genome1", file),
          ("genome2", file),
-         ("ancGenes", file),
+         ("families", file),
          ("chr1:deb1-fin1", str),
          ("chr2:deb2-fin2", str)],
-        [("filterType", str, 'InCommonAncestor'),
+        [("filterType", str, 'InFamilies'),
          ("tandemGapMax", int, 0),
          ("gapMax", str, 'None'),
          ('identifyBreakpointsWithinGaps', bool, False),
@@ -58,8 +58,8 @@ if __name__ == '__main__':
         __doc__)
 
     # Load genomes
-    genome1 = myGenomes.Genome(arguments["genome1"])
-    genome2 = myGenomes.Genome(arguments["genome2"])
+    genome1 = myLightGenomes.LightGenome(arguments["genome1"])
+    genome2 = myLightGenomes.LightGenome(arguments["genome2"])
     # Change genome format
     genome1Name = genome1.name
     genome2Name = genome2.name
@@ -67,11 +67,7 @@ if __name__ == '__main__':
     if arguments['in:SyntenyBlocks'] is not 'None':
         # load synteny blocks
         sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
-    genomeD1 = genome1.intoDict()
-    genomeD2 = genome2.intoDict()
-    genome1 = genomeD1
-    genome2 = genomeD2
-    ancGenes = myGenomes.Genome(arguments["ancGenes"])
+    families = myLightGenomes.Families(arguments["families"])
     modesFilter = list(myDiags.FilterType._keys)
     filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
 
@@ -140,7 +136,7 @@ if __name__ == '__main__':
             # comparisons
             sbsInPairComp = myDiags.extractSbsInPairCompGenomes(chrom1,
                                                                 chrom2,
-                                                                ancGenes,
+                                                                families,
                                                                 tandemGapMax=tandemGapMax,
                                                                 gapMax=gapMax,
                                                                 identifyBreakpointsWithinGaps=identifyBreakpointsWithinGaps,
@@ -171,7 +167,7 @@ if __name__ == '__main__':
          (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
          genesHomologyGroupsInWindow) =\
             drawHomologyMatrixWithSBs.genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
-                                                                       ancGenes,
+                                                                       families,
                                                                        filterType,
                                                                        minChromLength,
                                                                        tandemGapMax)
@@ -190,11 +186,11 @@ if __name__ == '__main__':
 
     else:
         #chromosomes are shown as lists of tbs
-        g1aID = myMapping.labelWithAncGeneID(genome1, ancGenes)
-        g2aID = myMapping.labelWithAncGeneID(genome2, ancGenes)
-        ((g1f, gf2gaID1, (nCL1, nGL1)),
-         (g2f, gf2gaID2, (nCL2, nGL2))) =\
-            myDiags.filter2D(g1aID, g2aID,
+        g1fId = myMapping.labelWithFamID(genome1, families)
+        g2fId = myMapping.labelWithFamID(genome2, families)
+        ((g1f, gf2gfId1, (nCL1, nGL1)),
+         (g2f, gf2gfId2, (nCL2, nGL2))) =\
+            myDiags.filter2D(g1fId, g2fId,
                              filterType,
                              minChromLength,
                              keepOriginal=True)
@@ -206,25 +202,25 @@ if __name__ == '__main__':
             myMapping.remapRewriteInTb(g2f,
                                        tandemGapMax=tandemGapMax,
                                        mOld=None)
-        gtb2gaID1 = {}
-        gaID2gtb1 = {}
+        gtb2gfId1 = {}
+        gfId2gtb1 = {}
         for c in gtb2gf1:
             # see Mapping class addition
-            gtb2gaID1[c] = gtb2gf1[c] + gf2gaID1[c]
-            gaID2gtb1[c] = gtb2gaID1[c].old
-        gtb2gaID2 = {}
-        gaID2gtb2 = {}
+            gtb2gfId1[c] = gtb2gf1[c] + gf2gfId1[c]
+            gfId2gtb1[c] = gtb2gfId1[c].old
+        gtb2gfId2 = {}
+        gfId2gtb2 = {}
         for c in gtb2gf2:
             # see Mapping class addition
-            gtb2gaID2[c] = gtb2gf2[c] + gf2gaID2[c]
-            gaID2gtb2[c] = gtb2gaID2[c].old
+            gtb2gfId2[c] = gtb2gf2[c] + gf2gfId2[c]
+            gfId2gtb2[c] = gtb2gfId2[c].old
 
         if not convertGenicToTbCoordinates:
             (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1tb)
             (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2tb)
         else:
-            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1tb, g2gtb=gaID2gtb1)
-            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2tb, g2gtb=gaID2gtb2)
+            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1tb, g2gtb=gfId2gtb1)
+            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2tb, g2gtb=gfId2gtb2)
 
         chrom1_tb = {}
         chrom2_tb = {}
@@ -234,11 +230,11 @@ if __name__ == '__main__':
         #Focus on the chromosome of the window, just give simple name to the chromosome of interest
         chrom1 = genome1[chr1]
         Ctb2Cf1 = gtb2gf1[chr1]
-        CaID2Ctb1 = gaID2gtb1[chr1]
+        CfId2Ctb1 = gfId2gtb1[chr1]
 
         chrom2 = genome2[chr2]
         Ctb2Cf2 = gtb2gf2[chr2]
-        CaID2Ctb2 = gaID2gtb2[chr2]
+        CfId2Ctb2 = gfId2gtb2[chr2]
 
         ###
         # Build TbNumberOfGenesInEachTbC1 : [ 4,5,1,1,6,2, ...] number og genes in each TB of C1
@@ -278,8 +274,8 @@ if __name__ == '__main__':
             new_sbsInPairComp = myTools.Dict2d(list)
             for sb in sbsInPairComp[chr1][chr2]:
                 # change the sb.lX structure from list of lists to list of ints
-                new_l1 = [CaID2Ctb1[tb[0]] for tb in sb.l1]
-                new_l2 = [CaID2Ctb2[tb[0]] for tb in sb.l2]
+                new_l1 = [CfId2Ctb1[tb[0]] for tb in sb.l1]
+                new_l2 = [CfId2Ctb2[tb[0]] for tb in sb.l2]
                 sb = myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, new_l1, new_l2, sb.la), sb.pVal)
                 if (range1[0] <= sb.minOnG(1) and sb.maxOnG(1) <= range1[1])\
                         and (range2[0] <= sb.minOnG(2) and sb.maxOnG(2) <= range2[1]):
@@ -297,7 +293,7 @@ if __name__ == '__main__':
         else:
             # extract diagonals in the ROI without considering other pairwise
             # comparisons
-            sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(chrom1_tb, chrom2_tb, ancGenes,
+            sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(chrom1_tb, chrom2_tb,
                                                                      gapMax=gapMax,
                                                                      distanceMetric=distanceMetric,
                                                                      pThreshold=pThreshold,
@@ -338,7 +334,7 @@ if __name__ == '__main__':
     # write a simple file with all diagonals into output file
     f = open(arguments['out:SyntenyBlocks'], 'w')
     print >> f, "Mode : %s" % 'Genic scale' if arguments['mode:chromosomesRewrittenInTbs'] is False else 'Tandem Blocks scale'
-    print >> f, "chromosome %s de %s\t%s\t%s\tchromosome %s de %s\t%s\t%s\t%s" % (chr1, genome1Name, 'beginC1', 'endC1', chr2, genome2Name, 'beginC2', 'endC2', 'length in ancestral genes')
+    print >> f, "chromosome %s de %s\t%s\t%s\tchromosome %s de %s\t%s\t%s\t%s" % (chr1, genome1Name, 'beginC1', 'endC1', chr2, genome2Name, 'beginC2', 'endC2', 'length in families')
     print >> f, "c1\tbeg1\tend1\tc2\tbeg2\tend2\thps\tpVal"
 
     for sb in sbsInPairComp[chr1][chr2]:
@@ -439,6 +435,7 @@ if __name__ == '__main__':
     #os.system("%s %s" % ('firefox',arguments["out:ImageName"]))
 
 #Find diags with the more paralogs
+@myTools.deprecated
 def searchInterestingDiags(listOfDiags, range1, range2):
     ecart=-sys.maxint-1
     diag_=None
@@ -483,7 +480,8 @@ def searchInterestingDiags(listOfDiags, range1, range2):
     return
 
 # ask the user for the desired chromosome ranges
-def chooseChrsAndRanges(genome1, genome2, ancGenes, distanceMetric = 'DPD'):
+@myTools.deprecated
+def chooseChrsAndRanges(genome1, genome2, families, distanceMetric = 'DPD'):
     while True:
         try:
             (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(raw_input("chr1:deb1-fin1 = "), genome1)
@@ -502,7 +500,7 @@ def chooseChrsAndRanges(genome1, genome2, ancGenes, distanceMetric = 'DPD'):
     chrom2 ={}
     chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
     chrom2[chr2] = genome2[chr2][range2[0]:range2[1]]
-    listOfDiags = myDiags.extractSbsInPairCompGenomes(chrom1, chrom2, ancGenes, gapMax=arguments["gapMax"], consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
+    listOfDiags = myDiags.extractSbsInPairCompGenomes(chrom1, chrom2, families, gapMax=arguments["gapMax"], consistentSwDType=arguments["consistentSwDType"], filterType=filterType, minChromLength=arguments["minChromLength"], distanceMetric=arguments["distanceMetric"], verbose=arguments['verbose'])
     listOfDiags = list(listOfDiags)
     print >> sys.stderr, "pairwise comparison of the two chromosomes yields" , len(listOfDiags), "diagonals."
     if len(listOfDiags) == 0:
@@ -515,6 +513,6 @@ def chooseChrsAndRanges(genome1, genome2, ancGenes, distanceMetric = 'DPD'):
 
     print >> sys.stderr, "Do you want to chose a new region of interest ?"
     if raw_input('y/n ? ') == 'y':
-        return chooseChrsAndRanges(genome1, genome2, ancGenes)
+        return chooseChrsAndRanges(genome1, genome2, families)
     else:
         return (chrom1, chrom2, range1, range2)

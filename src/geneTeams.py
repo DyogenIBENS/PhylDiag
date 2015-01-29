@@ -43,14 +43,14 @@ import sys
 
 import utils.myTools as myTools
 import utils.myGeneTeams as myGeneTeams
-import utils.myGenomes as myGenomes
+import utils.myLightGenomes as myLightGenomes
 
 # Arguments
 modesOrthos = list(myGeneTeams.FilterType._keys)
 arguments = myTools.checkArgs(
     [("genome1", file),
      ("genome2", file),
-     ("ancGenes", file)],
+     ("families", file)],
     [("tandemGapMax", int, 0),
      ("gapMax", str, 'None'),
      ("filterType", str, modesOrthos),
@@ -67,15 +67,13 @@ else:
     except:
         raise TypeError('gapMax is either an int or None')
 
-genome1 = myGenomes.Genome(arguments["genome1"])
+genome1 = myLightGenomes.LightGenome(arguments["genome1"])
 print >> sys.stderr, "Genome1"
-print >> sys.stderr, "nb of Chr = ", len(genome1.chrList[myGenomes.ContigType.Chromosome]),\
-    " nb of scaffolds = ", len(genome1.chrList[myGenomes.ContigType.Scaffold])
-genome2 = myGenomes.Genome(arguments["genome2"])
+print >> sys.stderr, "Nb of Chr = ", len(genome1)
+genome2 = myLightGenomes.LightGenome(arguments["genome2"])
 print >> sys.stderr, "Genome2"
-print >> sys.stderr, "nb of Chr = ", len(genome2.chrList[myGenomes.ContigType.Chromosome]),\
-    " nb of scaffolds = ", len(genome2.chrList[myGenomes.ContigType.Scaffold])
-ancGenes = myGenomes.Genome(arguments["ancGenes"])
+print >> sys.stderr, "Nb of Chr = ", len(genome2)
+families = myLightGenomes.Families(arguments["families"])
 filterType = myGeneTeams.FilterType[modesOrthos.index(arguments["filterType"])]
 statsDiags = []
 
@@ -94,7 +92,7 @@ if test is True:
     genome2 = g2
 
 listOfGts =\
-    list(myGeneTeams.extractGtsInPairCompGenomes(genome1, genome2, ancGenes,
+    list(myGeneTeams.extractGtsInPairCompGenomes(genome1, genome2, families,
                                                  tandemGapMax=arguments['tandemGapMax'],
                                                  gapMax=arguments["gapMax"],
                                                  filterType=filterType,
@@ -103,4 +101,4 @@ listOfGts =\
 print >> sys.stderr, "End of the gene team research"
 # sort the list of gene teams by decreasing length
 listOfGts.sort(key=lambda x: len(x[0]), reverse=True)
-myGeneTeams.printGtsFile(listOfGts, genome1, genome2)
+myGeneTeams.printGtsFile(listOfGts, genome1, genome2, families)

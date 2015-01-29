@@ -11,7 +11,8 @@ import os
 import sys
 import itertools
 
-import utils.myGenomes as myGenomes
+#import utils.myGenomes as myGenomes
+import utils.myLightGenomes as myLightGenomes
 import utils.myTools as myTools
 # PhylDiag core algorithm
 import utils.myDiags as myDiags
@@ -47,12 +48,12 @@ def genesComputeGeneTeamsIndices(listOfGeneTeams):
 
 arguments = myTools.checkArgs(
     [("genome1", file), ("genome2", file),
-     ("ancGenes", file),
+     ("families", file),
      ("chr1:deb1-fin1", str),
      ("chr2:deb2-fin2", str)],
     [("gapMax", str, 'None'),
      ("tandemGapMax", int, 0),
-     ("filterType", str, 'InCommonAncestor'),
+     ("filterType", str, 'InFamilies'),
      ("minChromLength", int, 1),
      ("out:GeneTeams", str, "./res/geneTeamsDrawer.txt"),
      #TODO ("mode:chromosomesRewrittenInTbs", bool, False),
@@ -75,22 +76,13 @@ else:
 #        or not arguments["convertGenicToTbCoordinates"]
 
 # Load genomes
-genome1 = myGenomes.Genome(arguments["genome1"])
-genome2 = myGenomes.Genome(arguments["genome2"])
+genome1 = myLightGenomes.LightGenome(arguments["genome1"])
+genome2 = myLightGenomes.LightGenome(arguments["genome2"])
 # Change genome format
 genome1Name = genome1.name
 genome2Name = genome2.name
 genome1_ = {}
-for chrom in genome1.lstGenes:
-    genome1_[chrom] = genome1.lstGenes[chrom]
-    genome1_[chrom] = [(g.names[0],g.strand) for g in genome1_[chrom]]
-genome2_ ={}
-for chrom in genome2.lstGenes:
-    genome2_[chrom] = genome2.lstGenes[chrom]
-    genome2_[chrom] = [(g.names[0],g.strand) for g in genome2_[chrom]]
-genome1=genome1_
-genome2=genome2_
-ancGenes = myGenomes.Genome(arguments["ancGenes"])
+families = myLightGenomes.Families(arguments["families"])
 modesFilter = list(myDiags.FilterType._keys)
 filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
 #thresholdChr = 50
@@ -119,7 +111,7 @@ genesStrandsC2 = [s for (_,s) in chrom2[chr2]]
  (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
  genesHomologyGroupsInWindow) =\
     drawHomologyMatrixWithSBs.genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
-                                          ancGenes,
+                                          families,
                                           filterType,
                                           arguments['minChromLength'],
                                           arguments['tandemGapMax'])
@@ -129,7 +121,7 @@ genesStrandsC2 = [s for (_,s) in chrom2[chr2]]
 listOfGeneTeams =\
     list(myGeneTeams.extractGtsInPairCompGenomes(chrom1,
                                                  chrom2,
-                                                 ancGenes,
+                                                 families,
                                                  tandemGapMax=arguments['tandemGapMax'],
                                                  gapMax=arguments['gapMax'],
                                                  filterType=filterType,

@@ -155,6 +155,7 @@ TODO:
 * In the MHP no overlap. Still some overlap between synteny blocks in the MH
   because of the tandemGapMax parameter.
 * Typical usage of PhylDiag with misc.compareMatrix
+* use a standard library to parse options
 
 ####################
 Update Data Base:

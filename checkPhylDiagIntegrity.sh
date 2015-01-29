@@ -65,8 +65,8 @@ gm=5
 dm=CD
 phylDiagCommandLines+=(
 # phylDiag with some options
-"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InCommonAncestor -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_f${A}_Gm${gm}${dm}.sbs"
-"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InBothSpecies -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_fIBS${A}_Gm${gm}${dm}.sbs"
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_f${A}_Gm${gm}${dm}.sbs"
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InBothGenomes -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_fIBS${A}_Gm${gm}${dm}.sbs"
 )
 tgm=9
 gm=10
@@ -75,9 +75,9 @@ ibwg='+'
 om=10
 phylDiagCommandLines+=(
 # phylDiag with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InCommonAncestor -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
 # view the sbs from the former output file in the X-X comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InCommonAncestor -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
 )
 for line in "${phylDiagCommandLines[@]}"
 	do
@@ -159,7 +159,7 @@ R1="1-~"
 C2=X
 R2="1-~"
 geneTeamsCommandLines=(
-"src/geneTeams.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InCommonAncestor -gapMax=${gm} +verbose > res/geneTeams.txt"
+"src/geneTeams.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -gapMax=${gm} +verbose > res/geneTeams.txt"
 )
 for line in "${geneTeamsCommandLines[@]}"
 	do

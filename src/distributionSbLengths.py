@@ -21,6 +21,7 @@ import numpy as np
 import utils.myTools as myTools
 import utils.myDiags as myDiags
 import utils.myGenomes as myGenomes
+import utils.myLightGenomes as myLightGenomes
 
 
 def lengthProjectionOnGenome(rankGenome, sb, c, genome):
@@ -68,14 +69,14 @@ lengthUnit = arguments['lengthUnit']
 assert lengthUnit == 'Mb' or lengthUnit == 'gene'
 
 genome1 = myGenomes.Genome(arguments["genome1"])
+genome1L = myLightGenomes.LightGenome(genome1)
 print >> sys.stderr, "Genome1"
-print >> sys.stderr, "nb of Chr = ", len(genome1.chrList[myGenomes.ContigType.Chromosome]), " nb of scaffolds = ", len(genome1.chrList[myGenomes.ContigType.Scaffold])
-genome1D = genome1.intoDict()
+print >> sys.stderr, "nb of Chr = ", len(genome1L)
 genome2 = myGenomes.Genome(arguments["genome2"])
+genome2L = myLightGenomes.LightGenome(genome2)
 print >> sys.stderr, "Genome2"
-print >> sys.stderr, "nb of Chr = ", len(genome2.chrList[myGenomes.ContigType.Chromosome]), " nb of scaffolds = ", len(genome2.chrList[myGenomes.ContigType.Scaffold])
-genome2D = genome2.intoDict()
-sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'], genome1=genome1, genome2=genome2)
+print >> sys.stderr, "nb of Chr = ", len(genome2L)
+sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'], genome1=genome1L, genome2=genome2L)
 lSbsLengths = []
 
 if arguments['lengthUnit'] == 'gene':
