@@ -54,10 +54,10 @@ else:
     except:
         raise TypeError('gapMax is either an int or None')
 
-genome1 = myLightGenomes.LightGenome(arguments["genome1"], withDict=False)
+genome1 = myLightGenomes.LightGenome(arguments["genome1"])
 print >> sys.stderr, "Genome1"
 print >> sys.stderr, "Nb of Chr = ", len(genome1.keys())
-genome2 = myLightGenomes.LightGenome(arguments["genome2"], withDict=False)
+genome2 = myLightGenomes.LightGenome(arguments["genome2"])
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "Nb of Chr = ", len(genome2.keys())
 families = myLightGenomes.Families(arguments["families"])

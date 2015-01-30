@@ -58,8 +58,8 @@ if __name__ == '__main__':
         __doc__)
 
     # Load genomes
-    genome1 = myLightGenomes.LightGenome(arguments["genome1"])
-    genome2 = myLightGenomes.LightGenome(arguments["genome2"])
+    genome1 = myLightGenomes.LightGenome(arguments["genome1"], withDict=True)
+    genome2 = myLightGenomes.LightGenome(arguments["genome2"], withDict=True)
     # Change genome format
     genome1Name = genome1.name
     genome2Name = genome2.name
@@ -105,8 +105,8 @@ if __name__ == '__main__':
     if not chromosomesRewrittenInTbs:
         (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
         (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2)
-        chrom1 = {}
-        chrom2 = {}
+        chrom1 = myLightGenomes.LightGenome()
+        chrom2 = myLightGenomes.LightGenome()
         chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
         chrom2[chr2] = genome2[chr2][range2[0]:range2[1]]
 
