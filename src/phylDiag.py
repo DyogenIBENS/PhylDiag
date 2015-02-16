@@ -65,7 +65,7 @@ filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-listOfSbs =\
+sbsInPairComp =\
     myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
                                         tandemGapMax=arguments['tandemGapMax'],
                                         gapMax=arguments["gapMax"],
@@ -83,5 +83,16 @@ listOfSbs =\
                                         multiProcess=arguments['multiProcess'],
                                         verbose=arguments['verbose'])
 print >> sys.stderr, "End of the synteny block research"
-print >> sys.stderr, "Number of synteny blocks = %s" % len(list(listOfSbs.iteritems2d()))
-myDiags.printSbsFile(listOfSbs, genome1, genome2, families, sortByDecrLengths=True)
+print >> sys.stderr, "Number of synteny blocks = %s" % len(list(sbsInPairComp.iteritems2d()))
+
+#def my_input(prompt=None):
+#    if prompt:
+#        sys.stderr.write(str(prompt))
+#    return raw_input()
+#for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
+#    print >> sys.stderr, "In pairwise comparison (%s, %s), this sb has %s ancGenes" % (c1, c2, len(set([aGn for (aGn,_,_) in sb.la])))
+#    m = my_input('type m for more informations on this synteny block: ')
+#    if m == 'm':
+#        print >> sys.stderr, sb
+
+myDiags.printSbsFile(sbsInPairComp, genome1, genome2, families, sortByDecrLengths=True)

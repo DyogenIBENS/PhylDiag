@@ -267,7 +267,7 @@ def drawHomologyMatrix(((begC1, endC1), (begC2, endC2)), (genesStrandsC1, genesS
                        (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
                        (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2),
                        hpSigns, homologyGroupsInWindow, diagsIndices,
-                       outputFileName=None, maxWidth=100, maxHeight=100, symbolsInGenes=None):
+                       outputFileName=None, maxWidth=100, maxHeight=100, symbolsInGenes=None, scaleFactorRectangles=1):
     # For the print on screen
     begC1 = begC1 + 1
     begC2 = begC2 + 1
@@ -313,7 +313,10 @@ def drawHomologyMatrix(((begC1, endC1), (begC2, endC2)), (genesStrandsC1, genesS
         for (i, j) in diag:
             cx_s = i*sizeCase
             cy_s = j*sizeCase
-            scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x, height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill_opacity=0.90, svgClass="HomologGroup%s" % color))
+            if nx >= 300 or ny >= 300:
+                scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x, height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill_opacity=0.90, svgClass="HomologGroup%s" % color, bigger=scaleFactorRectangles))
+            else:
+                scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x, height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill_opacity=0.90, svgClass="HomologGroup%s" % color))
             #scene.add(scgDrw.Rectangle((cx_s,height-(cy_s+sizeCase)), sizeCase, sizeCase, fill_opacity=0.90, svgClass = "chromgrp%s" % color ))
             #scene.add(svgDrw.Rectangle((cx_s,height-(cy_s+sizeCase)), sizeCase, sizeCase, fill_opacity=fill_opacity=0.90, color=(color,color,color))
         # draw rectangles around diagonals
@@ -447,7 +450,7 @@ def drawHomologyMatrix(((begC1, endC1), (begC2, endC2)), (genesStrandsC1, genesS
                 if (i1, i2) not in [dot for diag in diagsIndices for dot in diag]:
                     cx_s = i1*sizeCase
                     cy_s = i2*sizeCase
-                    scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x, height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill=(0, 0, 0), fill_opacity=0.90))
+                    scene.add(svgDrw.Rectangle((cx_s+offset_matrix_x, height-(cy_s+sizeCase+offset_matrix_y)), sizeCase, sizeCase, fill=(0, 0, 0), fill_opacity=0.90, bigger=scaleFactorRectangles))
         print >> sys.stderr, "Warning : some supplementary informations are not displayed because one of the two dimension of the window is > 300"
 
     if outputFileName is not None:

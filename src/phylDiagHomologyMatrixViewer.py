@@ -53,6 +53,7 @@ if __name__ == '__main__':
          ("distanceMetric", str, 'CD'),
          ('nbHpsRecommendedGap', int, 2),
          ('targetProbaRecommendedGap', float, 0.01),
+         ("scaleFactorRectangles", float, 2.0),
          ("out:ImageName", str, "./res/homologyMatrix.svg"),
          ('verbose', bool, True)],
         __doc__)
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     distanceMetric = arguments['distanceMetric']
     nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
     targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
+    scaleFactorRectangles = arguments['scaleFactorRectangles']
 
     #thresholdChr = 50
 
@@ -182,7 +184,8 @@ if __name__ == '__main__':
                                                                 genesDiagIndices,
                                                                 outputFileName=arguments["out:ImageName"],
                                                                 maxWidth=100,
-                                                                maxHeight=100)
+                                                                maxHeight=100,
+                                                                scaleFactorRectangles=scaleFactorRectangles)
 
     else:
         #chromosomes are shown as lists of tbs
@@ -323,7 +326,9 @@ if __name__ == '__main__':
                                                          outputFileName=arguments["out:ImageName"],
                                                          maxWidth=100,
                                                          maxHeight=100,
-                                                         symbolsInGenes=(TbNumberOfGenesInEachTbC1, TbNumberOfGenesInEachTbC2))
+                                                         symbolsInGenes=(TbNumberOfGenesInEachTbC1, TbNumberOfGenesInEachTbC2),
+                                                         scaleFactorRectangles=scaleFactorRectangles
+                                                         )
 
     #copy the css style sheet
     dirNameImage = os.path.dirname(arguments["out:ImageName"])
