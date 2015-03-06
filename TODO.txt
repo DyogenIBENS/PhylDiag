@@ -137,8 +137,6 @@ TODO:
 * Add an option to consider only genes over a certain length (for resolution
 		purposes)
 * Check that genes are not overlapping in raw data
-* Create a myLightGenome.py file with a LightGenome class that is more adapted
-		to my own use. (Load faster, perform my own operations...)
 * Use single hps to infer micro-inversion within the function
 		'identifyBreakpointsWithinGaps'of synteny blocks.
 * Allow more cases of micro-rearrangements (not only intra-sb-inversion,

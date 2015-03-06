@@ -43,6 +43,7 @@ if __name__ == '__main__':
          ("nonOverlappingSbs", bool, False),
          ("overlapMax", int, 0),
          ("consistentSwDType", bool, True),
+         ("considerMonogenicSb", bool, False),
          ("minChromLength", int, 1),
          ("pThreshold", float, 0.001),
          ("validateImpossToCalc_mThreshold", int, 3),
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     nonOverlappingSbs = arguments['nonOverlappingSbs']
     overlapMax = arguments['overlapMax']
     consistentSwDType = arguments['consistentSwDType']
+    considerMonogenicSb=arguments['considerMonogenicSb']
     minChromLength = arguments['minChromLength']
     pThreshold = arguments['pThreshold']
     validateImpossToCalc_mThreshold = arguments['validateImpossToCalc_mThreshold']
@@ -146,6 +148,7 @@ if __name__ == '__main__':
                                                                 overlapMax=overlapMax,
                                                                 consistentSwDType=consistentSwDType,
                                                                 filterType=filterType,
+                                                                considerMonogenicSb=considerMonogenicSb,
                                                                 minChromLength=minChromLength,
                                                                 distanceMetric=distanceMetric,
                                                                 pThreshold=pThreshold,
@@ -304,6 +307,7 @@ if __name__ == '__main__':
                                                                      nonOverlappingSbs=nonOverlappingSbs,
                                                                      overlapMax=overlapMax,
                                                                      consistentSwDType=consistentSwDType,
+                                                                     considerMonogenicSb=considerMonogenicSb,
                                                                      nbHpsRecommendedGap=nbHpsRecommendedGap,
                                                                      targetProbaRecommendedGap=targetProbaRecommendedGap,
                                                                      validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold)

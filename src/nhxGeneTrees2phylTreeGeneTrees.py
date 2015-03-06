@@ -5,6 +5,7 @@
 # Copyright © 2013 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
 # This is free software; you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 or later and the CeCiLL v2 license in France
+import sys
 
 __doc__ = """
         Convert gene trees from NHX to my protTree
@@ -132,7 +133,14 @@ def processData(data):
 arguments = myTools.checkArgs( [("tree",file)], [], __doc__)
 
 f = myFile.openFile(arguments["tree"], "r")
+totalNbLines = sum(1 for line in f)
+f.close()
+f = myFile.openFile(arguments["tree"], "r")
+progressBar = myTools.ProgressBar(totalNbLines)
+cptLines = 0
 for line in f:
+    cptLines += 1
+    progressBar.printProgressIn(sys.stderr, cptLines)
     if len(line.replace(" ","").replace("\n","")) == 0:
         #Do nothing : empty line
         continue

@@ -5,6 +5,7 @@
 # Copyright © 2013 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
 # This is free software, you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 (GPL v3) or later and the CeCiLL v2 license in France
+import collections
 
 __doc__ = """
 Wrapper for PhylDiag Library
@@ -19,10 +20,10 @@ import utils.myLightGenomes as myLightGenomes
 
 # Arguments
 filterType = list(myDiags.FilterType._keys)
-arguments = myTools.checkArgs( \
+arguments = myTools.checkArgs(
                 [("genome1",file),
                  ("genome2",file),
-                 ("families",file)], \
+                 ("families",file)],
                 [("filterType",str, filterType),
                  ("tandemGapMax", int, 0),
                  ("gapMax",str,'None'),
@@ -31,6 +32,7 @@ arguments = myTools.checkArgs( \
                  ('identifyBreakpointsWithinGaps', bool, False),
                  ('nonOverlappingSbs', bool, False),
                  ('overlapMax', int, 0),
+                 ('considerMonogenicSb', bool, False),
                  ("minChromLength",int,1),
                  ("sameStrand",bool,True),
                  ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),
@@ -75,6 +77,7 @@ sbsInPairComp =\
                                         nonOverlappingSbs=arguments['nonOverlappingSbs'],
                                         overlapMax=arguments['overlapMax'],
                                         filterType=filterType,
+                                        considerMonogenicSb=arguments['considerMonogenicSb'],
                                         minChromLength=arguments["minChromLength"],
                                         consistentSwDType=arguments["sameStrand"],
                                         nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
@@ -83,8 +86,12 @@ sbsInPairComp =\
                                         multiProcess=arguments['multiProcess'],
                                         verbose=arguments['verbose'])
 print >> sys.stderr, "End of the synteny block research"
-print >> sys.stderr, "Number of synteny blocks = %s" % len(list(sbsInPairComp.iteritems2d()))
-
+print >> sys.stderr, "Number of synteny blocks = %s" % sum([len(sbsInPairComp[c1][c2]) for (c1, c2) in sbsInPairComp.keys2d()])
+sbLens = sorted([len(sb.la) for (_, sb) in sbsInPairComp.iteritems2d()])
+nbSbsOfLen = collections.Counter(sbLens)
+distribSbLens = [" %s:%s" % (nbSbsOfLen[sbLen], sbLen) for sbLen in sorted(nbSbsOfLen.keys())]
+distribSbLens = distribSbLens[:5] + ["..."] + distribSbLens[-3:]
+print >> sys.stderr, "Distribution of sb lengths (nbSbs:length) = %s" % ",".join(distribSbLens)
 #def my_input(prompt=None):
 #    if prompt:
 #        sys.stderr.write(str(prompt))
