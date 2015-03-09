@@ -67,7 +67,7 @@ filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
-sbsInPairComp =\
+sbsInPairComp = \
     myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
                                         tandemGapMax=arguments['tandemGapMax'],
                                         gapMax=arguments["gapMax"],
@@ -86,20 +86,14 @@ sbsInPairComp =\
                                         multiProcess=arguments['multiProcess'],
                                         verbose=arguments['verbose'])
 print >> sys.stderr, "End of the synteny block research"
-print >> sys.stderr, "Number of synteny blocks = %s" % sum([len(sbsInPairComp[c1][c2]) for (c1, c2) in sbsInPairComp.keys2d()])
-sbLens = sorted([len(sb.la) for (_, sb) in sbsInPairComp.iteritems2d()])
-nbSbsOfLen = collections.Counter(sbLens)
-distribSbLens = [" %s:%s" % (nbSbsOfLen[sbLen], sbLen) for sbLen in sorted(nbSbsOfLen.keys())]
-distribSbLens = distribSbLens[:5] + ["..."] + distribSbLens[-3:]
-print >> sys.stderr, "Distribution of sb lengths (nbSbs:length) = %s" % ",".join(distribSbLens)
-#def my_input(prompt=None):
-#    if prompt:
-#        sys.stderr.write(str(prompt))
-#    return raw_input()
-#for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
-#    print >> sys.stderr, "In pairwise comparison (%s, %s), this sb has %s ancGenes" % (c1, c2, len(set([aGn for (aGn,_,_) in sb.la])))
-#    m = my_input('type m for more informations on this synteny block: ')
-#    if m == 'm':
-#        print >> sys.stderr, sb
+nbOfSbs = sum([len(sbsInPairComp[c1][c2]) for (c1, c2) in sbsInPairComp.keys2d()])
+print >> sys.stderr, "Number of synteny blocks = %s" % nbOfSbs
+if nbOfSbs > 0:
+    sbLens = sorted([len(sb.la) for (_, sb) in sbsInPairComp.iteritems2d()])
+    nbSbsOfLen = collections.Counter(sbLens)
+    distribSbLens = [" %s:%s" % (nbSbsOfLen[sbLen], sbLen) for sbLen in sorted(nbSbsOfLen.keys())]
+    distribSbLens = distribSbLens[:5] + ["..."] + distribSbLens[-3:]
+    print >> sys.stderr, "Distribution of sb lengths (nbSbs:length) = %s" % ",".join(distribSbLens)
 
+# FIXME: create an empty file or do not create any file when no sbs
 myDiags.printSbsFile(sbsInPairComp, genome1, genome2, families, sortByDecrLengths=True)
