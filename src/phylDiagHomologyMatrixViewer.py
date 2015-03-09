@@ -225,8 +225,8 @@ if __name__ == '__main__':
             (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1tb)
             (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2tb)
         else:
-            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1tb, g2gtb=gfId2gtb1)
-            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2tb, g2gtb=gfId2gtb2)
+            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1, g2gtb=gfId2gtb1)
+            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2, g2gtb=gfId2gtb2)
 
         chrom1_tb = {}
         chrom2_tb = {}

@@ -35,8 +35,25 @@ def parseChrRange(text, genome, g2gtb=None):
     range = text.split(":")[-1].split("-")
     if len(range) == 2 and range[0].isdigit and (range[1].isdigit() or range[1] == '~'):
         if g2gtb is not None:
-            range[0] = g2gtb[chr][int(range[0])-1]
-            range[1] = g2gtb[chr][int(range[1])-1] if range[1] != '~' else len(genome[chr])
+            targetIdxG1 = int(range[0])-1
+            if targetIdxG1 in g2gtb[chr]:
+                range[0] = g2gtb[chr][targetIdxG1]
+            else:
+                print >> sys.stderr, "Warning, gene %s at %s:%s is not part of a tandem block, thus we take the nearest tandem block" %\
+                                     (genome[chr][targetIdxG1].n, chr, targetIdxG1 + 1)
+                idxTargetTb1 = min(g2gtb[chr].keys(), key=lambda x: abs(x-targetIdxG1))
+                range[0] = g2gtb[chr][idxTargetTb1]
+            if range[1] == '~':
+                targetIdxG2 = len(genome[chr]) - 1
+            else:
+                targetIdxG2 = int(range[1]) - 1
+            if targetIdxG2 in g2gtb[chr]:
+                range[1] = g2gtb[chr][targetIdxG2]
+            else:
+                print >> sys.stderr, "Warning, gene %s at %s:%s is not part of a tandem block, thus we take the nearest tandem block" %\
+                                     (genome[chr][targetIdxG2].n, chr, targetIdxG2 + 1)
+                idxTargetTb2 = min(g2gtb[chr].keys(), key=lambda x: abs(x-targetIdxG2))
+                range[1] = g2gtb[chr][idxTargetTb2]
         else:
             range = (int(range[0])-1, int(range[1]) if range[1] != '~' else len(genome[chr]))
         if range[0] < 0 or range[1] > len(genome[chr]) or range[1] <= 0 or range[1] <= range[0]:
