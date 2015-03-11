@@ -96,4 +96,4 @@ if nbOfSbs > 0:
     print >> sys.stderr, "Distribution of sb lengths (nbSbs:length) = %s" % ",".join(distribSbLens)
 
 # FIXME: create an empty file or do not create any file when no sbs
-myDiags.printSbsFile(sbsInPairComp, genome1, genome2, families, sortByDecrLengths=True)
+myDiags.printSbsFile(sbsInPairComp, genome1, genome2, sortByDecrLengths=True)
