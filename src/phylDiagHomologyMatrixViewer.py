@@ -48,14 +48,14 @@ if __name__ == '__main__':
          ("pThreshold", float, 0.001),
          ("validateImpossToCalc_mThreshold", int, 3),
          ("in:SyntenyBlocks", str, 'None'),
-         ("out:SyntenyBlocks", str, "./res/syntenyBlocksDrawer.txt"),
+         ("out:SyntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
          ("mode:chromosomesRewrittenInTbs", bool, False),
          ('convertGenicToTbCoordinates', bool, False),
          ("distanceMetric", str, 'CD'),
          ('nbHpsRecommendedGap', int, 2),
          ('targetProbaRecommendedGap', float, 0.01),
          ("scaleFactorRectangles", float, 2.0),
-         ("out:ImageName", str, "./res/homologyMatrix.svg"),
+         ("out:ImageName", str, "./homologyMatrix.svg"),
          ('verbose', bool, True)],
         __doc__)
 
