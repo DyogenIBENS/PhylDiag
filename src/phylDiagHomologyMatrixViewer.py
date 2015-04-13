@@ -9,6 +9,7 @@
 import os
 import sys
 import itertools
+from utils import mySvgDrawer
 
 import utils.myLightGenomes as myLightGenomes
 import utils.myTools as myTools
@@ -365,7 +366,7 @@ if __name__ == '__main__':
     height = 100
     width = 100
     var = ['<?xml version="1.0" encoding="utf-8" standalone="no"?>\n',
-                    '<?xml-stylesheet type="text/css" href="styleForHomologyMatrixWithSBs.css" ?>\n', #Warning : request the css file
+                    #'<?xml-stylesheet type="text/css" href="styleForHomologyMatrixWithSBs.css" ?>\n', #Warning : request the css file
                     '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n',
                     "<svg height=\"100%%\" version=\"1.1\" viewBox=\"0 0 %s %s\" width=\"100%%\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" % (width, height),
                      '<defs>\n',
@@ -376,56 +377,67 @@ if __name__ == '__main__':
                      '<g style="fill-opacity:1.0; stroke:black;\n',
                      'stroke-width:1;">\n']
     #Title
-    if not arguments['mode:chromosomesRewrittenInTbs']:
-        title =\
-            "%s, tandemGapMax=%s tbs, gapMax=%s%s, overlapMax=%s tbs, %s sbs" %\
-            ('MH',
-             arguments['tandemGapMax'],
-             arguments['gapMax'],
-             arguments['distanceMetric'],
-             arguments['overlapMax'],
-             len(list(sbsInPairComp.iteritems2d())))
-    else:
-        title =\
-            "%s, tandemGapMax=%s tbs, gapMax=%s%s, overlapMax=%s tbs, %s sbs" %\
-            ('MHP',
-             arguments['tandemGapMax'],
-             arguments['gapMax'],
-             arguments['distanceMetric'],
-             arguments['overlapMax'],
-             len(list(sbsInPairComp.iteritems2d())))\
+    # if not arguments['mode:chromosomesRewrittenInTbs']:
 
-    var += ['<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
-                    '<foreignObject x="0" y="0" width="95" height="5">\n',
-                    '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
-                            '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                            '<xhtml:div style="color:black; word-wrap:break-word; font-size:1.5px; font-family:Arial" >' + title + '\n',
-                                            '</xhtml:div>\n',
-                                    '</xhtml:div>\n',
-                            '</xhtml:div>\n',
-                    '</foreignObject>\n',
+    title =\
+        "%s, f=%s, tgm=%s tbs, gm=%s%s, ibwg=%s, om=%s, %s sbs" %\
+        ('MHP' if arguments['mode:chromosomesRewrittenInTbs'] else 'MH',
+         arguments['filterType'],
+         arguments['tandemGapMax'],
+         arguments['gapMax'],
+         arguments['distanceMetric'],
+         arguments['identifyBreakpointsWithinGaps'],
+         arguments['overlapMax'] if arguments['nonOverlappingSbs'] else 'None',
+         len(list(sbsInPairComp.iteritems2d())))
+    # else:
+    #     title =\
+    #         "%s, tandemGapMax=%s tbs, gapMax=%s%s, overlapMax=%s tbs, %s sbs" %\
+    #         ('MHP',
+    #          arguments['tandemGapMax'],
+    #          arguments['gapMax'],
+    #          arguments['distanceMetric'],
+    #          arguments['overlapMax'],
+    #          len(list(sbsInPairComp.iteritems2d())))\
+
+    var += [#'<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
+            '<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5">\n',
+                    ''.join(mySvgDrawer.Text(mySvgDrawer.Point(float(5 + 95)/2.0, 5.0/2.0), title,
+                                             text_anchor='middle', fontWeight=300, size=2).strarray()),
+                    # '<foreignObject x="0" y="0" width="95" height="5">\n',
+                    # '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
+                    #         '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
+                    #         '<xhtml:div style="color:black; word-wrap:break-word; font-size:1.5px; font-family:Arial" >' + title + '\n',
+                    #                         '</xhtml:div>\n',
+                    #                 '</xhtml:div>\n',
+                    #         '</xhtml:div>\n',
+                    # '</foreignObject>\n',
             '</svg>\n']
 
     #Add legends (genomes names and ranges)
-    var += ['<svg x="0" y="0" viewBox="0 0 5 95" width="5" height="95" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
-                    '<foreignObject x="0" y="0" width="95" height="5" transform="translate(5,0) rotate(90) translate(0,0)">\n',
-                    '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
-                            '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                            '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + str(arguments["genome2"]) + " <br />  chr" + str(chr2) + ":" + str(range2[0]+1) + "-" + str(range2[1]) + '\n',
-                                            '</xhtml:div>\n',
-                                    '</xhtml:div>\n',
-                            '</xhtml:div>\n',
-                    '</foreignObject>\n',
+    var += [#'<svg x="0" y="0" viewBox="0 0 5 95" width="5" height="95" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
+            '<svg x="0" y="0" viewBox="0 0 5 95" width="5" height="95">\n',
+                    ''.join(mySvgDrawer.Text(mySvgDrawer.Point(5.0/2.0, float(5 + 95)/2.0), str(arguments["genome2"]) + " chr" + str(chr2) + ":" + str(range2[0]+1) + "-" + str(range2[1]),
+                                             text_anchor='middle', size=2, fontWeight=300, transform='rotate(-90, %s, %s)' % (5.0/2.0, float(5 + 95)/2.0)).strarray()),
+                    # '<foreignObject x="0" y="0" width="95" height="5" transform="translate(5,0) rotate(90) translate(0,0)">\n',
+                    # '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
+                    #         '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
+                    #         '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + str(arguments["genome2"]) + " <br />  chr" + str(chr2) + ":" + str(range2[0]+1) + "-" + str(range2[1]) + '\n',
+                    #                         '</xhtml:div>\n',
+                    #                 '</xhtml:div>\n',
+                    #         '</xhtml:div>\n',
+                    # '</foreignObject>\n',
             '</svg>\n',
-            '<svg x="5" y="95" viewBox="0 0 95 5" width="95" height="5" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
-                    '<foreignObject x="0" y="0" width="95" height="5">\n',
-                    '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
-                            '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                            '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + str(arguments["genome1"]) + " <br /> chr" + str(chr1) + ":" + str(range1[0]+1) + "-" + str(range1[1]) + '\n',
-                                            '</xhtml:div>\n',
-                                    '</xhtml:div>\n',
-                            '</xhtml:div>\n',
-                    '</foreignObject>\n',
+            '<svg x="5" y="95" viewBox="0 0 95 5" width="95" height="5">\n',
+                    ''.join(mySvgDrawer.Text(mySvgDrawer.Point(float(5 + 95)/2, 5.0/2.0),  str(arguments["genome1"]) + " chr" + str(chr1) + ":" + str(range1[0]+1) + "-" + str(range1[1]),
+                                             text_anchor='middle', fontWeight=300, size=2).strarray()),
+                    # '<foreignObject x="0" y="0" width="95" height="5">\n',
+                    # '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
+                    #         '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
+                    #         '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + str(arguments["genome1"]) + " <br /> chr" + str(chr1) + ":" + str(range1[0]+1) + "-" + str(range1[1]) + '\n',
+                    #                         '</xhtml:div>\n',
+                    #                 '</xhtml:div>\n',
+                    #         '</xhtml:div>\n',
+                    # '</foreignObject>\n',
             '</svg>\n']
 
     var+=['<svg preserveAspectRatio="xMidYMid meet" x="5" y="5" viewBox="0 0 100 100" width="90" height="90" >\n'] # little transformation : viewBox = "the part of the forecoming images that we want to see", width and height = the width and height of the image that will be printed on the screen. This instructions takes a viewBox of the forecoming images and display it in a image of the specified width and height

@@ -41,7 +41,7 @@ dm=CD
 ibwg='+'
 om=10
 # p-value threshold
-pt=0.001
+pt=1.0
 
 commandLines=()
 for line in "${args[@]}"
