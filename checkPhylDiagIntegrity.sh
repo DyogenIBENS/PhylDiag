@@ -130,7 +130,7 @@ done
 # Check the graph construction of the distribution of the lengths of synteny
 # blocks
 commandLines=(
-"src/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm9Gm5CDIbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
+"src/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_Tgm10gM5Gmmi0IbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
 )
 for line in "${commandLines[@]}"
 	do

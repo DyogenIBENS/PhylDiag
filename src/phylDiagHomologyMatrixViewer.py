@@ -56,6 +56,7 @@ if __name__ == '__main__':
          ('targetProbaRecommendedGap', float, 0.01),
          ("scaleFactorRectangles", float, 2.0),
          ("out:ImageName", str, "./homologyMatrix.svg"),
+         ("considerAllPairComps", bool, True),
          ('verbose', bool, True)],
         __doc__)
 
@@ -82,6 +83,7 @@ convertGenicToTbCoordinates = arguments['convertGenicToTbCoordinates']
 distanceMetric = arguments['distanceMetric']
 nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
 targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
+considerAllPairComps = arguments['considerAllPairComps']
 
 scaleFactorRectangles = arguments['scaleFactorRectangles']
 
@@ -113,14 +115,16 @@ genome2 = myLightGenomes.LightGenome(arguments["genome2"], withDict=True)
 genome1Name = genome1.name
 genome2Name = genome2.name
 sbsInPairComp = None
-if arguments['in:SyntenyBlocks'] is not 'None':
-    # load synteny blocks
-    sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
+if arguments['in:SyntenyBlocks'] == 'None':
+    sbsInPairComp = None
+else:
+    sbsInPairComp = arguments['in:SyntenyBlocks']
 # load families
 families = myLightGenomes.Families(arguments["families"])
 
-
 if not chromosomesRewrittenInTbs:
+
+    # define the ROI (Region Of Interest)
     (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
     (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2)
     chrom1 = myLightGenomes.LightGenome()
@@ -132,37 +136,47 @@ if not chromosomesRewrittenInTbs:
     nbSpeciesSpecificGenes2 = len([gn for gn in chrom2.getGeneNames(asA=list, checkNoDuplicates=False) if families.getFamilyByName(gn, default=None) is None])
     print >> sys.stderr, "the ROI2 contains %s genes (%s species specific genes)" % (len(chrom2[chr2]), nbSpeciesSpecificGenes2)
 
+    # load precomputed sbs if any
     if sbsInPairComp is not None:
-        new_sbsInPairComp = myTools.Dict2d(list)
-        for sb in sbsInPairComp[chr1][chr2]:
-            newl1 = []
-            newl2 = []
-            newla = []
-            for (idxHp, aG) in enumerate(sb.la):
-                tb1 = []
-                tb2 = []
-                for i1g in sb.l1[idxHp]:
-                    if (range1[0] <= i1g and i1g <= range1[1]):
-                        tb1.append(i1g)
-                for i2g in sb.l2[idxHp]:
-                    if (range2[0] <= i2g and i2g <= range2[1]):
-                        tb2.append(i2g)
-                if len(tb1) > 0 and len(tb2) > 0:
-                    newl1.append(tb1)
-                    newl2.append(tb2)
-                    newla.append(aG)
-            new_sbsInPairComp[chr1][chr2].append(myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, newl1, newl2, newla), sb.pVal))
-        sbsInPairComp = new_sbsInPairComp
+        # load synteny blocks
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
     else:
-        # extract diagonals in the ROI without considering other pairwise
-        # comparisons
-        sbsInPairComp = myDiags.extractSbsInPairCompGenomes(chrom1,
-                                                            chrom2,
+        if considerAllPairComps:
+            comparedGenome1 = genome1
+            comparedGenome2 = genome2
+        else:
+            # extract diagonals in the ROI without considering other pairwise comparisons
+            comparedGenome1 = chrom1
+            comparedGenome2 = chrom2
+        sbsInPairComp = myDiags.extractSbsInPairCompGenomes(comparedGenome1,
+                                                            comparedGenome2,
                                                             families,
                                                             tandemGapMax=tandemGapMax,
                                                             minChromLength=minChromLength,
                                                             filterType=filterType,
                                                             **kwargs)
+    # truncate sbs to fit the ROI
+    new_sbsInPairComp = myTools.Dict2d(list)
+    for sb in sbsInPairComp[chr1][chr2]:
+        newl1 = []
+        newl2 = []
+        newla = []
+        for (idxHp, aG) in enumerate(sb.la):
+            tb1 = []
+            tb2 = []
+            for i1g in sb.l1[idxHp]:
+                if (range1[0] <= i1g and i1g <= range1[1]):
+                    tb1.append(i1g)
+            for i2g in sb.l2[idxHp]:
+                if (range2[0] <= i2g and i2g <= range2[1]):
+                    tb2.append(i2g)
+            if len(tb1) > 0 and len(tb2) > 0:
+                newl1.append(tb1)
+                newl2.append(tb2)
+                newla.append(aG)
+        new_sbsInPairComp[chr1][chr2].append(myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, newl1, newl2, newla), sb.pVal))
+    sbsInPairComp = new_sbsInPairComp
+
 
     genesDiagIndices = []
     for sb in sbsInPairComp[chr1][chr2]:
@@ -201,53 +215,69 @@ if not chromosomesRewrittenInTbs:
                                                             scaleFactorRectangles=scaleFactorRectangles)
 
 else:
-
+    assert chromosomesRewrittenInTbs
     ((g1_tb, mtb2g1, (nCL1, nGL1)), (g2_tb, mtb2g2, (nCL2, nGL2))) =\
         myDiags.editGenomes(genome1, genome2, families, filterType, minChromLength, tandemGapMax, keepOriginal=True)
     if not convertGenicToTbCoordinates:
         (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1_tb)
         (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2_tb)
-
-        # TODO it might be interesting to editGenomes after truncation
-        # newGenome1 = myLightGenomes.LightGenome()
-        # idxGb1 = mtb2g1[chr1][range1[0]][0]
-        # idxGe1 = mtb2g1[chr1][range1[1]-1][-1]
-        # newGenome1[chr1] = genome1[chr1][idxGb1:idxGe1 + 1]
-        # newGenome2 = myLightGenomes.LightGenome()
-        # idxGb2 = mtb2g2[chr2][range2[0]][0]
-        # idxGe2 = mtb2g2[chr2][range2[1]-1][-1]
-        # newGenome2[chr2] = genome2[chr2][idxGb2:idxGe2 + 1]
-
-        # ((g1_tb, mtb2g1, (nCL1, nGL1)), (g2_tb, mtb2g2, (nCL2, nGL2))) =\
-        #     myDiags.editGenomes(newGenome1, newGenome2, families, filterType, minChromLength, tandemGapMax, keepOriginal=True)
     else:
         mg2tb1 = dict((c, m.old) for (c, m) in mtb2g1.iteritems())
         mg2tb2 = dict((c, m.old) for (c, m) in mtb2g2.iteritems())
         (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1, g2gtb=mg2tb1)
         (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2, g2gtb=mg2tb2)
-        # assert chr1InGenes == chr1
-        # assert chr2InGenes == chr2
-        # TODO it might be interesting to editGenomes after truncation
-        # newGenome1 = myLightGenomes.LightGenome()
-        # newGenome1[chr1InGenes] = genome1[chr1InGenes][range1InGenes[0]:range1InGenes[1]]
-        # newGenome2 = myLightGenomes.LightGenome()
-        # newGenome2[chr2InGenes] = genome2[chr2InGenes][range2InGenes[0]:range2InGenes[1]]
 
-    chrom1_tb = {}
-    chrom2_tb = {}
+    chrom1_tb = myLightGenomes.LightGenome()
+    chrom2_tb = myLightGenomes.LightGenome()
     chrom1_tb[chr1] = g1_tb[chr1][range1[0]:range1[1]]
     chrom2_tb[chr2] = g2_tb[chr2][range2[0]:range2[1]]
-
     print >> sys.stderr, "the ROI1 contains %s genes (%s genes deleted during edition)" %\
                          (sum(len(mtb2g1[chr1][itb]) for (itb, _) in enumerate(chrom1_tb[chr1])), nGL1)
     print >> sys.stderr, "the ROI2 contains %s genes (%s genes deleted during edition)" %\
                          (sum(len(mtb2g2[chr2][itb]) for (itb, _) in enumerate(chrom2_tb[chr2])), nGL2)
-
     #Focus on the chromosome of the window, just give simple name to the chromosome of interest
     tb2g1 = mtb2g1[chr1]
     g2tb1 = mtb2g1[chr1].old
     tb2g2 = mtb2g2[chr2]
     g2tb2 = mtb2g2[chr2].old
+
+    # load precomputed sbs if any
+    if sbsInPairComp is not None:
+        # load synteny blocks
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
+        for sb in sbsInPairComp[chr1][chr2]:
+            # change the sb.lX structure from list of lists to list of ints
+            new_l1 = [g2tb1[tb[0]] for tb in sb.l1]
+            new_l2 = [g2tb2[tb[0]] for tb in sb.l2]
+            sb = myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, new_l1, new_l2, sb.la), sb.pVal)
+    else:
+        if considerAllPairComps:
+            comparedGenome1 = g1_tb
+            comparedGenome2 = g2_tb
+        else:
+            # extract diagonals in the ROI without considering other pairwise comparisons
+            comparedGenome1 = chrom1_tb
+            comparedGenome2 = chrom2_tb
+        print >> sys.stderr, kwargs
+        sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(comparedGenome1,
+                                                                 comparedGenome2,
+                                                                 **kwargs)
+    # truncate sbs to fit the ROI
+    new_sbsInPairComp = myTools.Dict2d(list)
+    for sb in sbsInPairComp[chr1][chr2]:
+        if (range1[0] <= sb.minOnG(1) and sb.maxOnG(1) <= range1[1])\
+                and (range2[0] <= sb.minOnG(2) and sb.maxOnG(2) <= range2[1]):
+            # sb is perfectly included in the ROI
+            new_sbsInPairComp[chr1][chr2].append(sb)
+        elif (sb.maxOnG(1) < range1[0] or range1[1] < sb.minOnG(1))\
+                or (sb.maxOnG(2) < range2[0] or range2[1] < sb.minOnG(2)):
+            # sb is not in the ROI
+            continue
+        else:
+            # sb is partially included in the ROI
+            sb.truncate(range1, range2)
+            new_sbsInPairComp[chr1][chr2].append(sb)
+    sbsInPairComp = new_sbsInPairComp
 
     ###
     # Build TbNumberOfGenesInEachTbC1 : [ 4,5,1,1,6,2, ...] number og genes in each TB of C1
@@ -281,34 +311,6 @@ else:
     TbHomologyGroupsInWindow = tmpTbHomologyGroupsInWindow
     TbNoHomologiesInWindowC1 = [[tb1] for tb1 in TbNoHomologiesInWindowC1]
     TbNoHomologiesInWindowC2 = [[tb2] for tb2 in TbNoHomologiesInWindowC2]
-
-    if sbsInPairComp is not None:
-        # load synteny blocks
-        new_sbsInPairComp = myTools.Dict2d(list)
-        for sb in sbsInPairComp[chr1][chr2]:
-            # change the sb.lX structure from list of lists to list of ints
-            new_l1 = [g2tb1[tb[0]] for tb in sb.l1]
-            new_l2 = [g2tb2[tb[0]] for tb in sb.l2]
-            sb = myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, new_l1, new_l2, sb.la), sb.pVal)
-            if (range1[0] <= sb.minOnG(1) and sb.maxOnG(1) <= range1[1])\
-                    and (range2[0] <= sb.minOnG(2) and sb.maxOnG(2) <= range2[1]):
-                # sb is perfectly included in the ROI
-                new_sbsInPairComp[chr1][chr2].append(sb)
-            elif (sb.maxOnG(1) < range1[0] or range1[1] < sb.minOnG(1))\
-                    or (sb.maxOnG(2) < range2[0] or range2[1] < sb.minOnG(2)):
-                # sb is not in the ROI
-                continue
-            else:
-                # sb is partially included in the ROI
-                sb.truncate(range1, range2)
-                new_sbsInPairComp[chr1][chr2].append(sb)
-        sbsInPairComp = new_sbsInPairComp
-    else:
-        # extract diagonals in the ROI without considering other pairwise
-        # comparisons
-        sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(chrom1_tb,
-                                                                 chrom2_tb,
-                                                                 **kwargs)
 
     TbDiagIndices = []
     for sb in sbsInPairComp[chr1][chr2]:
