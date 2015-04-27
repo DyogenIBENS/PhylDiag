@@ -69,15 +69,15 @@ phylDiagCommandLines+=(
 "src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InBothGenomes -distanceMetric=${dm} -gapMax=${gm} > res/${S1}_${S2}_fIBS${A}_Gm${gm}${dm}.sbs"
 )
 tgm=9
-gm=10
+gm=5
 dm=CD
 ibwg='+'
 om=10
 phylDiagCommandLines+=(
 # phylDiag with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
+"src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
 # view the sbs from the former output file in the X-X comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
 )
 for line in "${phylDiagCommandLines[@]}"
 	do
@@ -107,17 +107,17 @@ ibwg='+'
 om=10
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om} -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
 )
 Title=PhylDiag
 gm=5
 C1=X
-R1="100-250"
+R1="100-210"
 C2=X
 R2="1-100"
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps +nonOverlappingSbs -overlapMax=${om}"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om}"
 #many computations known to be difficult
 "src/listOfDifficultSyntenies.sh"
 )
@@ -130,7 +130,7 @@ done
 # Check the graph construction of the distribution of the lengths of synteny
 # blocks
 commandLines=(
-"src/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm9Gm10CDIbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
+"src/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_fEuarchontoglires_Tgm9Gm5CDIbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
 )
 for line in "${commandLines[@]}"
 	do

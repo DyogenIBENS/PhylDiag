@@ -21,40 +21,37 @@ import utils.myLightGenomes as myLightGenomes
 # Arguments
 filterType = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs(
-                [("genome1",file),
-                 ("genome2",file),
-                 ("families",file)],
-                [("filterType",str, filterType),
+                [("genome1", file),
+                 ("genome2", file),
+                 ("families", file)],
+                [("filterType", str, filterType),
                  ("tandemGapMax", int, 0),
-                 ("gapMax",str,'None'),
-                 ('distanceMetric',str,'CD'),
-                 ('pThreshold',float, 0.001),
-                 ('identifyBreakpointsWithinGaps', bool, False),
-                 ('nonOverlappingSbs', bool, False),
-                 ('overlapMax', int, 0),
-                 ('considerMonogenicSb', bool, False),
-                 ("minChromLength",int,1),
-                 ("sameStrand",bool,True),
-                 ('nbHpsRecommendedGap',int,2), ('targetProbaRecommendedGap',float,0.01),
-                 ('validateImpossToCalc_mThreshold',int,3),\
-                 # TODO
-                 # Update functions using the multiprocess package of python to
-                 # allow usage of multiprocessing. For the moment, since it is
-                 # not working like this with the python version 2.7.8, the
-                 # multiprocessing is set to false by default.
-                ('multiProcess',bool,False),\
-                ('verbose',bool,False)], \
+                 ("gapMax", str, 'None'),
+                 ('distanceMetric', str, 'CD'),
+                 ('pThreshold', float, 1.0),
+                 ('gapMaxMicroInv', str, '0'),
+                 ('identifyBreakpointsWithinGaps', bool, True),
+                 ('overlapMax', str, 'None'),
+                 ("minChromLength", int, 2),
+                 ("sameStrand", bool, True),
+                 ('nbHpsRecommendedGap', int, 2), ('targetProbaRecommendedGap', float, 0.01),
+                 ('validateImpossToCalc_mThreshold', int, 3),
+                 # The multiprocess does not seem to work well for most of the data. It work well only for some data
+                 # with ~ 800 contigs
+                ('multiProcess', bool, False),
+                ('verbose', bool, False)],
                 #, ("computeDiagsWithoutGenesOnlyImplyedInDiagsOfLengthSmallerOrEqualTo",int,-1)], \
-                __doc__ \
+                __doc__
                 )
 
-if arguments['gapMax'] == 'None':
-    arguments['gapMax']=None
-else:
-    try:
-        arguments['gapMax']=int(arguments['gapMax'])
-    except:
-        raise TypeError('gapMax is either an int or None')
+for argN in ['gapMax', 'overlapMax', 'gapMaxMicroInv']:
+    if arguments[argN] == 'None':
+        arguments[argN] = None
+    else:
+        try:
+            arguments[argN] = int(arguments[argN])
+        except:
+            raise TypeError('%s is either an int or None' % argN)
 
 genome1 = myLightGenomes.LightGenome(arguments["genome1"])
 print >> sys.stderr, "Genome1"
@@ -73,11 +70,10 @@ sbsInPairComp = \
                                         gapMax=arguments["gapMax"],
                                         distanceMetric=arguments['distanceMetric'],
                                         pThreshold=arguments['pThreshold'],
+                                        gapMaxMicroInv=arguments["gapMaxMicroInv"],
                                         identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
-                                        nonOverlappingSbs=arguments['nonOverlappingSbs'],
                                         overlapMax=arguments['overlapMax'],
                                         filterType=filterType,
-                                        considerMonogenicSb=arguments['considerMonogenicSb'],
                                         minChromLength=arguments["minChromLength"],
                                         consistentSwDType=arguments["sameStrand"],
                                         nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],

@@ -37,28 +37,74 @@ if __name__ == '__main__':
          ("families", file),
          ("chr1:deb1-fin1", str),
          ("chr2:deb2-fin2", str)],
-        [("filterType", str, 'InFamilies'),
+        [("filterType", str, 'InBothGenomes'),
+         ("minChromLength", int, 2),
          ("tandemGapMax", int, 0),
+         ("distanceMetric", str, 'CD'),
          ("gapMax", str, 'None'),
-         ('identifyBreakpointsWithinGaps', bool, False),
-         ("nonOverlappingSbs", bool, False),
-         ("overlapMax", int, 0),
+         ("pThreshold", float, 1.0),
+         ('gapMaxMicroInv', str, '0'),
+         ('identifyBreakpointsWithinGaps', bool, True),
+         ("overlapMax", str, 'None'),
          ("consistentSwDType", bool, True),
-         ("considerMonogenicSb", bool, False),
-         ("minChromLength", int, 1),
-         ("pThreshold", float, 0.001),
          ("validateImpossToCalc_mThreshold", int, 3),
          ("in:SyntenyBlocks", str, 'None'),
          ("out:SyntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
          ("mode:chromosomesRewrittenInTbs", bool, False),
          ('convertGenicToTbCoordinates', bool, False),
-         ("distanceMetric", str, 'CD'),
          ('nbHpsRecommendedGap', int, 2),
          ('targetProbaRecommendedGap', float, 0.01),
          ("scaleFactorRectangles", float, 2.0),
          ("out:ImageName", str, "./homologyMatrix.svg"),
          ('verbose', bool, True)],
         __doc__)
+
+for argN in ['gapMax', 'overlapMax', 'gapMaxMicroInv']:
+    if arguments[argN] == 'None':
+        arguments[argN] = None
+    else:
+        try:
+            arguments[argN] = int(arguments[argN])
+        except:
+            raise TypeError('%s is either an int or None' % argN)
+
+    gapMax = arguments['gapMax']
+    gapMaxMicroInv = arguments['gapMaxMicroInv']
+    overlapMax = arguments['overlapMax']
+    tandemGapMax = arguments['tandemGapMax']
+    identifyBreakpointsWithinGaps = arguments['identifyBreakpointsWithinGaps']
+    consistentSwDType = arguments['consistentSwDType']
+    minChromLength = arguments['minChromLength']
+    pThreshold = arguments['pThreshold']
+    validateImpossToCalc_mThreshold = arguments['validateImpossToCalc_mThreshold']
+    chromosomesRewrittenInTbs = arguments['mode:chromosomesRewrittenInTbs']
+    convertGenicToTbCoordinates = arguments['convertGenicToTbCoordinates']
+    distanceMetric = arguments['distanceMetric']
+    nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
+    targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
+
+    scaleFactorRectangles = arguments['scaleFactorRectangles']
+
+    modesFilter = list(myDiags.FilterType._keys)
+    filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
+
+    #thresholdChr : 50
+    assert distanceMetric == 'DPD' or distanceMetric == 'MD'\
+        or distanceMetric == 'CD' or distanceMetric == 'ED'
+    assert (convertGenicToTbCoordinates and chromosomesRewrittenInTbs)\
+        or not convertGenicToTbCoordinates
+
+    kwargs = {'gapMax': gapMax,
+              'gapMaxMicroInv': gapMaxMicroInv,
+              'distanceMetric': distanceMetric,
+              'identifyBreakpointsWithinGaps': identifyBreakpointsWithinGaps,
+              'overlapMax': overlapMax,
+              'consistentSwDType': consistentSwDType,
+              'pThreshold': pThreshold,
+              'nbHpsRecommendedGap': nbHpsRecommendedGap,
+              'targetProbaRecommendedGap': targetProbaRecommendedGap,
+              'validateImpossToCalc_mThreshold': validateImpossToCalc_mThreshold,
+              'verbose': True}
 
     # Load genomes
     genome1 = myLightGenomes.LightGenome(arguments["genome1"], withDict=True)
@@ -70,42 +116,9 @@ if __name__ == '__main__':
     if arguments['in:SyntenyBlocks'] is not 'None':
         # load synteny blocks
         sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
+    # load families
     families = myLightGenomes.Families(arguments["families"])
-    modesFilter = list(myDiags.FilterType._keys)
-    filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
 
-    tandemGapMax = arguments['tandemGapMax']
-    gapMax = arguments['gapMax']
-    identifyBreakpointsWithinGaps = arguments['identifyBreakpointsWithinGaps']
-    nonOverlappingSbs = arguments['nonOverlappingSbs']
-    overlapMax = arguments['overlapMax']
-    consistentSwDType = arguments['consistentSwDType']
-    considerMonogenicSb=arguments['considerMonogenicSb']
-    minChromLength = arguments['minChromLength']
-    pThreshold = arguments['pThreshold']
-    validateImpossToCalc_mThreshold = arguments['validateImpossToCalc_mThreshold']
-    chromosomesRewrittenInTbs = arguments['mode:chromosomesRewrittenInTbs']
-    convertGenicToTbCoordinates = arguments['convertGenicToTbCoordinates']
-    distanceMetric = arguments['distanceMetric']
-    nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
-    targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
-    scaleFactorRectangles = arguments['scaleFactorRectangles']
-
-    #thresholdChr = 50
-
-    #by convention:
-    if gapMax == 'None':
-        gapMax = None
-    else:
-        try:
-            gapMax = int(gapMax)
-        except:
-            raise ValueError('gapMax must be an int or None')
-
-    assert distanceMetric == 'DPD' or distanceMetric == 'MD'\
-        or distanceMetric == 'CD' or distanceMetric == 'ED'
-    assert (convertGenicToTbCoordinates and chromosomesRewrittenInTbs)\
-        or not convertGenicToTbCoordinates
 
     if not chromosomesRewrittenInTbs:
         (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
@@ -114,6 +127,10 @@ if __name__ == '__main__':
         chrom2 = myLightGenomes.LightGenome()
         chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
         chrom2[chr2] = genome2[chr2][range2[0]:range2[1]]
+        nbSpeciesSpecificGenes1 = len([gn for gn in chrom1.getGeneNames(asA=list, checkNoDuplicates=False) if families.getFamilyByName(gn, default=None) is None])
+        print >> sys.stderr, "the ROI1 contains %s genes (%s species specific genes)" % (len(chrom1[chr1]), nbSpeciesSpecificGenes1)
+        nbSpeciesSpecificGenes2 = len([gn for gn in chrom2.getGeneNames(asA=list, checkNoDuplicates=False) if families.getFamilyByName(gn, default=None) is None])
+        print >> sys.stderr, "the ROI2 contains %s genes (%s species specific genes)" % (len(chrom2[chr2]), nbSpeciesSpecificGenes2)
 
         if sbsInPairComp is not None:
             new_sbsInPairComp = myTools.Dict2d(list)
@@ -143,17 +160,9 @@ if __name__ == '__main__':
                                                                 chrom2,
                                                                 families,
                                                                 tandemGapMax=tandemGapMax,
-                                                                gapMax=gapMax,
-                                                                identifyBreakpointsWithinGaps=identifyBreakpointsWithinGaps,
-                                                                nonOverlappingSbs=nonOverlappingSbs,
-                                                                overlapMax=overlapMax,
-                                                                consistentSwDType=consistentSwDType,
-                                                                filterType=filterType,
-                                                                considerMonogenicSb=considerMonogenicSb,
                                                                 minChromLength=minChromLength,
-                                                                distanceMetric=distanceMetric,
-                                                                pThreshold=pThreshold,
-                                                                validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold)
+                                                                filterType=filterType,
+                                                                **kwargs)
 
         genesDiagIndices = []
         for sb in sbsInPairComp[chr1][chr2]:
@@ -192,62 +201,59 @@ if __name__ == '__main__':
                                                                 scaleFactorRectangles=scaleFactorRectangles)
 
     else:
-        #chromosomes are shown as lists of tbs
-        g1fId = myMapping.labelWithFamID(genome1, families)
-        g2fId = myMapping.labelWithFamID(genome2, families)
-        ((g1f, gf2gfId1, (nCL1, nGL1)),
-         (g2f, gf2gfId2, (nCL2, nGL2))) =\
-            myDiags.filter2D(g1fId, g2fId,
-                             filterType,
-                             minChromLength,
-                             keepOriginal=True)
-        (g1tb, gtb2gf1, nGTD1) =\
-            myMapping.remapRewriteInTb(g1f,
-                                       tandemGapMax=tandemGapMax,
-                                       mOld=None)
-        (g2tb, gtb2gf2, nGTD2) =\
-            myMapping.remapRewriteInTb(g2f,
-                                       tandemGapMax=tandemGapMax,
-                                       mOld=None)
-        gtb2gfId1 = {}
-        gfId2gtb1 = {}
-        for c in gtb2gf1:
-            # see Mapping class addition
-            gtb2gfId1[c] = gtb2gf1[c] + gf2gfId1[c]
-            gfId2gtb1[c] = gtb2gfId1[c].old
-        gtb2gfId2 = {}
-        gfId2gtb2 = {}
-        for c in gtb2gf2:
-            # see Mapping class addition
-            gtb2gfId2[c] = gtb2gf2[c] + gf2gfId2[c]
-            gfId2gtb2[c] = gtb2gfId2[c].old
 
+        ((g1_tb, mtb2g1, (nCL1, nGL1)), (g2_tb, mtb2g2, (nCL2, nGL2))) =\
+            myDiags.editGenomes(genome1, genome2, families, filterType, minChromLength, tandemGapMax, keepOriginal=True)
         if not convertGenicToTbCoordinates:
-            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1tb)
-            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2tb)
+            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], g1_tb)
+            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], g2_tb)
+
+            # TODO it might be interesting to editGenomes after truncation
+            # newGenome1 = myLightGenomes.LightGenome()
+            # idxGb1 = mtb2g1[chr1][range1[0]][0]
+            # idxGe1 = mtb2g1[chr1][range1[1]-1][-1]
+            # newGenome1[chr1] = genome1[chr1][idxGb1:idxGe1 + 1]
+            # newGenome2 = myLightGenomes.LightGenome()
+            # idxGb2 = mtb2g2[chr2][range2[0]][0]
+            # idxGe2 = mtb2g2[chr2][range2[1]-1][-1]
+            # newGenome2[chr2] = genome2[chr2][idxGb2:idxGe2 + 1]
+
+            # ((g1_tb, mtb2g1, (nCL1, nGL1)), (g2_tb, mtb2g2, (nCL2, nGL2))) =\
+            #     myDiags.editGenomes(newGenome1, newGenome2, families, filterType, minChromLength, tandemGapMax, keepOriginal=True)
         else:
-            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1, g2gtb=gfId2gtb1)
-            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2, g2gtb=gfId2gtb2)
+            mg2tb1 = dict((c, m.old) for (c, m) in mtb2g1.iteritems())
+            mg2tb2 = dict((c, m.old) for (c, m) in mtb2g2.iteritems())
+            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1, g2gtb=mg2tb1)
+            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2, g2gtb=mg2tb2)
+            # assert chr1InGenes == chr1
+            # assert chr2InGenes == chr2
+            # TODO it might be interesting to editGenomes after truncation
+            # newGenome1 = myLightGenomes.LightGenome()
+            # newGenome1[chr1InGenes] = genome1[chr1InGenes][range1InGenes[0]:range1InGenes[1]]
+            # newGenome2 = myLightGenomes.LightGenome()
+            # newGenome2[chr2InGenes] = genome2[chr2InGenes][range2InGenes[0]:range2InGenes[1]]
 
         chrom1_tb = {}
         chrom2_tb = {}
-        chrom1_tb[chr1] = g1tb[chr1][range1[0]:range1[1]]
-        chrom2_tb[chr2] = g2tb[chr2][range2[0]:range2[1]]
+        chrom1_tb[chr1] = g1_tb[chr1][range1[0]:range1[1]]
+        chrom2_tb[chr2] = g2_tb[chr2][range2[0]:range2[1]]
+
+        print >> sys.stderr, "the ROI1 contains %s genes (%s genes deleted during edition)" %\
+                             (sum(len(mtb2g1[chr1][itb]) for (itb, _) in enumerate(chrom1_tb[chr1])), nGL1)
+        print >> sys.stderr, "the ROI2 contains %s genes (%s genes deleted during edition)" %\
+                             (sum(len(mtb2g2[chr2][itb]) for (itb, _) in enumerate(chrom2_tb[chr2])), nGL2)
 
         #Focus on the chromosome of the window, just give simple name to the chromosome of interest
-        chrom1 = genome1[chr1]
-        Ctb2Cf1 = gtb2gf1[chr1]
-        CfId2Ctb1 = gfId2gtb1[chr1]
-
-        chrom2 = genome2[chr2]
-        Ctb2Cf2 = gtb2gf2[chr2]
-        CfId2Ctb2 = gfId2gtb2[chr2]
+        tb2g1 = mtb2g1[chr1]
+        g2tb1 = mtb2g1[chr1].old
+        tb2g2 = mtb2g2[chr2]
+        g2tb2 = mtb2g2[chr2].old
 
         ###
         # Build TbNumberOfGenesInEachTbC1 : [ 4,5,1,1,6,2, ...] number og genes in each TB of C1
         ###
-        TbNumberOfGenesInEachTbC1 = [len(Ctb2Cf1[i1_tb]) for i1_tb in range(range1[0], range1[1])]
-        TbNumberOfGenesInEachTbC2 = [len(Ctb2Cf2[i2_tb]) for i2_tb in range(range2[0], range2[1])]
+        TbNumberOfGenesInEachTbC1 = [len(tb2g1[i1_tb]) for i1_tb in range(len(chrom1_tb[chr1]))]
+        TbNumberOfGenesInEachTbC2 = [len(tb2g2[i2_tb]) for i2_tb in range(len(chrom2_tb[chr2]))]
 
         ###
         # Build TBStrands
@@ -258,8 +264,7 @@ if __name__ == '__main__':
         ###
         # Build rangeXTB
         ###
-        (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2),
-         TbHomologyGroupsInWindow) =\
+        (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow) =\
             drawHomologyMatrixWithSBs.TbComputeHomologyInformations(chrom1_tb[chr1], chrom2_tb[chr2])
         ###
         # Convert into the correct format for the function TbHomologyGroupsInWindow
@@ -278,11 +283,12 @@ if __name__ == '__main__':
         TbNoHomologiesInWindowC2 = [[tb2] for tb2 in TbNoHomologiesInWindowC2]
 
         if sbsInPairComp is not None:
+            # load synteny blocks
             new_sbsInPairComp = myTools.Dict2d(list)
             for sb in sbsInPairComp[chr1][chr2]:
                 # change the sb.lX structure from list of lists to list of ints
-                new_l1 = [CfId2Ctb1[tb[0]] for tb in sb.l1]
-                new_l2 = [CfId2Ctb2[tb[0]] for tb in sb.l2]
+                new_l1 = [g2tb1[tb[0]] for tb in sb.l1]
+                new_l2 = [g2tb2[tb[0]] for tb in sb.l2]
                 sb = myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, new_l1, new_l2, sb.la), sb.pVal)
                 if (range1[0] <= sb.minOnG(1) and sb.maxOnG(1) <= range1[1])\
                         and (range2[0] <= sb.minOnG(2) and sb.maxOnG(2) <= range2[1]):
@@ -300,18 +306,9 @@ if __name__ == '__main__':
         else:
             # extract diagonals in the ROI without considering other pairwise
             # comparisons
-            sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(chrom1_tb, chrom2_tb,
-                                                                     gapMax=gapMax,
-                                                                     distanceMetric=distanceMetric,
-                                                                     pThreshold=pThreshold,
-                                                                     identifyBreakpointsWithinGaps=identifyBreakpointsWithinGaps,
-                                                                     nonOverlappingSbs=nonOverlappingSbs,
-                                                                     overlapMax=overlapMax,
-                                                                     consistentSwDType=consistentSwDType,
-                                                                     considerMonogenicSb=considerMonogenicSb,
-                                                                     nbHpsRecommendedGap=nbHpsRecommendedGap,
-                                                                     targetProbaRecommendedGap=targetProbaRecommendedGap,
-                                                                     validateImpossToCalc_mThreshold=validateImpossToCalc_mThreshold)
+            sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(chrom1_tb,
+                                                                     chrom2_tb,
+                                                                     **kwargs)
 
         TbDiagIndices = []
         for sb in sbsInPairComp[chr1][chr2]:
@@ -380,14 +377,15 @@ if __name__ == '__main__':
     # if not arguments['mode:chromosomesRewrittenInTbs']:
 
     title =\
-        "%s, f=%s, tgm=%s tbs, gm=%s%s, ibwg=%s, om=%s, %s sbs" %\
+        "%s, f=%s, tgm=%s tbs, gm=%s%s, gmmi=%s, ibwg=%s, om=%s, %s sbs" %\
         ('MHP' if arguments['mode:chromosomesRewrittenInTbs'] else 'MH',
          arguments['filterType'],
          arguments['tandemGapMax'],
          arguments['gapMax'],
          arguments['distanceMetric'],
+         arguments['gapMaxMicroInv'],
          arguments['identifyBreakpointsWithinGaps'],
-         arguments['overlapMax'] if arguments['nonOverlappingSbs'] else 'None',
+         arguments['overlapMax'],
          len(list(sbsInPairComp.iteritems2d())))
     # else:
     #     title =\

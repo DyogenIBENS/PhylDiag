@@ -39,28 +39,31 @@ def parseChrRange(text, genome, g2gtb=None):
     range = text.split(":")[-1].split("-")
     if len(range) == 2 and range[0].isdigit and (range[1].isdigit() or range[1] == '~'):
         if g2gtb is not None:
-            targetIdxG1 = int(range[0])-1
+            assert isinstance(g2gtb, dict)
+            targetIdxG1 = int(range[0]) - 1
             if targetIdxG1 in g2gtb[chr]:
                 range[0] = g2gtb[chr][targetIdxG1]
             else:
                 print >> sys.stderr, "Warning, gene %s at %s:%s is not part of a tandem block, thus we take the nearest tandem block" %\
                                      (genome[chr][targetIdxG1].n, chr, targetIdxG1 + 1)
-                idxTargetTb1 = min(g2gtb[chr].keys(), key=lambda x: abs(x-targetIdxG1))
-                range[0] = g2gtb[chr][idxTargetTb1]
+                idxGeneThatIsInTargetTb1 = min(g2gtb[chr].keys(), key=lambda x: abs(x-targetIdxG1))
+                print >> sys.stderr, "Warning: abs(idxGeneThatIsInTargetTb1 - targetIdxG1) = %s" % abs(idxGeneThatIsInTargetTb1 - targetIdxG1)
+                range[0] = g2gtb[chr][idxGeneThatIsInTargetTb1]
             if range[1] == '~':
-                targetIdxG2 = len(genome[chr]) - 1
+                range[1] = max(idxTb for idxTb in g2gtb[chr])
             else:
                 targetIdxG2 = int(range[1]) - 1
-            if targetIdxG2 in g2gtb[chr]:
-                range[1] = g2gtb[chr][targetIdxG2]
-            else:
-                print >> sys.stderr, "Warning, gene %s at %s:%s is not part of a tandem block, thus we take the nearest tandem block" %\
-                                     (genome[chr][targetIdxG2].n, chr, targetIdxG2 + 1)
-                idxTargetTb2 = min(g2gtb[chr].keys(), key=lambda x: abs(x-targetIdxG2))
-                range[1] = g2gtb[chr][idxTargetTb2]
+                if targetIdxG2 in g2gtb[chr]:
+                    range[1] = g2gtb[chr][targetIdxG2] + 1
+                else:
+                    print >> sys.stderr, "Warning, gene %s at %s:%s is not part of a tandem block, thus we take the nearest tandem block" %\
+                                         (genome[chr][targetIdxG2].n, chr, targetIdxG2 + 1)
+                    idxGeneThatIsInTargetTb2 = min(g2gtb[chr].keys(), key=lambda x: abs(x-targetIdxG2))
+                    print >> sys.stderr, "Warning: abs(idxGeneThatIsInTargetTb2 - targetIdxG2) = %s" % abs(idxGeneThatIsInTargetTb2 - targetIdxG2)
+                    range[1] = g2gtb[chr][idxGeneThatIsInTargetTb2] + 1
         else:
             range = (int(range[0])-1, int(range[1]) if range[1] != '~' else len(genome[chr]))
-        if range[0] < 0 or range[1] > len(genome[chr]) or range[1] <= 0 or range[1] <= range[0]:
+        if range[0] < 0 or len(genome[chr]) < range[1] or range[1] <= 0 or range[1] <= range[0]:
             print >> sys.stderr,\
                 "range %s is incoherent for chr %s. FYI chr %s contains %s elements. Be sure that beginning < end of range" % ([range[0]+1, range[1]], chr, chr, len(genome[chr]))
             raise ValueError
@@ -375,7 +378,7 @@ def drawChromFromLightGenome(genome, chr, families=None, tandemGapMax=None, leng
     homologousTbs = []
     genome_tb.computeDictG2Ps()
     setOfPositionsOfTb = {}
-    for fam in genome_fam.getSetOfGeneNames(checkNoDuplicates=False):
+    for fam in genome_fam.getGeneNames(checkNoDuplicates=False):
         famPositions = genome_tb.getPositions(fam, default=None)
         if famPositions:
             setOfPositionsOfTb[fam] = famPositions
@@ -862,7 +865,7 @@ def test(arguments):
         for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789':
             allFamilies.append(c)
 
-        familiesInBothGenomes = genome_Mouse.getSetOfOwnedFamilyNames(families) & genome_Chicken.getSetOfOwnedFamilyNames(families)
+        familiesInBothGenomes = genome_Mouse.getOwnedFamilyNames(families) & genome_Chicken.getOwnedFamilyNames(families)
         for gene in genome_Mouse['5'] + genome_Chicken['4']:
             oldFamily = families.getFamilyByName(gene.n, default=None)
             if oldFamily:
