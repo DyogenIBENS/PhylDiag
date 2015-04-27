@@ -35,6 +35,7 @@ C1=X
 #R1="100-250"
 C2=X
 #R2="1-100"
+f=InBothGenomes
 tgm=10
 gm=5
 dm=CD
@@ -45,6 +46,24 @@ om=10
 pt=1.0
 
 commandLines=()
+
+# 1: compute sbs
+speciesCombi=(
+"Homo.sapiens Mus.musculus Euarchontoglires"
+"Homo.sapiens Gallus.gallus Amniota"
+"Mus.musculus Gallus.gallus Amniota"
+)
+for line in "${speciesCombi[@]}"
+do
+S1=$(echo ${line}|cut -d" " -f1)
+S2=$(echo ${line}|cut -d" " -f2)
+A=$(echo ${line}|cut -d" " -f3)
+commandLines+=(
+"python -O src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=${f} -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -verbose > res/${S1}_${S2}_Tgm${tgm}gM${gm}GmmI${gmmi}IbwgOm${om}.sbs 2> >(tee logErr_syntenyBlocksDrawer.txt >&2)"
+)
+done
+
+#2: show sbs for each ROI
 for line in "${args[@]}"
 do
 
@@ -61,10 +80,18 @@ do
 	R2="${beg2}-${end2}"
 
 	commandLines+=(
-	# MHP
-	"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
 	# MH
-	"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	# recompute the sbs
+	#"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} -mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	# reuse previously computed sbs
+	"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} -mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt -in:SyntenyBlocks=res/${S1}_${S2}_Tgm${tgm}gM${gm}GmmI${gmmi}IbwgOm${om}.sbs"
+
+	# MHP
+	# recompute the sbs
+	#"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	# reuse previously computedsbs
+	"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:SyntenyBlocks=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt -in:SyntenyBlocks=res/${S1}_${S2}_Tgm${tgm}gM${gm}GmmI${gmmi}IbwgOm${om}.sbs"
+
 	)
 done
 

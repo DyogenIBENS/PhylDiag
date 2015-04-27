@@ -19,12 +19,11 @@ import utils.myDiags as myDiags
 import utils.myLightGenomes as myLightGenomes
 
 # Arguments
-filterType = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs(
                 [("genome1", file),
                  ("genome2", file),
                  ("families", file)],
-                [("filterType", str, filterType),
+                [("filterType", str, 'InBothGenomes'),
                  ("tandemGapMax", int, 0),
                  ("gapMax", str, 'None'),
                  ('distanceMetric', str, 'CD'),
@@ -60,12 +59,14 @@ genome2 = myLightGenomes.LightGenome(arguments["genome2"])
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "Nb of Chr = ", len(genome2.keys())
 families = myLightGenomes.Families(arguments["families"])
+filterType = list(myDiags.FilterType._keys)
 filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of synteny blocks"
 sbsInPairComp = \
     myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
+                                        filterType=filterType,
                                         tandemGapMax=arguments['tandemGapMax'],
                                         gapMax=arguments["gapMax"],
                                         distanceMetric=arguments['distanceMetric'],
@@ -73,7 +74,6 @@ sbsInPairComp = \
                                         gapMaxMicroInv=arguments["gapMaxMicroInv"],
                                         identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
                                         overlapMax=arguments['overlapMax'],
-                                        filterType=filterType,
                                         minChromLength=arguments["minChromLength"],
                                         consistentSwDType=arguments["sameStrand"],
                                         nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
