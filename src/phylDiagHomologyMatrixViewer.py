@@ -6,18 +6,11 @@
 # mail : hrc@ens.fr or jlucas@ens.fr
 # This is free software, you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 (GPL v3) or later and the CeCiLL v2 license in France
 
-import os
-import sys
-import itertools
-from utils import mySvgDrawer
-
 import utils.myLightGenomes as myLightGenomes
 import utils.myTools as myTools
+import utils.myGenomesDrawer as myGenomesDrawer
 # PhylDiag core algorithm
 import utils.myDiags as myDiags
-import utils.myMapping as myMapping
-
-import drawHomologyMatrixWithSBs
 
 filterType = list(myDiags.FilterType._keys)
 
@@ -29,490 +22,6 @@ __doc__ = """
         - '+' indicates homology that have horizontal gene and vertical gene in the same direction on both chromosomes
           '-' indicates homology that have horizontal gene and vertical gene in opposite directions on each chromosomes
         """
-
-def homologyMatrixViewer(genome1, genome2, families, CDF1, CDF2,
-                         convertGenicToTbCoordinates=False,
-                         filterType='InBothGenomes',
-                         minChromLength = 2,
-                         tandemGapMax=0,
-                         distanceMetric='CD',
-                         gapMax=None,
-                         distinguishMonoGenicDiags=True,
-                         pThreshold=None,
-                         gapMaxMicroInv=0,
-                         identifyBreakpointsWithinGaps=True,
-                         overlapMax=None,
-                         consistentSwDType=True,
-                         validateImpossToCalc_mThreshold=3,
-                         nbHpsRecommendedGap=2,
-                         targetProbaRecommendedGap=0.01,
-                         chromosomesRewrittenInTbs=False,
-                         scaleFactorRectangles=2.0,
-                         considerAllPairComps=True,
-                         switchOnDirectView=False,
-                         inSbsInPairComp=None,
-                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
-                         outImageFileName="./homologyMatrix.svg",
-                         verbose=True):
-
-    filterType = myDiags.FilterType[filterType.index(filterType)]
-
-    kwargs = {'gapMax': gapMax,
-              'distinguishMonoGenicDiags': distinguishMonoGenicDiags,
-              'gapMaxMicroInv': gapMaxMicroInv,
-              'distanceMetric': distanceMetric,
-              'identifyBreakpointsWithinGaps': identifyBreakpointsWithinGaps,
-              'overlapMax': overlapMax,
-              'consistentSwDType': consistentSwDType,
-              'pThreshold': pThreshold,
-              'nbHpsRecommendedGap': nbHpsRecommendedGap,
-              'targetProbaRecommendedGap': targetProbaRecommendedGap,
-              'validateImpossToCalc_mThreshold': validateImpossToCalc_mThreshold,
-              'verbose': True}
-
-    # if True, this opens the output image in firefox at the end of the computation
-    assert isinstance(genome1, myLightGenomes.LightGenome)
-    assert isinstance(genome2, myLightGenomes.LightGenome)
-    assert isinstance(families, myLightGenomes.Families)
-
-    kwargs = {'gapMax': gapMax,
-              'distinguishMonoGenicDiags': distinguishMonoGenicDiags,
-              'gapMaxMicroInv': gapMaxMicroInv,
-              'distanceMetric': distanceMetric,
-              'identifyBreakpointsWithinGaps': identifyBreakpointsWithinGaps,
-              'overlapMax': overlapMax,
-              'consistentSwDType': consistentSwDType,
-              'pThreshold': pThreshold,
-              'nbHpsRecommendedGap': nbHpsRecommendedGap,
-              'targetProbaRecommendedGap': targetProbaRecommendedGap,
-              'validateImpossToCalc_mThreshold': validateImpossToCalc_mThreshold,
-              'verbose': True}
-
-    assert distanceMetric == 'DPD' or distanceMetric == 'MD' or distanceMetric == 'CD' or distanceMetric == 'ED'
-    assert (convertGenicToTbCoordinates and chromosomesRewrittenInTbs) or not convertGenicToTbCoordinates
-    # Change genome format
-    genome1Name = genome1.name
-    genome2Name = genome2.name
-
-    if not chromosomesRewrittenInTbs:
-
-        # define the ROI (Region Of Interest)
-        (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(CDF1, genome1)
-        (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(CDF2, genome2)
-        chrom1 = myLightGenomes.LightGenome()
-        chrom2 = myLightGenomes.LightGenome()
-        chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
-        chrom2[chr2] = genome2[chr2][range2[0]:range2[1]]
-        nbSpeciesSpecificGenes1 = len([gn for gn in chrom1.getGeneNames(asA=list, checkNoDuplicates=False) if families.getFamilyByName(gn, default=None) is None])
-        print >> sys.stderr, "the ROI1 contains %s genes (%s species specific genes)" % (len(chrom1[chr1]), nbSpeciesSpecificGenes1)
-        nbSpeciesSpecificGenes2 = len([gn for gn in chrom2.getGeneNames(asA=list, checkNoDuplicates=False) if families.getFamilyByName(gn, default=None) is None])
-        print >> sys.stderr, "the ROI2 contains %s genes (%s species specific genes)" % (len(chrom2[chr2]), nbSpeciesSpecificGenes2)
-
-        if inSbsInPairComp is None:
-            if considerAllPairComps:
-                comparedGenome1 = genome1
-                comparedGenome2 = genome2
-            else:
-                # extract diagonals in the ROI without considering other pairwise comparisons
-                comparedGenome1 = chrom1
-                comparedGenome2 = chrom2
-            sbsInPairComp = myDiags.extractSbsInPairCompGenomes(comparedGenome1,
-                                                                comparedGenome2,
-                                                                families,
-                                                                tandemGapMax=tandemGapMax,
-                                                                minChromLength=minChromLength,
-                                                                filterType=filterType,
-                                                                **kwargs)
-        new_sbsInPairComp = myTools.Dict2d(list)
-        for sb in sbsInPairComp[chr1][chr2]:
-            newl1 = []
-            newl2 = []
-            newla = []
-            for (idxHp, aG) in enumerate(sb.la):
-                tb1 = []
-                tb2 = []
-                for i1g in sb.l1[idxHp]:
-                    if (range1[0] <= i1g and i1g <= range1[1]):
-                        tb1.append(i1g)
-                for i2g in sb.l2[idxHp]:
-                    if (range2[0] <= i2g and i2g <= range2[1]):
-                        tb2.append(i2g)
-                if len(tb1) > 0 and len(tb2) > 0:
-                    newl1.append(tb1)
-                    newl2.append(tb2)
-                    newla.append(aG)
-            if len(newla) > 0:
-                new_sbsInPairComp[chr1][chr2].append(myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, newl1, newl2, newla), sb.pVal))
-        sbsInPairComp = new_sbsInPairComp
-
-        genesDiagIndices = []
-        for sb in sbsInPairComp[chr1][chr2]:
-            genesDiagIndices.append([])
-            for idxHp, aG in enumerate(sb.la):
-                for (gi1, gi2) in itertools.product(sb.l1[idxHp], sb.l2[idxHp]):
-                    assert range1[0] <= gi1 <= range1[1]
-                    assert range2[0] <= gi2 <= range2[1]
-                    genesDiagIndices[-1].append((gi1 - range1[0], gi2 - range2[0]))
-
-        ###
-        # Build Genes Strands
-        ###
-        genesStrandsC1 = [s for (_, s) in chrom1[chr1]]
-        genesStrandsC2 = [s for (_, s) in chrom2[chr2]]
-
-        ((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
-         genesHomologiesHpSign,
-         (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
-         genesHomologyGroupsInWindow) =\
-            drawHomologyMatrixWithSBs.genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
-                                                                       families,
-                                                                       filterType,
-                                                                       minChromLength,
-                                                                       tandemGapMax)
-
-        strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2),
-                                                                (genesStrandsC1, genesStrandsC2),
-                                                                (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
-                                                                (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
-                                                                genesHomologiesHpSign,
-                                                                genesHomologyGroupsInWindow,
-                                                                genesDiagIndices,
-                                                                outputFileName=outImageFileName,
-                                                                maxWidth=100,
-                                                                maxHeight=100,
-                                                                scaleFactorRectangles=scaleFactorRectangles)
-
-    else:
-        assert chromosomesRewrittenInTbs
-        ((g1_tb, mtb2g1, (nCL1, nGL1)), (g2_tb, mtb2g2, (nCL2, nGL2))) =\
-            myDiags.editGenomes(genome1, genome2, families,
-                                filterType=filterType, labelWith='FamID', tandemGapMax=tandemGapMax,
-                                minChromLength=minChromLength, keepOriginal=True)
-        if not convertGenicToTbCoordinates:
-            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(CDF1, g1_tb)
-            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(CDF2, g2_tb)
-        else:
-            mg2tb1 = dict((c, m.old) for (c, m) in mtb2g1.iteritems())
-            mg2tb2 = dict((c, m.old) for (c, m) in mtb2g2.iteritems())
-            (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(CDF1, genome1, g2gtb=mg2tb1)
-            (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(CDF2, genome2, g2gtb=mg2tb2)
-
-        chrom1_tb = myLightGenomes.LightGenome()
-        chrom2_tb = myLightGenomes.LightGenome()
-        chrom1_tb[chr1] = g1_tb[chr1][range1[0]:range1[1]]
-        chrom2_tb[chr2] = g2_tb[chr2][range2[0]:range2[1]]
-        print >> sys.stderr, "the ROI1 contains %s genes (%s genes deleted during edition)" %\
-                             (sum(len(mtb2g1[chr1][itb]) for (itb, _) in enumerate(chrom1_tb[chr1])), nGL1)
-        print >> sys.stderr, "the ROI2 contains %s genes (%s genes deleted during edition)" %\
-                             (sum(len(mtb2g2[chr2][itb]) for (itb, _) in enumerate(chrom2_tb[chr2])), nGL2)
-        #Focus on the chromosome of the window, just give simple name to the chromosome of interest
-        tb2g1 = mtb2g1[chr1]
-        g2tb1 = mtb2g1[chr1].old
-        tb2g2 = mtb2g2[chr2]
-        g2tb2 = mtb2g2[chr2].old
-
-        # load precomputed sbs if any
-        if inSbsInPairComp is not None:
-            for sb in inSbsInPairComp[chr1][chr2]:
-                # change the sb.lX structure from list of lists to list of ints
-                new_l1 = [g2tb1[tb[0]] for tb in sb.l1]
-                new_l2 = [g2tb2[tb[0]] for tb in sb.l2]
-                sb = myDiags.SyntenyBlock(myDiags.Diagonal(sb.dt, new_l1, new_l2, sb.la), sb.pVal)
-        else:
-            if considerAllPairComps:
-                comparedGenome1 = g1_tb
-                comparedGenome2 = g2_tb
-            else:
-                # extract diagonals in the ROI without considering other pairwise comparisons
-                comparedGenome1 = chrom1_tb
-                comparedGenome2 = chrom2_tb
-            print >> sys.stderr, kwargs
-            sbsInPairComp = myDiags.extractSbsInPairCompGenomesInTbs(comparedGenome1,
-                                                                     comparedGenome2,
-                                                                     **kwargs)
-        # truncate sbs to fit the ROI
-        new_sbsInPairComp = myTools.Dict2d(list)
-        for sb in sbsInPairComp[chr1][chr2]:
-            if (range1[0] <= sb.minOnG(1) and sb.maxOnG(1) <= range1[1])\
-                    and (range2[0] <= sb.minOnG(2) and sb.maxOnG(2) <= range2[1]):
-                # sb is perfectly included in the ROI
-                new_sbsInPairComp[chr1][chr2].append(sb)
-            elif (sb.maxOnG(1) < range1[0] or range1[1] < sb.minOnG(1))\
-                    or (sb.maxOnG(2) < range2[0] or range2[1] < sb.minOnG(2)):
-                # sb is not in the ROI
-                continue
-            else:
-                # sb is partially included in the ROI
-                sb.truncate(range1, range2)
-                if len(sb.la) > 0:
-                    new_sbsInPairComp[chr1][chr2].append(sb)
-        sbsInPairComp = new_sbsInPairComp
-
-        ###
-        # Build TbNumberOfGenesInEachTbC1 : [ 4,5,1,1,6,2, ...] number og genes in each TB of C1
-        ###
-        TbNumberOfGenesInEachTbC1 = [len(tb2g1[i1_tb]) for i1_tb in range(len(chrom1_tb[chr1]))]
-        TbNumberOfGenesInEachTbC2 = [len(tb2g2[i2_tb]) for i2_tb in range(len(chrom2_tb[chr2]))]
-
-        ###
-        # Build TBStrands
-        ###
-        TbStrandsC1 = [s for (_, s) in chrom1_tb[chr1]]
-        TbStrandsC2 = [s for (_, s) in chrom2_tb[chr2]]
-
-        ###
-        # Build rangeXTB
-        ###
-        (TbHpSign, (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2), TbHomologyGroupsInWindow) =\
-            drawHomologyMatrixWithSBs.TbComputeHomologyInformations(chrom1_tb[chr1], chrom2_tb[chr2])
-        ###
-        # Convert into the correct format for the function TbHomologyGroupsInWindow
-        ###
-        tmpTbHomologyGroupsInWindow = []
-        for (tbs1, tbs2) in TbHomologyGroupsInWindow:
-            tmpTbs1 = []
-            tmpTbs2 = []
-            for tb1 in tbs1:
-                tmpTbs1.append([tb1])
-            for tb2 in tbs2:
-                tmpTbs2.append([tb2])
-            tmpTbHomologyGroupsInWindow.append((tmpTbs1, tmpTbs2))
-        TbHomologyGroupsInWindow = tmpTbHomologyGroupsInWindow
-        TbNoHomologiesInWindowC1 = [[tb1] for tb1 in TbNoHomologiesInWindowC1]
-        TbNoHomologiesInWindowC2 = [[tb2] for tb2 in TbNoHomologiesInWindowC2]
-
-        TbDiagIndices = []
-        for sb in sbsInPairComp[chr1][chr2]:
-            TbDiagIndices.append([])
-            for idxHp, aG in enumerate(sb.la):
-                idxHp1 = sb.l1[idxHp]
-                idxHp2 = sb.l2[idxHp]
-                assert isinstance(idxHp1, int) and isinstance(idxHp2, int)
-                assert range1[0] <= idxHp1 <= range1[1]
-                assert range2[0] <= idxHp2 <= range2[1]
-                TbDiagIndices[-1].append((idxHp1 - range1[0], idxHp2 - range2[0]))
-
-        strArray =\
-            drawHomologyMatrixWithSBs.drawHomologyMatrix((range1, range2),
-                                                         (TbStrandsC1, TbStrandsC2),
-                                                         ([], []),
-                                                         (TbNoHomologiesInWindowC1, TbNoHomologiesInWindowC2),
-                                                         TbHpSign,
-                                                         TbHomologyGroupsInWindow,
-                                                         TbDiagIndices,
-                                                         outputFileName=outImageFileName,
-                                                         maxWidth=100,
-                                                         maxHeight=100,
-                                                         symbolsInGenes=(TbNumberOfGenesInEachTbC1, TbNumberOfGenesInEachTbC2),
-                                                         scaleFactorRectangles=scaleFactorRectangles
-                                                         )
-
-    #copy the css style sheet
-    dirNameImage = os.path.dirname(outImageFileName)
-    dirNameImage = dirNameImage if dirNameImage != "" else "."
-    print >> sys.stderr, "cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage)
-    os.system("cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage))
-
-    # write a simple file with all diagonals into output file
-    with open(outSyntenyBlocksFileName, 'w') as f:
-        print >> f, "Mode : %s" % 'Genic scale' if chromosomesRewrittenInTbs is False else 'Tandem Blocks scale'
-        print >> f, "chromosome %s de %s\t%s\t%s\tchromosome %s de %s\t%s\t%s\t%s" % (chr1, genome1Name, 'beginC1', 'endC1', chr2, genome2Name, 'beginC2', 'endC2', 'length in families')
-        print >> f, "c1\tbeg1\tend1\tc2\tbeg2\tend2\thps\tpVal"
-
-        for sb in sbsInPairComp[chr1][chr2]:
-            if isinstance(sb.l1[0], list) and isinstance(sb.l2[0], list):
-                minl1 = min(sb.l1[0])
-                maxl1 = max(sb.l1[-1])
-                minl2 = min(sb.l2[0])
-                maxl2 = max(sb.l2[-1])
-            elif isinstance(sb.l2[0], int) and isinstance(sb.l2[0], int):
-                minl1 = min(sb.l1)
-                maxl1 = max(sb.l1)
-                minl2 = min(sb.l2)
-                maxl2 = max(sb.l2)
-            # indices of genes start at 1 to be coherent with the output image
-            print >> f, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (chr1, minl1 + 1, maxl1 + 1, chr2, minl2 + 1, maxl2 + 1, len(sb.la), sb.pVal)
-
-    # Add lengends and title to the ouput matrix
-    height = 100
-    width = 100
-    var = ['<?xml version="1.0" encoding="utf-8" standalone="no"?>\n',
-                    #'<?xml-stylesheet type="text/css" href="styleForHomologyMatrixWithSBs.css" ?>\n', #Warning : request the css file
-                    '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n',
-                    "<svg height=\"100%%\" version=\"1.1\" viewBox=\"0 0 %s %s\" width=\"100%%\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" % (width, height),
-                     '<defs>\n',
-                      '<style type="text/css">\n',
-                            '*{stroke-linecap:square;stroke-linejoin:round;}\n',
-                      '</style>\n',
-                     '</defs>\n'
-                     '<g style="fill-opacity:1.0; stroke:black;\n',
-                     'stroke-width:1;">\n']
-    #Title
-    # if not arguments['mode:chromosomesRewrittenInTbs']:
-
-    title =\
-        "%s, f=%s, tgm=%s tbs, gm=%s%s, gmmi=%s, ibwg=%s, om=%s, %s sbs" %\
-        ('MHP' if chromosomesRewrittenInTbs else 'MH',
-         filterType,
-         tandemGapMax,
-         gapMax,
-         distanceMetric,
-         gapMaxMicroInv,
-         identifyBreakpointsWithinGaps,
-         overlapMax,
-         len(list(sbsInPairComp.iteritems2d())))
-    # else:
-    #     title =\
-    #         "%s, tandemGapMax=%s tbs, gapMax=%s%s, overlapMax=%s tbs, %s sbs" %\
-    #         ('MHP',
-    #          arguments['tandemGapMax'],
-    #          arguments['gapMax'],
-    #          arguments['distanceMetric'],
-    #          arguments['overlapMax'],
-    #          len(list(sbsInPairComp.iteritems2d())))\
-
-    var += [#'<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
-            '<svg x="5" y="0" viewBox="5 0 95 5" width="95" height="5">\n',
-                    ''.join(mySvgDrawer.Text(mySvgDrawer.Point(float(5 + 95)/2.0, 5.0/2.0), title,
-                                             text_anchor='middle', fontWeight=300, size=2).strarray()),
-                    # '<foreignObject x="0" y="0" width="95" height="5">\n',
-                    # '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
-                    #         '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                    #         '<xhtml:div style="color:black; word-wrap:break-word; font-size:1.5px; font-family:Arial" >' + title + '\n',
-                    #                         '</xhtml:div>\n',
-                    #                 '</xhtml:div>\n',
-                    #         '</xhtml:div>\n',
-                    # '</foreignObject>\n',
-            '</svg>\n']
-
-    #Add legends (genomes names and ranges)
-    var += [#'<svg x="0" y="0" viewBox="0 0 5 95" width="5" height="95" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink">\n',
-            '<svg x="0" y="0" viewBox="0 0 5 95" width="5" height="95">\n',
-                    ''.join(mySvgDrawer.Text(mySvgDrawer.Point(5.0/2.0, float(5 + 95)/2.0), str(genome2.name) + " chr" + str(chr2) + ":" + str(range2[0]+1) + "-" + str(range2[1]),
-                                             text_anchor='middle', size=2, fontWeight=300, transform='rotate(-90, %s, %s)' % (5.0/2.0, float(5 + 95)/2.0)).strarray()),
-                    # '<foreignObject x="0" y="0" width="95" height="5" transform="translate(5,0) rotate(90) translate(0,0)">\n',
-                    # '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
-                    #         '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                    #         '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + str(arguments["genome2"]) + " <br />  chr" + str(chr2) + ":" + str(range2[0]+1) + "-" + str(range2[1]) + '\n',
-                    #                         '</xhtml:div>\n',
-                    #                 '</xhtml:div>\n',
-                    #         '</xhtml:div>\n',
-                    # '</foreignObject>\n',
-            '</svg>\n',
-            '<svg x="5" y="95" viewBox="0 0 95 5" width="95" height="5">\n',
-                    ''.join(mySvgDrawer.Text(mySvgDrawer.Point(float(5 + 95)/2, 5.0/2.0),  str(genome1.name) + " chr" + str(chr1) + ":" + str(range1[0]+1) + "-" + str(range1[1]),
-                                             text_anchor='middle', fontWeight=300, size=2).strarray()),
-                    # '<foreignObject x="0" y="0" width="95" height="5">\n',
-                    # '<xhtml:div style="display:table; height:100%; width:100%; overflow:hidden; text-align:center; ">\n',
-                    #         '<xhtml:div style="display: table-cell; vertical-align: middle;">\n',
-                    #         '<xhtml:div style="color:black; word-wrap:break-word; font-size:2px; font-family:Arial" >' + str(arguments["genome1"]) + " <br /> chr" + str(chr1) + ":" + str(range1[0]+1) + "-" + str(range1[1]) + '\n',
-                    #                         '</xhtml:div>\n',
-                    #                 '</xhtml:div>\n',
-                    #         '</xhtml:div>\n',
-                    # '</foreignObject>\n',
-            '</svg>\n']
-
-    var+=['<svg preserveAspectRatio="xMidYMid meet" x="5" y="5" viewBox="0 0 100 100" width="90" height="90" >\n'] # little transformation : viewBox = "the part of the forecoming images that we want to see", width and height = the width and height of the image that will be printed on the screen. This instructions takes a viewBox of the forecoming images and display it in a image of the specified width and height
-    for line in strArray:
-        if line.find("<?xml")>=0 or line.find("<!DOCTYPE")>=0: #or line.find("<svg")>=0 or line.find("</svg")>=0:
-            continue
-        else:
-            var += line
-
-    var += ["</svg>\n"]
-    var += ["</g>\n", "</svg>\n"]
-
-    file = open(outImageFileName, 'w')
-    file.writelines(var)
-    file.close()
-    if switchOnDirectView:
-        os.system("%s %s" % ('firefox', outImageFileName))
-
-    #Find diags with the more paralogs
-    @myTools.deprecated
-    def searchInterestingDiags(listOfDiags, range1, range2):
-        ecart=-sys.maxint-1
-        diag_=None
-        for diag in listOfDiags:
-            l1=diag[0][1]
-            l2=diag[1][1]
-            la=diag[2]
-            if len(l1) != len(l2):
-                print >> sys.stderr, "assymetric (on genome1 and genome2) SB of ", len([ anc for (anc,_,_,_) in la]), " HPs"
-                print >> sys.stderr, "diag on G1 from %s to %s" % (min(l1[0][0]+range1[0], l1[-1][0]+range1[0]) , max(l1[0][0]+range1[0], l1[-1][0]+range1[0]))
-                print >> sys.stderr, "diag on G2 from %s to %s" % (min(l2[0][0]+range2[0], l2[-1][0]+range2[0]) , max(l2[0][0]+range2[0], l2[-1][0]+range2[0]))
-                if ecart < abs(len(l1) -  len(la)):
-                    ecart = abs(len(l1) -  len(la))
-                    diag_=diag
-                if ecart < abs(len(l2) -  len(la)):
-                    ecart = abs(len(l2) -  len(la))
-                    diag_=diag
-        diag = diag_ if diag_ != None else listOfDiags[0]
-        l1 = diag[0][1]
-        l2 = diag[1][1]
-        la = diag[2]
-        print >> sys.stderr, "The most assymetric diag"
-        print >> sys.stderr, " SB of ", len([ anc for (anc,_,_,_) in la]), " HPs"
-        print >> sys.stderr, "diag on G1 = ", [ gene[0]+range1[0] for gene in l1]
-        print >> sys.stderr, "diag on G2 = ", [ gene[0]+range2[0] for gene in l2]
-
-        minIndiceG1 = sys.maxint
-        maxIndiceG1 = -sys.maxint-1
-        minIndiceG2 = sys.maxint
-        maxIndiceG2 = -sys.maxint-1
-        for diag in listOfDiags :
-            ((_,l1),(_,l2),_) = diag
-            for (i1,_) in l1:
-                minIndiceG1 = i1 if i1 < minIndiceG1 else minIndiceG1
-                maxIndiceG1 = i1 if i1 > maxIndiceG1 else maxIndiceG1
-            for (i2,_) in l2:
-                minIndiceG2 = i2 if i2 < minIndiceG2 else minIndiceG2
-                maxIndiceG2 = i2 if i2 > maxIndiceG2 else maxIndiceG2
-        print >> sys.stderr, 'Indices entre lesquels se trouvents les diagonales sur le G1 = [%s,%s]' % (minIndiceG1+range1[0], maxIndiceG1+range1[0])
-        print >> sys.stderr, 'Indices entre lesquels se trouvents les diagonales sur le G2 = [%s,%s]' % (minIndiceG2+range2[0], maxIndiceG2+range2[0])
-
-        return
-
-    # ask the user for the desired chromosome ranges
-    @myTools.deprecated
-    def chooseChrsAndRanges(genome1, genome2, families, distanceMetric = 'DPD'):
-        while True:
-            try:
-                (chr1, range1) = drawHomologyMatrixWithSBs.parseChrRange(raw_input("chr1:deb1-fin1 = "), genome1)
-                break
-            except ValueError:
-                print >> sys.stderr, "You need to write somtehing as chr1:deb1-fin1 with chr1 a chr of G1 and deb1 and fin1 indices of the first and last gene (indices start at 1)"
-
-        while True:
-            try:
-                (chr2, range2) = drawHomologyMatrixWithSBs.parseChrRange(raw_input("chr2:deb2-fin2 = "), genome2)
-                break
-            except ValueError:
-                print >> sys.stderr, "You need to write somtehing as chr2:deb2-fin2 with chr2 a chr of G2 and deb2 and fin2 indices of the first and last gene (indices start at 1)"
-
-        chrom1 ={}
-        chrom2 ={}
-        chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
-        chrom2[chr2] = genome2[chr2][range2[0]:range2[1]]
-        listOfDiags = myDiags.extractSbsInPairCompGenomes(chrom1, chrom2, families,
-                                                          gapMax=gapMax, consistentSwDType=consistentSwDType,
-                                                          filterType=filterType, minChromLength=minChromLength,
-                                                          distanceMetric=distanceMetric, verbose=verbose)
-        listOfDiags = list(listOfDiags)
-        print >> sys.stderr, "pairwise comparison of the two chromosomes yields" , len(listOfDiags), "diagonals."
-        if len(listOfDiags) == 0:
-            print >> sys.stderr, "There is no diag in the considered region of interest"
-        else:
-            #recherche des diagonales interessantes a afficher
-            print >> sys.stderr, range1
-            print >> sys.stderr, range2
-            searchInterestingDiags(listOfDiags, range1, range2)
-
-        print >> sys.stderr, "Do you want to chose a new region of interest ?"
-        if raw_input('y/n ? ') == 'y':
-            return chooseChrsAndRanges(genome1, genome2, families)
-        else:
-            return (chrom1, chrom2, range1, range2)
 
 if __name__ == '__main__':
 
@@ -544,6 +53,7 @@ if __name__ == '__main__':
          ("out:ImageName", str, "./homologyMatrix.svg"),
          ("considerAllPairComps", bool, True),
          ('switchOnDirectView', bool, False),
+         ('optimisation', str, 'cython'),
          ('verbose', bool, True)],
         __doc__)
 
@@ -573,6 +83,8 @@ nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
 targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
 considerAllPairComps = arguments['considerAllPairComps']
 scaleFactorRectangles = arguments['scaleFactorRectangles']
+filterType = list(myDiags.FilterType._keys)
+filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 
 # Load genomes
 genome1 = myLightGenomes.LightGenome(arguments['genome1'], withDict=True)
@@ -588,27 +100,28 @@ else:
     inSbsInPairComp = arguments['in:SyntenyBlocks']
     inSbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
 
-homologyMatrixViewer(genome1, genome2, families, arguments['chr1:deb1-fin1'], arguments['chr2:deb2-fin2'],
-                     convertGenicToTbCoordinates=arguments['convertGenicToTbCoordinates'],
-                     filterType=arguments["filterType"],
-                     minChromLength=arguments['minChromLength'],
-                     tandemGapMax=arguments['tandemGapMax'],
-                     distanceMetric=arguments['distanceMetric'],
-                     gapMax=arguments['gapMax'],
-                     distinguishMonoGenicDiags=arguments['distinguishMonoGenicDiags'],
-                     pThreshold=arguments['pThreshold'],
-                     gapMaxMicroInv=arguments['gapMaxMicroInv'],
-                     identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
-                     overlapMax=arguments['overlapMax'],
-                     consistentSwDType=arguments['consistentSwDType'],
-                     validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
-                     nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
-                     targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
-                     chromosomesRewrittenInTbs=arguments['mode:chromosomesRewrittenInTbs'],
-                     scaleFactorRectangles=arguments['scaleFactorRectangles'],
-                     considerAllPairComps=arguments['considerAllPairComps'],
-                     switchOnDirectView=arguments['switchOnDirectView'],
-                     inSbsInPairComp=inSbsInPairComp,
-                     outSyntenyBlocksFileName=arguments['out:SyntenyBlocks'],
-                     outImageFileName=arguments['out:ImageName'],
-                     verbose=arguments['verbose'])
+myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1:deb1-fin1'], arguments['chr2:deb2-fin2'],
+                                     convertGenicToTbCoordinates=arguments['convertGenicToTbCoordinates'],
+                                     filterType=filterType,
+                                     minChromLength=arguments['minChromLength'],
+                                     tandemGapMax=arguments['tandemGapMax'],
+                                     distanceMetric=arguments['distanceMetric'],
+                                     gapMax=arguments['gapMax'],
+                                     distinguishMonoGenicDiags=arguments['distinguishMonoGenicDiags'],
+                                     pThreshold=arguments['pThreshold'],
+                                     gapMaxMicroInv=arguments['gapMaxMicroInv'],
+                                     identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
+                                     overlapMax=arguments['overlapMax'],
+                                     consistentSwDType=arguments['consistentSwDType'],
+                                     validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
+                                     nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
+                                     targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
+                                     chromosomesRewrittenInTbs=arguments['mode:chromosomesRewrittenInTbs'],
+                                     scaleFactorRectangles=arguments['scaleFactorRectangles'],
+                                     considerAllPairComps=arguments['considerAllPairComps'],
+                                     switchOnDirectView=arguments['switchOnDirectView'],
+                                     optimisation=arguments['optimisation'],
+                                     inSbsInPairComp=inSbsInPairComp,
+                                     outSyntenyBlocksFileName=arguments['out:SyntenyBlocks'],
+                                     outImageFileName=arguments['out:ImageName'],
+                                     verbose=arguments['verbose'])
