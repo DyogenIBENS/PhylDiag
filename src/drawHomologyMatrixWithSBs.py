@@ -777,8 +777,8 @@ def test(arguments):
                         genesStrandsC2[i2]=strand if b else None
                     else:
                         raise ValueError()
-        begC1,endC1 = 0,nx-1
-        begC2,endC2 = 0,ny-1
+        begC1, endC1 = 0, nx-1
+        begC2, endC2 = 0, ny-1
         tbWithNoHomologyInWindowC1=[0,2,3,6,10]
         tbWithNoHomologyInWindowC2=[0,7]
         homologyGroupsInWindow=[([1],[5]),([4],[4]),([5],[3]),([9],[1]),([7],[6]),([8],[2])]
@@ -787,7 +787,7 @@ def test(arguments):
         genesRemovedDuringFilteringC2=[]
         symbolsInGenes=[[1,1,1,1,1,1,1,2,2,1,1],[1,1,2,1,1,1,2,1]]
 
-        drawHomologyMatrix(((begC1,endC1),(begC2,endC2)), (genesStrandsC1, genesStrandsC2),
+        drawHomologyMatrix(((begC1, endC1),(begC2, endC2)), (genesStrandsC1, genesStrandsC2),
                            (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
                            (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2),
                            hpSigns, homologyGroupsInWindow, diagsIndices,

@@ -26,8 +26,9 @@ arguments = myTools.checkArgs(
                 [("filterType", str, 'InBothGenomes'),
                  ("tandemGapMax", int, 0),
                  ("gapMax", str, 'None'),
+                 ("distinguishMonoGenicDiags", bool, True),
                  ('distanceMetric', str, 'CD'),
-                 ('pThreshold', float, 1.0),
+                 ('pThreshold', str, 'None'),
                  ('gapMaxMicroInv', str, '0'),
                  ('identifyBreakpointsWithinGaps', bool, True),
                  ('overlapMax', str, 'None'),
@@ -43,12 +44,12 @@ arguments = myTools.checkArgs(
                 __doc__
                 )
 
-for argN in ['gapMax', 'overlapMax', 'gapMaxMicroInv']:
+for (argN, tpe) in [('gapMax', int), ('overlapMax', int), ('gapMaxMicroInv', int), ('pThreshold', float)]:
     if arguments[argN] == 'None':
         arguments[argN] = None
     else:
         try:
-            arguments[argN] = int(arguments[argN])
+            arguments[argN] = tpe(arguments[argN])
         except:
             raise TypeError('%s is either an int or None' % argN)
 
@@ -69,6 +70,7 @@ sbsInPairComp = \
                                         filterType=filterType,
                                         tandemGapMax=arguments['tandemGapMax'],
                                         gapMax=arguments["gapMax"],
+                                        distinguishMonoGenicDiags=arguments["distinguishMonoGenicDiags"],
                                         distanceMetric=arguments['distanceMetric'],
                                         pThreshold=arguments['pThreshold'],
                                         gapMaxMicroInv=arguments["gapMaxMicroInv"],
