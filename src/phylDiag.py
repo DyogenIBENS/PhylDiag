@@ -63,7 +63,7 @@ filterType = list(myDiags.FilterType._keys)
 filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 statsDiags = []
 
-print >> sys.stderr, "Begining of the extraction of synteny blocks"
+print >> sys.stderr, "Beginning of the extraction of synteny blocks"
 sbsInPairComp = \
     myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
                                         filterType=filterType,

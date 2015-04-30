@@ -188,6 +188,7 @@ def test(arguments):
             scene.add(item)
         scene.write_svg(filename=outFileName)
         print >> sys.stderr, "finished!"
+
     elif scenario == 14:
         os.chdir('/home/jlucas/Libs/MagSimus')
         genome1 = myLightGenomes.LightGenome('data/genesST.Mus.musculus.list.bz2')
@@ -217,12 +218,19 @@ def test(arguments):
                         old2newFamily[oldFamily.fn] = newFamily
         families = newFamilies
 
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
         lengthGene = 1
         width = max(len(genome_Mouse['5']), len(genome_Chicken['4'])) + 2 * lengthGene
         height = 4 * lengthGene
         scene = svgDrw.Scene(name='chromosome', width=width, height=height)
-        chromosomeMouseItems = myGenomesDrawer.drawChromFromLightGenome(genome_Mouse, '5', families, lengthGene=lengthGene)
-        chromosomeChickenItems = myGenomesDrawer.drawChromFromLightGenome(genome_Chicken, '4', families, lengthGene=lengthGene)
+        chromosomeMouseItems = myGenomesDrawer.drawLightGenome(genome_Mouse, families,
+                                                               familyName2color=familyName2color, lengthGene=lengthGene)['5']
+        chromosomeChickenItems = myGenomesDrawer.drawLightGenome(genome_Chicken, families,
+                                                                 familyName2color=familyName2color, lengthGene=lengthGene)['4']
         for item in chromosomeMouseItems:
             item.start = Point(item.start.x, item.start.y + lengthGene)
             item.end = Point(item.end.x, item.end.y + lengthGene)
@@ -232,6 +240,10 @@ def test(arguments):
             item.end = Point(item.end.x, item.end.y + 2*lengthGene)
             scene.add(item)
         scene.write_svg(filename=outFileName)
+
+        CDF1 = '5:1-~'
+        CDF2 = '4:1-~'
+        myGenomesDrawer.homologyMatrixViewer(genome_Mouse, genome_Chicken, families, CDF1, CDF2, outImageFileName=(outFileName + '2'))
 
     elif scenario == 15:
         # class chrNG():
@@ -296,7 +308,7 @@ def test(arguments):
             genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
-        height =(2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
         scene = svgDrw.Scene(name='genomes', width=width, height=height)
 
         translateValue = sizeGene
@@ -318,6 +330,6 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = 15
+    arguments['scenario'] = 14
     arguments['out:fileName'] = './toto.svg'
     test(arguments)
