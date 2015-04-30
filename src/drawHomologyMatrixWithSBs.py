@@ -234,60 +234,82 @@ def test(arguments):
         scene.write_svg(filename=outFileName)
 
     elif scenario == 15:
+        # class chrNG():
+        #     def __init__(self):
+        #         self.nextValue = -1
+        #     def nV(self):
+        #         self.nextValue += 1
+        #         return str(self.nextValue)
+        # cG = chrNG()
+
         # presentation of the different events
         OG = myLightGenomes.OGene
-        genome = myLightGenomes.LightGenome()
-        genome['1'] = [OG('A', +1), OG('B', -1), OG('C', +1)]
-        genome['2'] = [OG('D', -1), OG('E', +1), OG('F', -1)]
+        genomes = collections.OrderedDict()
 
-        sizeGene = 1
-        listOfChromosomes = []
-        for c in genome:
-            listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(genome, c, lengthGene=sizeGene, 
-                                                                                     homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomeIni = myLightGenomes.LightGenome()
+        genomeIni['0'] = [OG('A', +1), OG('B', -1), OG('C', +1)]
+        genomeIni['1'] = [OG('D', -1), OG('E', +1), OG('F', -1)]
+        genomes['Initial'] = genomeIni
+
         import libs.myEvents as mE
-
         # Gene events
         # tandem duplication
-        newGenome = mE.performInsertNewGene(genome, ('B.b', '1', 2, -1), keepOriginalGenome=True)
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['Dup'] = mE.performInsertNewGene(genomeIni, ('B.a', '0', 2, -1), keepOriginalGenome=True)
         # gene loss
-        newGenome = mE.performGeneLoss(genome, ('1', 1), keepOriginalGenome=True)
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['Loss'] = mE.performGeneLoss(genomeIni, ('0', 1), keepOriginalGenome=True)
         # de novo gene birth
-        newGenome = mE.performInsertNewGene(genome, ('G', '1', 2, -1), keepOriginalGenome=True)
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['gBirth'] = mE.performInsertNewGene(genomeIni, ('G', '0', 2, -1), keepOriginalGenome=True)
 
         # Chromosomal rearrangements
         # fission
-        newGenome = mE.performFission(genome, ('1', 1), keepOriginalGenome=True)
-        assert '0' in newGenome.keys()
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '0', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['Fission'] = mE.performFission(genomeIni, ('0', 1), keepOriginalGenome=True)
         # fusion
-        newGenome = mE.performFusion(genome, (('1', +1), ('2', +1)), keepOriginalGenome=True)
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['Fusion'] = mE.performFusion(genomeIni, (('0', +1), ('1', +1)), keepOriginalGenome=True)
         # inversion
-        newGenome = mE.performInversion(genome, ('1', 1, 3), keepOriginalGenome=True)
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['Inversion'] = mE.performInversion(genomeIni, ('0', 1, 3), keepOriginalGenome=True)
         # reciprocal translocation
-        newGenome = mE.performReciprocalTranslocation(genome, (('1', 1, +1), ('2', 1, +1)), keepOriginalGenome=True)
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '1', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(newGenome, '2', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        genomes['RecTransloc'] = mE.performReciprocalTranslocation(genomeIni, (('0', 1, +1), ('1', 1, +1)),
+                                                                   keepOriginalGenome=True)
 
-        genome['3'] = [OG('A', +1), OG('B', -1), OG('C', +1), OG('D', +1), OG('E', -1), OG('F', +1), OG('G', +1), OG('H', -1), OG('I', +1)]
-        listOfChromosomes.append(myGenomesDrawer.drawChromFromLightGenome(genome, '3', lengthGene=sizeGene, homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5)))
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes.iteritems():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'B.a':
+                        families.addFamily(myLightGenomes.Family('B', {'B.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems = collections.OrderedDict()
+        for (genomeName, genome) in genomes.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
-        height = (2 + len(listOfChromosomes)) * sizeGene
-        scene = svgDrw.Scene(name='chromosome', width=width, height=height)
-        for i, chromosome in enumerate(listOfChromosomes):
-            svgDrw.tanslateItems(chromosome, 0, sizeGene + i * sizeGene)
-            for item in chromosome:
-                scene.add(item)
+        height =(2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+
+        translateValue = sizeGene
+        for (genomeName, genomeItems) in genomesItems.iteritems():
+            for (chr, chromosomeItems) in genomeItems.items():
+                svgDrw.tanslateItems(chromosomeItems, 0, translateValue)
+                for item in chromosomeItems:
+                    scene.add(item)
+                # space between each chromosome
+                translateValue += sizeGene
+            # space between each genome
+            translateValue += sizeGene
         scene.write_svg(filename=outFileName)
-
-
 
 if __name__ == '__main__':
     #arguments = myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
@@ -296,6 +318,6 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = int(sys.argv[1])
-    arguments['out:fileName'] = 'toto.svg'
+    arguments['scenario'] = 15
+    arguments['out:fileName'] = './toto.svg'
     test(arguments)
