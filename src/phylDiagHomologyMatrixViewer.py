@@ -40,6 +40,7 @@ if __name__ == '__main__':
          ("distinguishMonoGenicDiags", bool, True),
          ("pThreshold", str, 'None'),
          ('gapMaxMicroInv', str, '0'),
+         ('identifyMonoGenicInversion', bool, False),
          ('identifyBreakpointsWithinGaps', bool, True),
          ("overlapMax", str, 'None'),
          ("consistentSwDType", bool, True),
@@ -72,6 +73,7 @@ distinguishMonoGenicDiags = arguments['distinguishMonoGenicDiags']
 gapMaxMicroInv = arguments['gapMaxMicroInv']
 overlapMax = arguments['overlapMax']
 tandemGapMax = arguments['tandemGapMax']
+identifyMonoGenicInversion = arguments["gapMaxMicroInv"]
 identifyBreakpointsWithinGaps = arguments['identifyBreakpointsWithinGaps']
 consistentSwDType = arguments['consistentSwDType']
 minChromLength = arguments['minChromLength']
@@ -109,6 +111,7 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      distinguishMonoGenicDiags=arguments['distinguishMonoGenicDiags'],
                                      pThreshold=arguments['pThreshold'],
                                      gapMaxMicroInv=arguments['gapMaxMicroInv'],
+                                     identifyMonoGenicInversion=arguments["identifyMonoGenicInversion"],
                                      identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
                                      overlapMax=arguments['overlapMax'],
                                      consistentSwDType=arguments['consistentSwDType'],
