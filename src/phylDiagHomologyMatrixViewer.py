@@ -86,6 +86,8 @@ nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
 targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
 considerAllPairComps = arguments['considerAllPairComps']
 scaleFactorRectangles = arguments['scaleFactorRectangles']
+filterType = list(myDiags.FilterType._keys)
+filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
 
 # Load genomes
 genome1 = myLightGenomes.LightGenome(arguments['genome1'], withDict=True)
@@ -103,7 +105,7 @@ else:
 
 myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1:deb1-fin1'], arguments['chr2:deb2-fin2'],
                                      convertGenicToTbCoordinates=arguments['convertGenicToTbCoordinates'],
-                                     filterType=arguments['filterType'],
+                                     filterType=filterType,
                                      minChromLength=arguments['minChromLength'],
                                      tandemGapMax=arguments['tandemGapMax'],
                                      distanceMetric=arguments['distanceMetric'],

@@ -11,19 +11,19 @@ NC='\e[0m' # No Color
 #	Check integrity of pre-processing scripts #
 #############################################
 
-preProcessCommandLines=(
-# convet a .nhx tree into a protTree (forest of gene trees)
-"src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree"
-# convet a .nwk tree into a phylTree
-"src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree"
-# extract ancGenes (family)  from the species tree and the forest of gene trees
-"src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree"
-)
-for line in "${preProcessCommandLines[@]}"
-	do
-		echo -e "${green}${line}${NC}"
-		eval ${line}
-done
+#preProcessCommandLines=(
+## convet a .nhx tree into a protTree (forest of gene trees)
+#"src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree"
+## convet a .nwk tree into a phylTree
+#"src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree"
+## extract ancGenes (family)  from the species tree and the forest of gene trees
+#"src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree"
+#)
+#for line in "${preProcessCommandLines[@]}"
+#	do
+#		echo -e "${green}${line}${NC}"
+#		eval ${line}
+#done
 
 #############################################
 #	Check integrity of phylDiag.py					  #
