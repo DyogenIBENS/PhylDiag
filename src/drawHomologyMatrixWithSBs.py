@@ -13,11 +13,14 @@ Build the homology matrix with synteny blocks using the mySvgDrawer Library
 import collections
 import itertools
 import random
+from utils import myDiags
 
 import utils.mySvgDrawer as svgDrw
 from utils.mySvgDrawer import Point
 import utils.myLightGenomes as myLightGenomes
 import utils.myGenomesDrawer as myGenomesDrawer
+from utils.myLightGenomes import OGene as OG
+import libs.myEvents as mE
 
 def test(arguments):
     scenario = arguments["scenario"]
@@ -137,7 +140,6 @@ def test(arguments):
 
     elif scenario == 12:
         genome = myLightGenomes.LightGenome()
-        OG = myLightGenomes.OGene
         genome['0'] = [OG('a', +1), OG('b', +1), OG('c', -1), OG('d', +1), OG('e', -1), OG('f', +1), OG('g', +1), OG('h', +1)]
         lengthGene = 1
         width = len(genome['0']) + 2 * lengthGene
@@ -166,7 +168,6 @@ def test(arguments):
         for familyName in allFamilies:
             familiesDict[familyName] = []
         genome = myLightGenomes.LightGenome()
-        OG = myLightGenomes.OGene
         print familiesDict
         for geneName in 'abcdefghijklmnopqrstuvw':
             genome['0'].append(OG(geneName, random.choice([+1, -1])))
@@ -255,7 +256,6 @@ def test(arguments):
         # cG = chrNG()
 
         # presentation of the different events
-        OG = myLightGenomes.OGene
         genomes = collections.OrderedDict()
 
         genomeIni = myLightGenomes.LightGenome()
@@ -263,7 +263,6 @@ def test(arguments):
         genomeIni['1'] = [OG('D', -1), OG('E', +1), OG('F', -1)]
         genomes['Initial'] = genomeIni
 
-        import libs.myEvents as mE
         # Gene events
         # tandem duplication
         genomes['Dup'] = mE.performInsertNewGene(genomeIni, ('B.a', '0', 2, -1), keepOriginalGenome=True)
@@ -323,6 +322,169 @@ def test(arguments):
             translateValue += sizeGene
         scene.write_svg(filename=outFileName)
 
+
+    elif scenario == 16:
+        # mono-genic inversion and tandem dup followed by gene deletion
+        genomes = collections.OrderedDict()
+        genomeIni = myLightGenomes.LightGenome()
+        genomeIni['0'] = [OG('A', +1), OG('B', +1), OG('C', +1)]
+        genomes['Initial'] = genomeIni
+
+        # tandem duplication
+        genomes['Dup'] = mE.performInsertNewGene(genomeIni, ('B.a', '0', 2, -1), keepOriginalGenome=True)
+        # gene loss
+        genomes['Loss'] = mE.performGeneLoss(genomes['Dup'], ('0', 1), keepOriginalGenome=True)
+
+        # inversion
+        genomes['Inversion'] = mE.performInversion(genomeIni, ('0', 1, 2), keepOriginalGenome=True)
+
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes.iteritems():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'B.a':
+                        families.addFamily(myLightGenomes.Family('B', {'B.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems = collections.OrderedDict()
+        for (genomeName, genome) in genomes.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems[genomeName] = genomeItems
+
+        width = (2 + 8) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+
+        translateValue = sizeGene
+        for (genomeName, genomeItems) in genomesItems.iteritems():
+            for (chr, chromosomeItems) in genomeItems.items():
+                svgDrw.tanslateItems(chromosomeItems, 0, translateValue)
+                for item in chromosomeItems:
+                    scene.add(item)
+                # space between each chromosome
+                translateValue += sizeGene
+            # space between each genome
+            translateValue += sizeGene
+        scene.write_svg(filename=outFileName)
+
+        filterType = list(myDiags.FilterType._keys)
+        filterType = myDiags.FilterType[filterType.index('None')]
+        myGenomesDrawer.homologyMatrixViewer(genomes['Initial'], genomes['Inversion'], families, '0:1-~', '0:1-~',
+                         filterType=filterType,
+                         distanceMetric='CD',
+                         gapMax=2,
+                         distinguishMonoGenicDiags=True,
+                         pThreshold=None,
+                         gapMaxMicroInv=0,
+                         identifyMonoGenicInversion=False,
+                         identifyBreakpointsWithinGaps=True,
+                         overlapMax=None,
+                         consistentSwDType=True,
+                         validateImpossToCalc_mThreshold=3,
+                         nbHpsRecommendedGap=2,
+                         targetProbaRecommendedGap=0.01,
+                         chromosomesRewrittenInTbs=False,
+                         scaleFactorRectangles=1.0,
+                         considerAllPairComps=True,
+                         switchOnDirectView=False,
+                         optimisation=None,
+                         inSbsInPairComp=None,
+                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                         outImageFileName="./homologyMatrix.svg",
+                         verbose=True)
+        os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
+
+    elif scenario == 17:
+        # breakpoint within a tandem block
+        genomes = collections.OrderedDict()
+        genomeIni = myLightGenomes.LightGenome()
+        genomeIni['0'] = [OG('A', +1), OG('B', +1), OG('C', +1), OG('D', +1), OG('E', +1)]
+        genomes['Initial'] = genomeIni
+
+        # tandem duplication
+        genomes['tandemDup'] = mE.performInsertNewGene(genomeIni, ('C.a', '0', 3, +1), keepOriginalGenome=True)
+        # inversion
+        genomes['Inversion'] = mE.performInversion(genomes['tandemDup'], ('0', 1, 3), keepOriginalGenome=True)
+
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes.iteritems():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'C.a':
+                        families.addFamily(myLightGenomes.Family('C', {'C.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems = collections.OrderedDict()
+        for (genomeName, genome) in genomes.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems[genomeName] = genomeItems
+
+        width = (2 + 8) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+
+        translateValue = sizeGene
+        for (genomeName, genomeItems) in genomesItems.iteritems():
+            for (chr, chromosomeItems) in genomeItems.items():
+                svgDrw.tanslateItems(chromosomeItems, 0, translateValue)
+                for item in chromosomeItems:
+                    scene.add(item)
+                # space between each chromosome
+                translateValue += sizeGene
+            # space between each genome
+            translateValue += sizeGene
+        scene.write_svg(filename=outFileName)
+
+
+        filterType = list(myDiags.FilterType._keys)
+        filterType = myDiags.FilterType[filterType.index('None')]
+        myGenomesDrawer.homologyMatrixViewer(genomes['Inversion'], genomes['Initial'], families, '0:1-~', '0:1-~',
+                         filterType=filterType,
+                         distanceMetric='CD',
+                         gapMax=2,
+                         distinguishMonoGenicDiags=False,
+                         pThreshold=None,
+                         gapMaxMicroInv=0,
+                         identifyMonoGenicInversion=False,
+                         identifyBreakpointsWithinGaps=True,
+                         overlapMax=None,
+                         consistentSwDType=True,
+                         validateImpossToCalc_mThreshold=3,
+                         nbHpsRecommendedGap=2,
+                         targetProbaRecommendedGap=0.01,
+                         chromosomesRewrittenInTbs=False,
+                         scaleFactorRectangles=1.0,
+                         considerAllPairComps=True,
+                         switchOnDirectView=False,
+                         optimisation=None,
+                         inSbsInPairComp=None,
+                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                         outImageFileName="./homologyMatrix.svg",
+                         verbose=True)
+        os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
+
 if __name__ == '__main__':
     #arguments = myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
     import os
@@ -330,6 +492,7 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = 14
+    arguments['scenario'] = 17
     arguments['out:fileName'] = './toto.svg'
     test(arguments)
+    os.system("%s %s" % ('firefox', arguments['out:fileName']))
