@@ -1,0 +1,7 @@
+#!/bin/bash
+
+./extractSbsExtremitiesFromExtantGenomes.py data/speciesTree.phylTree -ancGenes=data/ancGenes.%s.list.bz2 -genomes=data/genesST.%s.list.bz2 -tandemGapMax=7 -gapMax=5 -gapMaxMicroInv=2 -identifyMonoGenicInversion +verbose -out:sbsExtremities=res/sbsExtremitiesWithoutMonoGenicMicroInv.%s.%s.%s.list 2> >(tee res/logErrWithoutMonoGenicMicroInv >&2)
+ 
+./extractSbsExtremitiesFromReconstructedAncGenomes.py data/speciesTree.phylTree -ancGenome=data/genome.Boreoeutheria.list.bz2 -ancGenes=data/ancGenes.Boreoeutheria.list.bz2 -extantGenomes=data/genesST.%s.list.bz2 -tandemGapMax=7 -gapMax=5 -gapMaxMicroInv=2 -identifyMonoGenicInversion +verbose -out:sbsExtremities=res/sbsExtremitiesWithoutMonoGenicMicroInv.Boreoeutheria.%s.list 2> >(tee res/logErrWithoutMonoGenicMicroInv >&2)
+
+./viewSomeSyntenies.sh

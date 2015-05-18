@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#version=78
+#projectFolder=/kingdoms/dyogen/workspace4/workspace4/jlucas/Share/CamilleBerthellot
+#gen=/kingdoms/dyogen/workspace2/workspace2/alouis/GENOMICUS_SVN/
+#
+## create directories
+#mkdir ${projectFolder}
+#data=${projectFolder}/data
+#mkdir${data}
+#res=${projectFolder}/res
+#mkdir ${res}
+#
+## copy data from Alex data-base
+## copy genesST
+#for n in Homo.sapiens Mus.musculus Canis.lupus.familiaris Bos.taurus Equus.caballus
+#	do
+#	cp ${gen}/data${version}/genes/genesST.${n}.list.bz2 ${data}
+#done
+## copy ancGenes
+#for n in Euarchontoglires Boreoeutheria Laurasiatheria
+#	do
+#	cp ${gen}/data${version}/trees/0.25/ancGenes/all/ancGenes.${n}.list.bz2 ${data}
+#done
+
+# launch PhylDiag to obtain synteny blocks and ancGenes at sbs extremities
+# python ${project}/extractSbsExtremities.py ${res}/sbs.%s.list.bz2
+
+# check visualy that synteny blocks are ok
+# python phylDiagHomologyMatrixViewer.py ...
+
+camExtantSpecies="Homo.sapiens Mus.musculus Canis.lupus.familiaris Bos.taurus Equus.caballus"
+camAncSpecies="Euarchontoglires Boreoeutheria Laurasiatheria"
+jl=/kingdoms/dyogen/workspace4/workspace4/jlucas/
+# return ancGenes at synteny block extremities
+for n in $camExtantSpecies; do cp /kingdoms/dyogen/projects/projects/GENOMICUS_FTP/78.01/ModernSpecies/genesST.${n}.list.bz2 $jl/Share/CamilleBerthellot/data ; done
+mkdir $jl/Share/CamilleBerthellot/data2
+cp /kingdoms/dyogen/projects/projects/GENOMICUS_FTP/78.01/ancGenes.tar $jl/Share/CamilleBerthellot/data2
+cp /kingdoms/dyogen/projects/projects/GENOMICUS_FTP/78.01/ancGenomes.tar $jl/Share/CamilleBerthellot/data2
+cd $jl/Share/CamilleBerthellot/data2
+tar -xvf ancGenes.tar
+tar -xvf ancGenomes.tar
+cd -
+for n in $camAncSpecies; do cp $jl/Share/CamilleBerthellot/data2/ancGenes.${n}.list.bz2 $jl/Share/CamilleBerthellot/data ; done
+for n in $camAncSpecies; do cp $jl/Share/CamilleBerthellot/data2/genome.${n}.list.bz2 $jl/Share/CamilleBerthellot/data ; done
+rm -rf $jl/Share/CamilleBerthellot/data2
+

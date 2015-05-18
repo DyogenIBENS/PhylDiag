@@ -13,11 +13,11 @@ NC='\e[0m' # No Color
 
 #preProcessCommandLines=(
 ## convet a .nhx tree into a protTree (forest of gene trees)
-#"src/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree"
+#"src/preprocessing/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree"
 ## convet a .nwk tree into a phylTree
-#"src/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree"
+#"src/preprocessing/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree"
 ## extract ancGenes (family)  from the species tree and the forest of gene trees
-#"src/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree"
+#"src/preprocessing/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree"
 #)
 #for line in "${preProcessCommandLines[@]}"
 #	do
@@ -119,7 +119,7 @@ phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
 "src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om}"
 #many computations known to be difficult
-"src/listOfDifficultSyntenies.sh"
+"src/postprocessing/listOfDifficultSyntenies.sh"
 )
 for line in "${phylDiagHomologyMatrixViewerCommandLines[@]}"
 	do
@@ -130,7 +130,7 @@ done
 # Check the graph construction of the distribution of the lengths of synteny
 # blocks
 commandLines=(
-"src/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_Tgm10gM5Gmmi0IbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
+"src/postprocessing/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_Tgm10gM5Gmmi0IbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
 )
 for line in "${commandLines[@]}"
 	do
