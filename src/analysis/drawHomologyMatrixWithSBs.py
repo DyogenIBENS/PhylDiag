@@ -22,6 +22,119 @@ import utils.myGenomesDrawer as myGenomesDrawer
 from utils.myLightGenomes import OGene as OG
 import libs.myEvents as mE
 
+def evolution1(genomeIni):
+    genomes = collections.OrderedDict()
+    genomes['Initial'] = genomeIni
+    sbs = collections.OrderedDict()
+    sbs['Initial'] = genomeIni
+    #####################################
+    # Events that modify synteny blocks #
+    #####################################
+    # fission
+    genomes['Fission'] = mE.performFission(genomeIni, ('0', 10), keepOriginalGenome=True)
+    # genomes['Fission'] = {0:[ABCDEFGHIJ], 1:[PQRSTUVW], 2:[KLMNO]}
+    sbs['Fission'] = genomes['Fission']
+    # sbs['Fission'] = {0:[ABCDEFGHIJ], 1:[PQRSTUVW], 2:[KLMNO]}
+
+    # inversion
+    genomes['Inversion'] = mE.performInversion(genomes['Fission'], ('0', 4, 9), keepOriginalGenome=True)
+    # genomes['Inversion'] = {0:[ABCD-I-H-G-F-EJ], 1:[PQRSTUVW], 2:[KLMNO]}
+    sbs['Inversion'] = mE.performFission(sbs['Fission'], ('0', 9), keepOriginalGenome=True)
+    sbs['Inversion'] = mE.performFission(sbs['Inversion'], ('0', 4), keepOriginalGenome=False)
+    # sbs['Inversion'] = {0:[ABCD], 1:[PQRSTUVW], 2:[KLMNO], 3:[J], 4:[EFGHI]}
+
+    # reciprocal translocation
+    # c1 & c2 -> c1 = [s2*c2[:lenTrans2] + c1[lenTrans1:]]   &   c2 = [s1*c1[:lenTrans1] + c2[lenTrans2:]]
+    genomes['RecTransloc'] = mE.performReciprocalTranslocation(genomes['Inversion'], (('0', 6, +1), ('1', 2, +1)),
+                                                               keepOriginalGenome=True)
+    # genomes['RecTransloc'] ={0:[PQ-G-F-EJ], 1:[ABCD-I-HRSTUVW], 2:[KLMNO]}
+    sbs['RecTransloc'] = mE.performFission(sbs['Inversion'], ('4', 3), keepOriginalGenome=True)
+    sbs['RecTransloc'] = mE.performFission(sbs['RecTransloc'], ('1', 2), keepOriginalGenome=True)
+    # sbs['RecTransloc'] = {0:[ABCD], 1:[PQ], 2:[KLMNO], 3:[J], 4:[EFG], 5:[HI], 6:[RSTUVW]}
+
+    # gene loss
+    genomes['gLoss'] = mE.performGeneLoss(genomes['RecTransloc'], ('2', 0), keepOriginalGenome=True)
+    sbs['gLoss'] = mE.performGeneLoss(sbs['RecTransloc'], ('2', 0), keepOriginalGenome=True)
+    # genomes['gLoss'] ={0:[PQ-G-F-EJ], 1:[ABCD-I-HRSTUVW], 2:[LMNO]}
+    # sbs['gLoss'] = {0:[ABCD], 1:[PQ], 2:[LMNO], 3:[J], 4:[EFG], 5:[HI], 6:[RSTUVW]}
+
+    ##############################################
+    # Events that does not modify synteny blocks #
+    ##############################################
+    # fusion
+    genomes['Fusion'] = mE.performFusion(genomes['gLoss'], (('0', +1), ('1', +1)), keepOriginalGenome=True)
+    # genomes['Fusion'] ={0:[PQ-G-F-EJABCD-I-HRSTUVW], 2:[LMNO]}
+    # tandem duplication
+    genomes['TandemDup'] = mE.performInsertNewGene(genomes['Fusion'], ('B.a', '0', 8, -1), keepOriginalGenome=True)
+    # genomes['TandemDup'] ={0:[PQ-G-F-EJAB(B.a)CD-I-HRSTUVW], 2:[LMNO]}
+    # dispersed duplication
+    genomes['DispersedDup'] = mE.performInsertNewGene(genomes['TandemDup'], ('A.a', '2', 1, +1), keepOriginalGenome=True)
+    # genomes['DispersedDup'] ={0:[PQ-G-F-EJAB(B.a)CD-I-HRSTUVW], 2:[LM(A.a)NO]}
+    # de novo gene birth
+    genomes['gBirth'] = mE.performInsertNewGene(genomes['DispersedDup'], ('X', '2', 4, -1), keepOriginalGenome=True)
+    # genomes['gBirth'] ={0:[PQ-G-F-EJAB(B.a)CD-I-HRSTUVW], 2:[LM(A.a)N-XO]}
+    return (genomes, sbs)
+
+def evolution2(genomeIni):
+    genomes = collections.OrderedDict()
+    sbs = collections.OrderedDict()
+    genomes['Initial'] = genomeIni
+    sbs['Initial'] = genomeIni
+    # sbs['Initial'] = {0:[ABCDEFGHIJKLMNO], 1:[PQRSTUVW]}
+
+    # reciprocal translocation
+    # c1 & c2 -> c1 = [s2*c2[:lenTrans2] + c1[lenTrans1:]]   &   c2 = [s1*c1[:lenTrans1] + c2[lenTrans2:]]
+    genomes['RecTransloc'] = mE.performReciprocalTranslocation(genomes['Initial'], (('0', 4, +1), ('1', 6, +1)),
+                                                               keepOriginalGenome=True)
+    # genomes['RecTransloc'] = {0:[PQRSTUEFGHIJKLMNO], 1:[ABCDVW]}
+    sbs['RecTransloc'] = mE.performFission(sbs['Initial'], ('0', 4), keepOriginalGenome=True)
+    sbs['RecTransloc'] = mE.performFission(sbs['RecTransloc'], ('1', 6), keepOriginalGenome=True)
+    # sbs['RecTransloc'] = {0:[ABCD], 1:[PQRSTU] 2:[EFGHIJKLMNO], 3:[VW]}
+
+    # tandem duplication
+    genomes['TandemDup'] = mE.performInsertNewGene(genomes['RecTransloc'], ('T.a', '0', 4, +1), keepOriginalGenome=True)
+    # genomes['RecTransloc'] = {0:[PQRST.aTUEFGHIJKLMNO], 1:[ABCDVW]}
+    sbs['TandemDup'] = sbs['RecTransloc']
+    # sbs['TandemDup'] = {0:[ABCD], 1:[PQRSTU] 2:[EFGHIJKLMNO], 3:[VW]}
+
+    # gene loss
+    genomes['gLoss'] = mE.performGeneLoss(genomes['TandemDup'], ('0', 9), keepOriginalGenome=True)
+    sbs['gLoss'] = mE.performGeneLoss(sbs['TandemDup'], ('2', 2), keepOriginalGenome=True)
+    # genomes['gLoss'] = {0:[PQRST.aTUEFHIJKLMNO], 1:[ABCDVW]}
+    # sbs['gLoss'] = {0:[ABCD], 1:[PQRSTU] 2:[EFHIJKLMNO], 3:[VW]}
+
+    # fission
+    genomes['Fission'] = mE.performFission(genomes['gLoss'], ('0', 11), keepOriginalGenome=True)
+    # genomes['Fission'] = {0:[PQRST.aTUEFHI], 1:[ABCDVW], 2:[JKLMNO]}
+    sbs['Fission'] = mE.performFission(sbs['gLoss'], ('2', 4), keepOriginalGenome=True)
+    # sbs['Fission'] = {0:[ABCD], 1:[PQRSTU] 2:[EFHI], 3:[VW], 4:[JKLMNO]}
+
+    # de novo gene birth
+    genomes['gBirth'] = mE.performInsertNewGene(genomes['Fission'], ('Y', '1', 5, +1), keepOriginalGenome=True)
+    sbs['gBirth'] = sbs['Fission']
+    # genomes['gBirth'] = {0:[PQRST.aTUEFHI], 1:[ABCDVYW], 2:[JKLMNO]}
+    # sbs['gBirth'] = {{0:[ABCD], 1:[PQRSTU] 2:[EFHI], 3:[VW], 4:[JKLMNO]}
+
+    # fusion
+    genomes['Fusion'] = mE.performFusion(genomes['gBirth'], (('1', +1), ('2', -1)), keepOriginalGenome=True)
+    # genomes['Fusion'] = {0:[PQRST.aTUEFHI], 1:[ABCDVYW-O-N-M-L-K-J]}
+    sbs['Fusion'] = sbs['gBirth']
+    # sbs['Fusion'] = {0:[ABCD], 1:[PQRSTU] 2:[EFHI], 3:[VW], 4:[JKLMNO]}
+
+    # dispersed duplication
+    genomes['DispersedDup'] = mE.performInsertNewGene(genomes['Fusion'], ('A.a', '0', 2, +1), keepOriginalGenome=True)
+    # genomes['DispersedDup'] = {0:[PQA.aRST.aTUEFHI], 1:[ABCDVYW-O-N-M-L-K-J]}
+    sbs['DispersedDup'] = sbs['Fusion']
+    # sbs['Fusion'] = {0:[ABCD], 1:[PQRSTU] 2:[EFHI], 3:[VW], 4:[JKLMNO]}
+
+    # inversion
+    genomes['Inversion'] = mE.performInversion(genomes['DispersedDup'], ('1', 4, 9), keepOriginalGenome=True)
+    # genomes['Inversion'] = {0:[PQA.aRST.aTUEFHI], 1:[ABCDNO-W-Y-V-M-L-K-J]}
+    # there is one breakpoint reuse
+    sbs['Inversion'] = mE.performFission(sbs['DispersedDup'], ('4', 4), keepOriginalGenome=True)
+    # sbs['Inversion'] = {0:[ABCD], 1:[PQRSTU] 2:[EFHI], 3:[VW], 4:[JKLM] 5:[NO]}
+    return (genomes, sbs)
+
 def test(arguments):
     scenario = arguments["scenario"]
     outFileName = arguments['out:fileName']
@@ -309,17 +422,7 @@ def test(arguments):
         width = (2 + 8) * sizeGene
         height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
         scene = svgDrw.Scene(name='genomes', width=width, height=height)
-
-        translateValue = sizeGene
-        for (genomeName, genomeItems) in genomesItems.iteritems():
-            for (chr, chromosomeItems) in genomeItems.items():
-                svgDrw.tanslateItems(chromosomeItems, 0, translateValue)
-                for item in chromosomeItems:
-                    scene.add(item)
-                # space between each chromosome
-                translateValue += sizeGene
-            # space between each genome
-            translateValue += sizeGene
+        scene = svgDrw.addGenomesItemToScene(genomesItems, scene, sizeGene=1)
         scene.write_svg(filename=outFileName)
 
 
@@ -365,17 +468,7 @@ def test(arguments):
         width = (2 + 8) * sizeGene
         height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
         scene = svgDrw.Scene(name='genomes', width=width, height=height)
-
-        translateValue = sizeGene
-        for (genomeName, genomeItems) in genomesItems.iteritems():
-            for (chr, chromosomeItems) in genomeItems.items():
-                svgDrw.tanslateItems(chromosomeItems, 0, translateValue)
-                for item in chromosomeItems:
-                    scene.add(item)
-                # space between each chromosome
-                translateValue += sizeGene
-            # space between each genome
-            translateValue += sizeGene
+        scene = svgDrw.addGenomesItemToScene(genomesItems, scene, sizeGene=1)
         scene.write_svg(filename=outFileName)
 
         filterType = list(myDiags.FilterType._keys)
@@ -445,16 +538,7 @@ def test(arguments):
         height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
         scene = svgDrw.Scene(name='genomes', width=width, height=height)
 
-        translateValue = sizeGene
-        for (genomeName, genomeItems) in genomesItems.iteritems():
-            for (chr, chromosomeItems) in genomeItems.items():
-                svgDrw.tanslateItems(chromosomeItems, 0, translateValue)
-                for item in chromosomeItems:
-                    scene.add(item)
-                # space between each chromosome
-                translateValue += sizeGene
-            # space between each genome
-            translateValue += sizeGene
+        scene = svgDrw.addGenomesItemToScene(genomesItems, scene, sizeGene=1)
         scene.write_svg(filename=outFileName)
 
 
@@ -485,6 +569,199 @@ def test(arguments):
                          verbose=True)
         os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
+    elif scenario == 18:
+        # breakpoint within a tandem block
+        genomes = collections.OrderedDict()
+        genomeIni = myLightGenomes.LightGenome()
+        genomeIni['0'] = [OG(gn, +1) for gn in 'ABCDEFGHIJKLMNO']
+        genomeIni['1'] = [OG(gn, +1) for gn in 'PQRSTUVW']
+        genomes['Initial'] = genomeIni
+
+        (genomes1, sbs1) = evolution1(genomeIni)
+
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes.iteritems():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'B.a':
+                        families.addFamily(myLightGenomes.Family('B', {'B.a'}))
+                    elif gn == 'A.a':
+                        families.addFamily(myLightGenomes.Family('A', {'A.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems = collections.OrderedDict()
+        for (genomeName, genome) in genomes.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems[genomeName] = genomeItems
+
+        sbssItems = collections.OrderedDict()
+        for (sbsName, sbS) in sbs.iteritems():
+            sbsItems = myGenomesDrawer.drawLightGenome(sbS,
+                                                       families=families,
+                                                       familyName2color=familyName2color,
+                                                       lengthGene=sizeGene,
+                                                       homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            sbssItems[sbsName] = sbsItems
+
+        width = (2 + 8) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+        for item in svgDrw.placeGenomesItems(genomesItems, origin=Point(0, 0), sizeGene=sizeGene):
+            scene.add(item)
+        sbssItems = svgDrw.placeGenomesItems(sbssItems, origin=Point(20*sizeGene, 0), sizeGene=sizeGene)
+        for item in sbssItems:
+            scene.add(item)
+        scene.write_svg(filename=outFileName)
+
+        filterType = list(myDiags.FilterType._keys)
+        filterType = myDiags.FilterType[filterType.index('None')]
+        myGenomesDrawer.homologyMatrixViewer(genomes['gBirth'], genomes['Initial'], families, '0:1-~', '1:1-~',
+                         filterType=filterType,
+                         distanceMetric='CD',
+                         gapMax=1,
+                         distinguishMonoGenicDiags=False,
+                         pThreshold=None,
+                         gapMaxMicroInv=0,
+                         identifyMonoGenicInversion=False,
+                         identifyBreakpointsWithinGaps=True,
+                         overlapMax=None,
+                         consistentSwDType=True,
+                         validateImpossToCalc_mThreshold=3,
+                         nbHpsRecommendedGap=2,
+                         targetProbaRecommendedGap=0.01,
+                         chromosomesRewrittenInTbs=False,
+                         scaleFactorRectangles=1.0,
+                         considerAllPairComps=True,
+                         switchOnDirectView=False,
+                         optimisation=None,
+                         inSbsInPairComp=None,
+                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                         outImageFileName="./homologyMatrix.svg",
+                         verbose=True)
+        os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
+
+    elif scenario == 19:
+        # breakpoint within a tandem block
+        genomes = collections.OrderedDict()
+        sbs = collections.OrderedDict()
+        # same genome initial as in scenario 18
+        genomeIni = myLightGenomes.LightGenome()
+        genomeIni['0'] = [OG(gn, +1) for gn in 'ABCDEFGHIJKLMNO']  # 15 genes
+        genomeIni['1'] = [OG(gn, +1) for gn in 'PQRSTUVW']  # 8 genes
+        genomes['Initial'] = genomeIni
+
+        (genomes1, sbs1) = evolution1(genomeIni)
+        (genomes2, sbs2) = evolution2(genomeIni)
+
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes1.items() + genomes2.items():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'T.a':
+                        families.addFamily(myLightGenomes.Family('T', {'T.a'}))
+                    elif gn == 'A.a':
+                        families.addFamily(myLightGenomes.Family('A', {'A.a'}))
+                    elif gn == 'B.a':
+                        families.addFamily(myLightGenomes.Family('B', {'B.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems1 = collections.OrderedDict()
+        for (genomeName, genome) in genomes1.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems1[genomeName] = genomeItems
+
+        sbssItems1 = collections.OrderedDict()
+        for (sbsName, sbS) in sbs1.iteritems():
+            sbsItems = myGenomesDrawer.drawLightGenome(sbS,
+                                                       families=families,
+                                                       familyName2color=familyName2color,
+                                                       lengthGene=sizeGene,
+                                                       homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            sbssItems1[sbsName] = sbsItems
+
+        genomesItems2 = collections.OrderedDict()
+        for (genomeName, genome) in genomes2.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems2[genomeName] = genomeItems
+
+        sbssItems2 = collections.OrderedDict()
+        for (sbsName, sbS) in sbs2.iteritems():
+            sbsItems = myGenomesDrawer.drawLightGenome(sbS,
+                                                       families=families,
+                                                       familyName2color=familyName2color,
+                                                       lengthGene=sizeGene,
+                                                       homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            sbssItems2[sbsName] = sbsItems
+
+        width = (2 + 8) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+        for item in svgDrw.placeGenomesItems(genomesItems1, origin=Point(0, 0), sizeGene=sizeGene):
+            scene.add(item)
+        sbssItems = svgDrw.placeGenomesItems(sbssItems1, origin=Point(20*sizeGene, 0), sizeGene=sizeGene)
+        for item in sbssItems:
+            scene.add(item)
+        for item in svgDrw.placeGenomesItems(genomesItems2, origin=Point(40*sizeGene, 0), sizeGene=sizeGene):
+            scene.add(item)
+        sbssItems = svgDrw.placeGenomesItems(sbssItems2, origin=Point(60*sizeGene, 0), sizeGene=sizeGene)
+        for item in sbssItems:
+            scene.add(item)
+        scene.write_svg(filename=outFileName)
+
+        filterType = list(myDiags.FilterType._keys)
+        filterType = myDiags.FilterType[filterType.index('None')]
+        myGenomesDrawer.homologyMatrixViewer(genomes1['gBirth'], genomes2['Inversion'], families, '2:1-~', '1:1-~',
+                         filterType=filterType,
+                         distanceMetric='CD',
+                         gapMax=1,
+                         distinguishMonoGenicDiags=False,
+                         pThreshold=None,
+                         gapMaxMicroInv=0,
+                         identifyMonoGenicInversion=False,
+                         identifyBreakpointsWithinGaps=True,
+                         overlapMax=None,
+                         consistentSwDType=True,
+                         validateImpossToCalc_mThreshold=3,
+                         nbHpsRecommendedGap=2,
+                         targetProbaRecommendedGap=0.01,
+                         chromosomesRewrittenInTbs=False,
+                         scaleFactorRectangles=1.0,
+                         considerAllPairComps=True,
+                         switchOnDirectView=False,
+                         optimisation=None,
+                         inSbsInPairComp=None,
+                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                         outImageFileName="./homologyMatrix.svg",
+                         verbose=True)
+        os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
+
+
 if __name__ == '__main__':
     #arguments = myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
     import os
@@ -492,7 +769,7 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = 17
+    arguments['scenario'] = 19
     arguments['out:fileName'] = './toto.svg'
     test(arguments)
     os.system("%s %s" % ('firefox', arguments['out:fileName']))

@@ -18,7 +18,7 @@ import utils.myTools as myTools
 import utils.myDiags as myDiags
 import utils.myGeneTeams as myGeneTeams
 
-from PhylDiag.src.preprocessing import drawHomologyMatrixWithSBs
+from PhylDiag.src.analysis import drawHomologyMatrixWithSBs
 
 __doc__= """
         Show the homology matrix with coloured gene teams.
