@@ -606,7 +606,7 @@ def test(arguments):
             genomesItems[genomeName] = genomeItems
 
         sbssItems = collections.OrderedDict()
-        for (sbsName, sbS) in sbs.iteritems():
+        for (sbsName, sbS) in sbs1.iteritems():
             sbsItems = myGenomesDrawer.drawLightGenome(sbS,
                                                        families=families,
                                                        familyName2color=familyName2color,
