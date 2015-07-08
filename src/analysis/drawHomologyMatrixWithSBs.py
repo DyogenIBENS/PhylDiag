@@ -135,6 +135,24 @@ def evolution2(genomeIni):
     # sbs['Inversion'] = {0:[ABCD], 1:[PQRSTU] 2:[EFHI], 3:[VW], 4:[JKLM] 5:[NO]}
     return (genomes, sbs)
 
+def fromStringToChromosome(string):
+    assert isinstance(string, str)
+    """
+    :param string: [AB-CDEFGHI]
+    :return: [OGene('A',+1), OGene('B',+1), OGene('C',-1), ...]
+    """
+    chromosome = []
+    orientation = +1
+    for c in string:
+        if c == '-':
+            orientation = -1
+            continue
+        else:
+            assert c.isalpha()
+            chromosome.append(OG(c, orientation))
+            orientation = +1
+    return chromosome
+
 def test(arguments):
     scenario = arguments["scenario"]
     outFileName = arguments['out:fileName']
@@ -761,6 +779,88 @@ def test(arguments):
                          verbose=True)
         os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
+    elif scenario == 20:
+
+        # breakpoint within a tandem block
+        genomes = collections.OrderedDict()
+        sbs = collections.OrderedDict()
+        # same genome initial as in scenario 18
+        genomeIni = myLightGenomes.LightGenome()
+        genomeScenario1 = myLightGenomes.LightGenome()
+        genomeScenario2 = myLightGenomes.LightGenome()
+        genomeScenario3 = myLightGenomes.LightGenome()
+        genomeIni['0'] = fromStringToChromosome('ABCDEFGHI')
+        genomeScenario1['0'] =  fromStringToChromosome('-IAB-CD-F-EGH')
+        genomeScenario2['0'] =  fromStringToChromosome('ABCEGDFHI')
+        genomeScenario3['0'] =  fromStringToChromosome('ABCFG-E-D')
+        genomes['Initial'] = genomeIni
+        genomes[1] = genomeScenario1
+        genomes[2] = genomeScenario2
+        genomes[3] = genomeScenario3
+
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes.items():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'T.a':
+                        families.addFamily(myLightGenomes.Family('T', {'T.a'}))
+                    elif gn == 'A.a':
+                        families.addFamily(myLightGenomes.Family('A', {'A.a'}))
+                    elif gn == 'B.a':
+                        families.addFamily(myLightGenomes.Family('B', {'B.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems = collections.OrderedDict()
+        for (genomeName, genome) in genomes.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems[genomeName] = genomeItems
+
+        width = (2 + 8) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+        for item in svgDrw.placeGenomesItems(genomesItems, origin=Point(0, 0), sizeGene=sizeGene):
+            scene.add(item)
+        scene.write_svg(filename=outFileName)
+
+        filterType = list(myDiags.FilterType._keys)
+        filterType = myDiags.FilterType[filterType.index('None')]
+        for x in [1, 2, 3]:
+            myGenomesDrawer.homologyMatrixViewer(genomes['Initial'], genomes[x], families, '0:1-~', '0:1-~',
+                             filterType=filterType,
+                             distanceMetric='CD',
+                             gapMax=1,
+                             distinguishMonoGenicDiags=False,
+                             pThreshold=None,
+                             gapMaxMicroInv=0,
+                             identifyMonoGenicInversion=False,
+                             identifyBreakpointsWithinGaps=True,
+                             overlapMax=None,
+                             consistentSwDType=True,
+                             validateImpossToCalc_mThreshold=3,
+                             nbHpsRecommendedGap=2,
+                             targetProbaRecommendedGap=0.01,
+                             chromosomesRewrittenInTbs=False,
+                             scaleFactorRectangles=1.0,
+                             considerAllPairComps=True,
+                             switchOnDirectView=False,
+                             optimisation=None,
+                             inSbsInPairComp=None,
+                             outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                             outImageFileName="./homologyMatrix" + str(x) + ".svg",
+                             verbose=True)
+            os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
+
 
 if __name__ == '__main__':
     #arguments = myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
@@ -769,7 +869,7 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = 19
-    arguments['out:fileName'] = './toto.svg'
+    arguments['scenario'] = 20
+    arguments['out:fileName'] = './genomes.svg'
     test(arguments)
     os.system("%s %s" % ('firefox', arguments['out:fileName']))
