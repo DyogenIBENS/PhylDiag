@@ -440,7 +440,8 @@ def test(arguments):
         width = (2 + 8) * sizeGene
         height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
         scene = svgDrw.Scene(name='genomes', width=width, height=height)
-        scene = svgDrw.addGenomesItemToScene(genomesItems, scene, sizeGene=1)
+        for item in svgDrw.placeGenomesItems(genomesItems, origin=Point(0, 0), sizeGene=sizeGene):
+            scene.add(item)
         scene.write_svg(filename=outFileName)
 
 
@@ -869,7 +870,7 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = 20
+    arguments['scenario'] = 15
     arguments['out:fileName'] = './genomes.svg'
     test(arguments)
     os.system("%s %s" % ('firefox', arguments['out:fileName']))
