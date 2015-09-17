@@ -10,20 +10,22 @@
 # to the PhylDiag package for practical uses
 
 __doc__ = """
-        Plot the homology matrix between two genomes
+        Plot the homology matrix between two genomes, with synteny blocks of PhylDiag
 """
 
 from utils import myTools, myLightGenomes, myGenomesDrawer, myDiags
 
 arguments = myTools.checkArgs(
         [("genome1", file), ("genome2", file), ("families", file)],
+        myDiags.defaultArgsPhylDiag +\
         [('removeUnofficialChromosomes', bool, True),
          ('withSbs', bool, True),
-         ('filterType', str, 'InBothGenomes')],
+         ('chromosomesRewrittenInTbs', bool, False),
+         ('outImageFileName', str, 'res/image.svg')],
         __doc__)
 
-filterType = list(myDiags.FilterType._keys)
-filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
+kwargs = myDiags.defaultKwargsPhylDiag(arguments=arguments)
+kwargs['verbose'] = True
 
 genome1 = myLightGenomes.LightGenome(arguments['genome1'])
 genome2 = myLightGenomes.LightGenome(arguments['genome2'])
@@ -33,36 +35,34 @@ if arguments['removeUnofficialChromosomes']:
     genome1.removeUnofficialChromosomes()
     genome2.removeUnofficialChromosomes()
 
-#FIXME :
-# write chromosomes names
-
 sbsInPairComp = None
 if arguments['withSbs']:
     sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
-                                                        filterType=filterType,
-                                                        tandemGapMax=0,
-                                                        gapMax=5,
-                                                        distanceMetric='CD',
-                                                        distinguishMonoGenicDiags=False,
-                                                        pThreshold=1.0,
-                                                        gapMaxMicroInv=1,
-                                                        identifyMonoGenicInversion=False,
-                                                        identifyBreakpointsWithinGaps=False,
-                                                        overlapMax=20,
-                                                        consistentSwDType=True,
-                                                        minChromLength=2,
-                                                        nbHpsRecommendedGap=2,
-                                                        targetProbaRecommendedGap=0.01,
-                                                        validateImpossToCalc_mThreshold=3,
-                                                        optimisation='cython',
-                                                        verbose=False)
+                                                        **kwargs)
 
-myGenomesDrawer.wholeGenomeHomologyMatrices(genome1, genome2, families,
-                                            inSbsInPairComp=sbsInPairComp,
-                                            filterType=filterType,
-                                            minChromLength=0,
-                                            tandemGapMax=4,
-                                            scaleFactorRectangles=10,
-                                            outputFileName='res/pairwiseCompGenomesHMs.svg',
-                                            maxWidth=100,
-                                            maxHeight=100)
+WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genome1, genome2, families,
+                                                  inSbsInPairComp=sbsInPairComp,
+                                                  filterType=kwargs['filterType'],
+                                                  minChromLength=kwargs['minChromLength'],
+                                                  tandemGapMax=kwargs['tandemGapMax'],
+                                                  scaleFactorRectangles=10,
+                                                  outputFileName=None,
+                                                  maxWidth=100,
+                                                  maxHeight=100)
+
+nbSbs = len(sbsInPairComp.intoList())
+
+myGenomesDrawer.writeSVGFileForPairwiseCompOfGenomes(genome1.name,
+                                                     genome2.name,
+                                                     WHM,
+                                                     chromosomesRewrittenInTbs=arguments['chromosomesRewrittenInTbs'],
+                                                     filterType=kwargs['filterType'],
+                                                     tandemGapMax=kwargs['tandemGapMax'],
+                                                     gapMax=kwargs['gapMax'],
+                                                     distanceMetric=kwargs['distanceMetric'],
+                                                     gapMaxMicroInv=kwargs['gapMaxMicroInv'],
+                                                     identifyBreakpointsWithinGaps=kwargs['gapMaxMicroInv'],
+                                                     overlapMax=kwargs['overlapMax'],
+                                                     nbSbs=nbSbs,
+                                                     outImageFileName=arguments['outImageFileName'],
+                                                     switchOnDirectView=False)

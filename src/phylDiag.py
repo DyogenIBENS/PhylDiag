@@ -22,68 +22,31 @@ arguments = myTools.checkArgs(
     [("genome1", file),
      ("genome2", file),
      ("families", file)],
-    [("filterType", str, 'InBothGenomes'),
-     ("tandemGapMax", int, 0),
-     ("gapMax", str, 'None'),
-     ("distinguishMonoGenicDiags", bool, True),
-     ('distanceMetric', str, 'CD'),
-     ('pThreshold', str, 'None'),
-     ('gapMaxMicroInv', str, '0'),
-     ('identifyMonoGenicInversion', bool, False),
-     ('identifyBreakpointsWithinGaps', bool, True),
-     ('overlapMax', str, 'None'),
-     ("minChromLength", int, 2),
-     ("sameStrand", bool, True),
-     ('nbHpsRecommendedGap', int, 2), ('targetProbaRecommendedGap', float, 0.01),
-     ('validateImpossToCalc_mThreshold', int, 3),
-     # The multiprocess does not seem to work well for most of the data. It work well only for some data
-     # with ~ 800 contigs
-     ('optimisation', str, 'cython'),
-     ('verbose', bool, False)],
+    myDiags.defaultArgsPhylDiag + [('removeUnofficialChromosomes', bool, True)],
     #, ("computeDiagsWithoutGenesOnlyImplyedInDiagsOfLengthSmallerOrEqualTo",int,-1)], \
     __doc__
 )
-
-for (argN, tpe) in [('gapMax', int), ('overlapMax', int), ('gapMaxMicroInv', int), ('pThreshold', float)]:
-    if arguments[argN] == 'None':
-        arguments[argN] = None
-    else:
-        try:
-            arguments[argN] = tpe(arguments[argN])
-        except:
-            raise TypeError('%s is either an int or None' % argN)
+kwargs = myDiags.defaultKwargsPhylDiag(arguments=arguments)
+kwargs['verbose'] = True
 
 genome1 = myLightGenomes.LightGenome(arguments["genome1"])
+if arguments['removeUnofficialChromosomes']:
+    genome1.removeUnofficialChromosomes()
 print >> sys.stderr, "Genome1"
 print >> sys.stderr, "Nb of Chr = ", len(genome1.keys())
 genome2 = myLightGenomes.LightGenome(arguments["genome2"])
+if arguments['removeUnofficialChromosomes']:
+    genome2.removeUnofficialChromosomes()
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "Nb of Chr = ", len(genome2.keys())
 families = myLightGenomes.Families(arguments["families"])
-filterType = list(myDiags.FilterType._keys)
-filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
+#filterType = myDiags.FilterType[list(myDiags.FilterType._keys).index(arguments["filterType"])]
 statsDiags = []
 
 print >> sys.stderr, "Beginning of the extraction of synteny blocks"
 sbsInPairComp = \
     myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
-                                        filterType=filterType,
-                                        tandemGapMax=arguments['tandemGapMax'],
-                                        gapMax=arguments["gapMax"],
-                                        distinguishMonoGenicDiags=arguments["distinguishMonoGenicDiags"],
-                                        distanceMetric=arguments['distanceMetric'],
-                                        pThreshold=arguments['pThreshold'],
-                                        gapMaxMicroInv=arguments["gapMaxMicroInv"],
-                                        identifyMonoGenicInversion=arguments["identifyMonoGenicInversion"],
-                                        identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
-                                        overlapMax=arguments['overlapMax'],
-                                        minChromLength=arguments["minChromLength"],
-                                        consistentSwDType=arguments["sameStrand"],
-                                        nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
-                                        targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
-                                        validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
-                                        optimisation=arguments['optimisation'],
-                                        verbose=arguments['verbose'])
+                                        **kwargs)
 print >> sys.stderr, "End of the synteny block research"
 nbOfSbs = sum([len(sbsInPairComp[c1][c2]) for (c1, c2) in sbsInPairComp.keys2d()])
 print >> sys.stderr, "Number of synteny blocks = %s" % nbOfSbs

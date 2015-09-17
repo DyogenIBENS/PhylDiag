@@ -153,7 +153,7 @@ This returns :
 	4: chr1:deb1-fin1 <type 'str'>
 	5: chr2:deb2-fin2 <type 'str'>
 	  -gapMax <type 'str'> (None)
-	+/-consistentSwDType (True)
+	+/-sameStrand (True)
 	  -filterType <type 'str'> (InCommonAncestor)
 	  -minChromLength <type 'int'> (1)
 	  -pThreshold <type 'float'> (0.001)

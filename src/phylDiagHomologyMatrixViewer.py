@@ -43,7 +43,7 @@ if __name__ == '__main__':
          ('identifyMonoGenicInversion', bool, False),
          ('identifyBreakpointsWithinGaps', bool, True),
          ("overlapMax", str, 'None'),
-         ("consistentSwDType", bool, True),
+         ("sameStrand", bool, True),
          ("validateImpossToCalc_mThreshold", int, 3),
          ("in:SyntenyBlocks", str, 'None'),
          ("out:SyntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
@@ -76,7 +76,7 @@ overlapMax = arguments['overlapMax']
 tandemGapMax = arguments['tandemGapMax']
 identifyMonoGenicInversion = arguments["gapMaxMicroInv"]
 identifyBreakpointsWithinGaps = arguments['identifyBreakpointsWithinGaps']
-consistentSwDType = arguments['consistentSwDType']
+sameStrand = arguments['sameStrand']
 minChromLength = arguments['minChromLength']
 pThreshold = arguments['pThreshold']
 validateImpossToCalc_mThreshold = arguments['validateImpossToCalc_mThreshold']
@@ -117,7 +117,7 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      identifyMonoGenicInversion=arguments["identifyMonoGenicInversion"],
                                      identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
                                      overlapMax=arguments['overlapMax'],
-                                     consistentSwDType=arguments['consistentSwDType'],
+                                     sameStrand=arguments['sameStrand'],
                                      validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
                                      nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
                                      targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],

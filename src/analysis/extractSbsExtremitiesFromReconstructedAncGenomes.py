@@ -74,7 +74,7 @@ for sp in setOfExtantSpecies:
         identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
         overlapMax=arguments['overlapMax'],
         minChromLength=arguments["minChromLength"],
-        consistentSwDType=arguments["sameStrand"],
+        sameStrand=arguments["sameStrand"],
         nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
         targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
         validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],

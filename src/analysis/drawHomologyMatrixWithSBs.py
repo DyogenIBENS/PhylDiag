@@ -13,7 +13,7 @@ Build the homology matrix with synteny blocks using the mySvgDrawer Library
 import collections
 import itertools
 import random
-from utils import myDiags
+from utils import myDiags, myTools
 
 import utils.mySvgDrawer as svgDrw
 from utils.mySvgDrawer import Point
@@ -262,7 +262,9 @@ def test(arguments):
         genesRemovedDuringFilteringC2=[]
         symbolsInGenes=[[1,1,1,1,1,1,1,2,2,1,1],[1,1,2,1,1,1,2,1]]
 
-        myGenomesDrawer.drawHomologyMatrix(((begC1, endC1),(begC2, endC2)), (genesStrandsC1, genesStrandsC2),
+        range1 = (0, nx)
+        range2 = (0, ny)
+        myGenomesDrawer.drawHomologyMatrix((range1, range2), (genesStrandsC1, genesStrandsC2),
                            (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
                            (tbWithNoHomologyInWindowC1, tbWithNoHomologyInWindowC2),
                            hpSigns, homologyGroupsInWindow, diagsIndices,
@@ -502,7 +504,7 @@ def test(arguments):
                          identifyMonoGenicInversion=False,
                          identifyBreakpointsWithinGaps=True,
                          overlapMax=None,
-                         consistentSwDType=True,
+                         sameStrand=True,
                          validateImpossToCalc_mThreshold=3,
                          nbHpsRecommendedGap=2,
                          targetProbaRecommendedGap=0.01,
@@ -573,7 +575,7 @@ def test(arguments):
                          identifyMonoGenicInversion=False,
                          identifyBreakpointsWithinGaps=True,
                          overlapMax=None,
-                         consistentSwDType=True,
+                         sameStrand=True,
                          validateImpossToCalc_mThreshold=3,
                          nbHpsRecommendedGap=2,
                          targetProbaRecommendedGap=0.01,
@@ -655,7 +657,7 @@ def test(arguments):
                          identifyMonoGenicInversion=False,
                          identifyBreakpointsWithinGaps=True,
                          overlapMax=None,
-                         consistentSwDType=True,
+                         sameStrand=True,
                          validateImpossToCalc_mThreshold=3,
                          nbHpsRecommendedGap=2,
                          targetProbaRecommendedGap=0.01,
@@ -765,7 +767,7 @@ def test(arguments):
                          identifyMonoGenicInversion=False,
                          identifyBreakpointsWithinGaps=True,
                          overlapMax=None,
-                         consistentSwDType=True,
+                         sameStrand=True,
                          validateImpossToCalc_mThreshold=3,
                          nbHpsRecommendedGap=2,
                          targetProbaRecommendedGap=0.01,
@@ -847,7 +849,7 @@ def test(arguments):
                              identifyMonoGenicInversion=False,
                              identifyBreakpointsWithinGaps=True,
                              overlapMax=None,
-                             consistentSwDType=True,
+                             sameStrand=True,
                              validateImpossToCalc_mThreshold=3,
                              nbHpsRecommendedGap=2,
                              targetProbaRecommendedGap=0.01,
@@ -862,6 +864,62 @@ def test(arguments):
                              verbose=True)
             os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
+    elif scenario == 21:
+
+        # identification of a dispersed homology and an homology between two extant instances of the same ancestral gene
+        genomes = collections.OrderedDict()
+        sbs = collections.OrderedDict()
+
+        genomes['Ini'] = myLightGenomes.LightGenome()
+        genomes['Ini']['0'] = fromStringToChromosome('ABCDE')
+        genomes['Ini']['1'] = fromStringToChromosome('FG')
+
+        genomes['afterDispDup'] = mE.performInsertNewGene(genomes['Ini'], ('C.a', '1', 1, +1), keepOriginalGenome=True)
+
+        families = myLightGenomes.Families()
+        for (genomeName, genome) in genomes.items():
+            for chrom in genome.values():
+                for (gn, _) in chrom:
+                    if gn == 'C.a':
+                        families.addFamily(myLightGenomes.Family('C', {'C.a'}))
+                    else:
+                        families.addFamily(myLightGenomes.Family(gn, {gn}))
+
+        sizeGene = 1
+        familyName2color = {}
+        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        for family in families:
+            familyName2color[family.fn] = homologColorGenerator.getLevel()
+
+        genomesItems = collections.OrderedDict()
+        for (genomeName, genome) in genomes.iteritems():
+            genomeItems = myGenomesDrawer.drawLightGenome(genome,
+                                                          families=families,
+                                                          familyName2color=familyName2color,
+                                                          lengthGene=sizeGene,
+                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomesItems[genomeName] = genomeItems
+
+        width = (2 + 8) * sizeGene
+        height = (2 + len(genomes) + sum(len(chrom) for chrom in genomes.values())) * sizeGene
+        scene = svgDrw.Scene(name='genomes', width=width, height=height)
+        for item in svgDrw.placeGenomesItems(genomesItems, origin=Point(0, 0), sizeGene=sizeGene):
+            scene.add(item)
+        scene.write_svg(filename=outFileName)
+
+        filterType = list(myDiags.FilterType._keys)
+        filterType = myDiags.FilterType[filterType.index('None')]
+        WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genomes['Ini'], genomes['afterDispDup'], families,
+                                                          inSbsInPairComp=myTools.Dict2d(list),
+                                                          filterType=filterType,
+                                                          minChromLength=1,
+                                                          tandemGapMax=0,
+                                                          scaleFactorRectangles=10,
+                                                          outputFileName="./homologyMatrix.svg",
+                                                          maxWidth=100,
+                                                          maxHeight=100)
+        os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
+
 
 if __name__ == '__main__':
     #arguments = myTools.checkArgs([("scenario",int)],[("out:FileName",str,"image.svg")],__doc__)
@@ -870,7 +928,7 @@ if __name__ == '__main__':
     print sys.stderr, sys.argv
     os.chdir('/home/jlucas/Libs/MagSimus')
     arguments = {}
-    arguments['scenario'] = 15
+    arguments['scenario'] = 21
     arguments['out:fileName'] = './genomes.svg'
     test(arguments)
     os.system("%s %s" % ('firefox', arguments['out:fileName']))
