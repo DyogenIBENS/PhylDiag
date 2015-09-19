@@ -33,21 +33,28 @@ def fit_exp_nonlinear(t, y, p0=(170, -0.1, 0)):
     A, K, C = opt_parms
     return A, K, C
 
-def fit_exp_linear(t, y, C=0):
+def fit_exp_linear(t, y, C=0, removeNullValues=True, maxT=None):
     assert len(t) == len(y)
-    # remove all values <= 0
-    newt = []
-    newy = []
-    for (vt, vy) in zip(t, y):
-        if vy > 0:
-            newt.append(vt)
-            newy.append(vy)
+    if removeNullValues:
+        # remove all values <= 0
+        newt = []
+        newy = []
+        for (vt, vy) in zip(t, y):
+            if vy > 0:
+                if maxT is None or vt <= maxT:
+                    newt.append(vt)
+                    newy.append(vy)
     t = np.asarray(newt)
     y = np.asarray(newy)
     assert len(t) == len(y)
     y = y - C
     y = np.log(y)
     K, A_log = np.polyfit(x=t, y=y, deg=1)
+    plt.figure()
+    plt.plot(t, y, marker='o', linestyle='', color='k')
+    plt.plot(t, K * t + A_log, marker='o', linestyle='', color='b')
+    plt.xlabel('lengths of sbs (logarithmic scale)')
+    plt.ylabel('#sbs')
     A = np.exp(A_log)
     return A, K
 
@@ -131,8 +138,15 @@ elif arguments['lengthUnit'] == 'Mb':
 
 #remove lengths higher than maxShownLength
 lSbsLengths = [sbLength for sbLength in lSbsLengths if sbLength <= maxShownLength]
+# cumulative
+clSbsLengths = []
+csbl = 0
+for sbl in lSbsLengths:
+    csbl += sbl
+    clSbsLengths.append(csbl)
+
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
-binwidth = 2.5
+binwidth=1
 mindata=0
 maxdata=80
 bins = list(np.arange(mindata, maxdata + binwidth, binwidth))
@@ -142,7 +156,6 @@ ax2.set_ylabel('Nb of synteny blocks')
 #ax1.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], 0, "\infty"))
 ax2.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], 0, maxShownLength))
 
-
 # remove lengths lower than minShownLength
 lSbsLengths = [sbLength for sbLength in lSbsLengths if minShownLength <= sbLength]
 n, bins, patches = ax1.hist(lSbsLengths, bins=bins, histtype='bar')
@@ -150,17 +163,23 @@ t = np.asarray(bins[1:])
 noisy = np.asarray(n)
 
 # manual fit
-# A=170
-# K=-0.1
-# C=0
+meanSbLength = float(sum(lSbsLengths))/len(lSbsLengths)
+print >> sys.stderr, meanSbLength
+K=-1.0/meanSbLength
+A=1.0/meanSbLength
+C=0
+print >> sys.stderr, A, K
+ysModel = model_func(t, A, K, C)
+# normalisation
+ysModel = [y*len(lSbsLengths) for y in ysModel]
 
 # non-linear fit
 #A, K, C = fit_exp_nonlinear(t, noisy)
 
 # linear fit with the constant set to 0
-C = 0
-A, K = fit_exp_linear(t, noisy, C)
-ysModel = model_func(t, A, K, C)
+# C = 0
+# A, K = fit_exp_linear(t, noisy, C)
+# ysModel = model_func(t, A, K, C)
 ax1.plot(bins[1:], ysModel, color='k', linewidth=1.0, label="$y = %0.2f e^{%0.2f t} + %0.2f$" % (A, K, C))
 ax1.set_ylabel('Nb of synteny blocks')
 ax1.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], minShownLength, maxShownLength))
@@ -172,5 +191,14 @@ ax1.legend()
 #plt.title("")
 fig.suptitle("Distribution of the lengths of synteny blocks\nHuman-Mouse comparison")
 plt.legend()
-plt.savefig(sys.stdout, format='svg')
-#plt.show()
+#plt.savefig(sys.stdout, format='svg')
+
+
+plt.figure()
+n, bins, patches = plt.hist(lSbsLengths, bins=bins, normed=1, histtype='step', cumulative=True)
+t = np.asarray(bins[1:])
+noisy = np.asarray(n)
+cst = 0
+ys = 1 - np.exp(-t/meanSbLength) + cst
+plt.plot(t, ys)
+plt.show()
