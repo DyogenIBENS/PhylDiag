@@ -24,6 +24,9 @@ import utils.myGenomes as myGenomes
 import utils.myLightGenomes as myLightGenomes
 import scipy.optimize
 
+def Exp(t, theta):
+    return 1.0/theta * np.exp(- t/theta)
+
 def model_func(t, A, K, C):
     return A * np.exp(K * t) + C
 
@@ -75,6 +78,27 @@ def lengthProjectionOnGenome(rankGenome, sb, c, genome):
     lengthG = maxOnG - minOnG
     return lengthG
 
+def plotDensityFunction(ax, lSbsLengths, bins):
+    n, _, patches = ax.hist(lSbsLengths, bins=bins, histtype='bar')
+    t = np.asarray(bins[1:])
+    #noisy = np.asarray(n)
+
+    # negatie Exponential Distribution Parameterisation
+    meanSbLength = float(sum(lSbsLengths))/len(lSbsLengths)
+    # equal to 8.09 Mb ~= 8 cM "One centiMorgan corresponds to about 1 million base pairs in humans on average"
+    print >> sys.stderr, "meanSbLength (inInterVal) = %s %s" % (meanSbLength, lengthUnit)
+    theta = meanSbLength
+    ysModel = Exp(t, theta)
+    # from normal distribuion (area = 1) to a distribution of area = nb of sbs
+    ysModel = [y*len(lSbsLengths) for y in ysModel]
+
+    ax.plot(bins[1:], ysModel, color='k', linewidth=1.0, label="$y = %s \\times \\frac{1}{%0.2f} e^{\\frac{-t}{%0.2f}}$" % (len(lSbsLengths), theta, theta))
+    ax.set_ylabel('Nb of synteny blocks')
+    # str_maxSbLength = "\infty" if maxSbLength > 100 else maxSbLength
+    # ax.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], minSbLength, str_maxSbLength))
+    ax.legend()
+
+
 # Arguments
 modesOrthos = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs(
@@ -85,23 +109,22 @@ arguments = myTools.checkArgs(
     ],
     [
         ('lengthUnit', str, 'Mb'),
-        ('minShownLength', float, 1),
-        ('maxShownLength', str, 'None')
+        ('minSbLength', float, 1),
+        ('maxSbLength', str, 'None')
     ],
     __doc__)
-
-minShownLength = arguments['minShownLength']
-if arguments['maxShownLength'] == 'None':
-    maxShownLength = sys.maxint
+minSbLength = arguments['minSbLength']
+if arguments['maxSbLength'] == 'None':
+    maxSbLength = sys.maxint
 else:
     try:
-        maxShownLength = int(arguments['maxShownLength'])
+        maxSbLength = int(arguments['maxSbLength'])
     except:
-        raise ValueError('maxShownLength should is not an integer')
-
+        raise ValueError('maxSbLength should is not an integer')
 lengthUnit = arguments['lengthUnit']
 assert lengthUnit == 'Mb' or lengthUnit == 'gene'
 
+# load data
 genome1 = myGenomes.Genome(arguments["genome1"])
 genome1L = myLightGenomes.LightGenome(genome1)
 print >> sys.stderr, "Genome1"
@@ -111,67 +134,87 @@ genome2L = myLightGenomes.LightGenome(genome2)
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "nb of Chr = ", len(genome2L)
 sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'], genome1=genome1L, genome2=genome2L)
-lSbsLengths = []
 
+lSbsLengths = []
+# compute sb lengths
 if arguments['lengthUnit'] == 'gene':
     for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
         nbAncGenes = len(sb.la)
-        #print >> sys.stderr, "genes=%s" % nbAncGenes
         lSbsLengths.append(nbAncGenes)
 elif arguments['lengthUnit'] == 'Mb':
     for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
         lengthG1 = lengthProjectionOnGenome(1, sb, c1, genome1)
         lengthG2 = lengthProjectionOnGenome(2, sb, c2, genome2)
         averageSbLength = float(lengthG1 + lengthG2) / 2.0
+        # in megabases
         averageSbLength = averageSbLength / 1000000
-        #print >> sys.stderr, "Mb=%s" % averageSbLength
         lSbsLengths.append(averageSbLength)
+lSbsLengths.sort()
+#print >> sys.stderr, lSbsLengths
 
-#X = []
-#Y = []
-#distribSbsLengths = collections.defaultdict(int)
-#for length in lSbsLengths:
-#    distribSbsLengths[length] += 1
-#for (length, nbSbs) in distribSbsLengths.iteritems():
-#    X.append(length)
-#    Y.append(nbSbs)
+# remove lengths not in [minSbLength, maxSbLength]
+lSbsLengthsInInterval = [sbLength for sbLength in lSbsLengths if minSbLength <= sbLength <= maxSbLength]
+print >> sys.stderr, "nb of removed sb not in interval = %s" % (len(lSbsLengths) - len(lSbsLengthsInInterval))
 
-#remove lengths higher than maxShownLength
-lSbsLengths = [sbLength for sbLength in lSbsLengths if sbLength <= maxShownLength]
-# cumulative
-clSbsLengths = []
-csbl = 0
-for sbl in lSbsLengths:
-    csbl += sbl
-    clSbsLengths.append(csbl)
-
-fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
-binwidth=1
+##########################
+# Graph Parameters
+##########################
+binwidth=1.0
 mindata=0
-maxdata=80
+#maxdata=80
+maxdata=max(lSbsLengths)
+##########################
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=(15, 6))
 bins = list(np.arange(mindata, maxdata + binwidth, binwidth))
-n, bins, patches = ax2.hist(lSbsLengths, bins=bins, histtype='bar')
-#plt.plot(X, Y, marker='o', linestyle='', color='w', label='Real value', markersize=4, markeredgewidth=1.5, markeredgecolor='k')
-ax2.set_ylabel('Nb of synteny blocks')
-#ax1.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], 0, "\infty"))
-ax2.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], 0, maxShownLength))
-
-# remove lengths lower than minShownLength
-lSbsLengths = [sbLength for sbLength in lSbsLengths if minShownLength <= sbLength]
-n, bins, patches = ax1.hist(lSbsLengths, bins=bins, histtype='bar')
 t = np.asarray(bins[1:])
-noisy = np.asarray(n)
+##########################################################
+# graphs with all sbLength in [minSbLength, maxSbLength]
+##########################################################
+plotDensityFunction(ax1, lSbsLengthsInInterval, bins)
+ax1.set_xlim((0, maxdata))
 
-# manual fit
+# cumulative distribution
+n, _, patches = ax3.hist(lSbsLengthsInInterval, bins=bins, normed=1, histtype='step', cumulative=True)
+# add the theoretical cumulative function
+# t = np.asarray(bins[1:])
+#noisy = np.asarray(n)
+meanSbLength = float(sum(lSbsLengthsInInterval))/len(lSbsLengthsInInterval)
+ys = 1 - np.exp(-t/meanSbLength)
+ax3.plot(t, ys)
+ax3.set_xlim((0, maxdata))
+ax3.set_ylim((0, 1))
+ax3.set_ylabel("% synteny blocks")
+str_maxSbLength = "\infty" if maxSbLength > 100 else maxSbLength
+ax3.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], minSbLength, str_maxSbLength))
+ax3.legend()
+
+#############################
+# graphs with all sbLengths
+#############################
+plotDensityFunction(ax2, lSbsLengths, bins)
+ax2.set_xlim((0, maxdata))
+
+# cumulative distribution
+n, _, patches = ax4.hist(lSbsLengths, bins=bins, normed=1, histtype='step', cumulative=True)
+# add the theoretical cumulative function
+# t = np.asarray(bins[1:])
+#noisy = np.asarray(n)
 meanSbLength = float(sum(lSbsLengths))/len(lSbsLengths)
-print >> sys.stderr, meanSbLength
-K=-1.0/meanSbLength
-A=1.0/meanSbLength
-C=0
-print >> sys.stderr, A, K
-ysModel = model_func(t, A, K, C)
-# normalisation
-ysModel = [y*len(lSbsLengths) for y in ysModel]
+ys = 1 - np.exp(-t/meanSbLength)
+ax4.plot(t, ys)
+ax4.set_xlim((0, maxdata))
+ax4.set_ylim((0, 1))
+ax4.set_ylabel("% synteny blocks")
+ax4.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], 0, "\infty"))
+ax4.legend()
+
+fig.suptitle("Distribution of the lengths of synteny blocks\nHuman-Mouse comparison")
+plt.show()
+
+##############################################################
+# deprecated
+##############################################################
 
 # non-linear fit
 #A, K, C = fit_exp_nonlinear(t, noisy)
@@ -180,25 +223,10 @@ ysModel = [y*len(lSbsLengths) for y in ysModel]
 # C = 0
 # A, K = fit_exp_linear(t, noisy, C)
 # ysModel = model_func(t, A, K, C)
-ax1.plot(bins[1:], ysModel, color='k', linewidth=1.0, label="$y = %0.2f e^{%0.2f t} + %0.2f$" % (A, K, C))
-ax1.set_ylabel('Nb of synteny blocks')
-ax1.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], minShownLength, maxShownLength))
-ax1.legend()
 
 #plt.tight_layout()
 #plt.xlim(0, 100)
 #plt.title("OSB length distribution in Human-Mouse comparison \n Confidence Interval : %s*sigma around mean" % arguments["ICfactorOfSigma"] )
 #plt.title("")
-fig.suptitle("Distribution of the lengths of synteny blocks\nHuman-Mouse comparison")
-plt.legend()
+# #plt.legend()
 #plt.savefig(sys.stdout, format='svg')
-
-
-plt.figure()
-n, bins, patches = plt.hist(lSbsLengths, bins=bins, normed=1, histtype='step', cumulative=True)
-t = np.asarray(bins[1:])
-noisy = np.asarray(n)
-cst = 0
-ys = 1 - np.exp(-t/meanSbLength) + cst
-plt.plot(t, ys)
-plt.show()
