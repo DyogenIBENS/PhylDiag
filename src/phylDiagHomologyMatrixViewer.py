@@ -24,110 +24,71 @@ __doc__ = """
           '-' indicates homology that have horizontal gene and vertical gene in opposite directions on each chromosomes
         """
 
-if __name__ == '__main__':
+arguments = myTools.checkArgs(
+    [("genome1", file),
+     ("genome2", file),
+     ("families", file),
+     ("chr1:deb1-fin1", str),
+     ("chr2:deb2-fin2", str)],
+    myDiags.defaultArgsPhylDiag +\
+    [('removeUnofficialChromosomes', bool, True),
+     ('withSbs', bool, True),
+     ("in:SyntenyBlocks", str, 'None'),
+     ("out:SyntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
+     ("mode:chromosomesRewrittenInTbs", bool, False),
+     ('convertGenicToTbCoordinates', bool, False),
+     ('drawAllInformations', bool, False),
+     ("scaleFactorRectangles", float, 2.0),
+     ("out:ImageFileName", str, "./homologyMatrix.svg"),
+     ("considerAllPairComps", bool, True),
+     ('switchOnDirectView', bool, False),
+     ('verbose', bool, True)],
+    __doc__)
 
-    arguments = myTools.checkArgs(
-        [("genome1", file),
-         ("genome2", file),
-         ("families", file),
-         ("chr1:deb1-fin1", str),
-         ("chr2:deb2-fin2", str)],
-        [("filterType", str, 'InBothGenomes'),
-         ("minChromLength", int, 2),
-         ("tandemGapMax", int, 0),
-         ("distanceMetric", str, 'CD'),
-         ("gapMax", str, 'None'),
-         ("distinguishMonoGenicDiags", bool, True),
-         ("pThreshold", str, 'None'),
-         ('gapMaxMicroInv', str, '0'),
-         ('identifyMonoGenicInversion', bool, False),
-         ('identifyBreakpointsWithinGaps', bool, True),
-         ("overlapMax", str, 'None'),
-         ("sameStrand", bool, True),
-         ("validateImpossToCalc_mThreshold", int, 3),
-         ("in:SyntenyBlocks", str, 'None'),
-         ("out:SyntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
-         ("mode:chromosomesRewrittenInTbs", bool, False),
-         ('convertGenicToTbCoordinates', bool, False),
-         ('nbHpsRecommendedGap', int, 2),
-         ('targetProbaRecommendedGap', float, 0.01),
-         ('drawAllInformations', bool, False),
-         ("scaleFactorRectangles", float, 2.0),
-         ("out:ImageName", str, "./homologyMatrix.svg"),
-         ("considerAllPairComps", bool, True),
-         ('switchOnDirectView', bool, False),
-         ('optimisation', str, 'cython'),
-         ('verbose', bool, True)],
-        __doc__)
+kwargs = myDiags.defaultKwargsPhylDiag(arguments=arguments)
+kwargs['verbose'] = True
 
-for (argN, tpe) in [('gapMax', int), ('overlapMax', int), ('gapMaxMicroInv', int), ('pThreshold', float)]:
-    if arguments[argN] == 'None':
-        arguments[argN] = None
-    else:
-        try:
-            arguments[argN] = tpe(arguments[argN])
-        except:
-            raise TypeError('%s is either an int or None' % argN)
-
-gapMax = arguments['gapMax']
-distinguishMonoGenicDiags = arguments['distinguishMonoGenicDiags']
-gapMaxMicroInv = arguments['gapMaxMicroInv']
-overlapMax = arguments['overlapMax']
-tandemGapMax = arguments['tandemGapMax']
-identifyMonoGenicInversion = arguments["gapMaxMicroInv"]
-identifyBreakpointsWithinGaps = arguments['identifyBreakpointsWithinGaps']
-sameStrand = arguments['sameStrand']
-minChromLength = arguments['minChromLength']
-pThreshold = arguments['pThreshold']
-validateImpossToCalc_mThreshold = arguments['validateImpossToCalc_mThreshold']
-chromosomesRewrittenInTbs = arguments['mode:chromosomesRewrittenInTbs']
-convertGenicToTbCoordinates = arguments['convertGenicToTbCoordinates']
-distanceMetric = arguments['distanceMetric']
-nbHpsRecommendedGap = arguments['nbHpsRecommendedGap']
-targetProbaRecommendedGap = arguments['targetProbaRecommendedGap']
-considerAllPairComps = arguments['considerAllPairComps']
-scaleFactorRectangles = arguments['scaleFactorRectangles']
-filterType = list(myDiags.FilterType._keys)
-filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
-
-# Load genomes
 genome1 = myLightGenomes.LightGenome(arguments['genome1'], withDict=True)
 genome2 = myLightGenomes.LightGenome(arguments['genome2'], withDict=True)
-# load families
-families = myLightGenomes.Families(arguments["families"])
+families = myLightGenomes.Families(arguments['families'])
 
-inSbsInPairComp = None
-if arguments['in:SyntenyBlocks'] == 'None':
-    inSbsInPairComp = None
-else:
-    # load precomputed sbs if any
-    inSbsInPairComp = arguments['in:SyntenyBlocks']
-    inSbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
+if arguments['removeUnofficialChromosomes']:
+    genome1.removeUnofficialChromosomes()
+    genome2.removeUnofficialChromosomes()
+
+sbsInPairComp = None
+if arguments['withSbs']:
+    if arguments['in:SyntenyBlocks'] != 'None':
+        # load precomputed sbs if any
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
+    else:
+        sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
+                                                            **kwargs)
 
 myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1:deb1-fin1'], arguments['chr2:deb2-fin2'],
                                      convertGenicToTbCoordinates=arguments['convertGenicToTbCoordinates'],
-                                     filterType=filterType,
-                                     minChromLength=arguments['minChromLength'],
-                                     tandemGapMax=arguments['tandemGapMax'],
-                                     distanceMetric=arguments['distanceMetric'],
-                                     gapMax=arguments['gapMax'],
-                                     distinguishMonoGenicDiags=arguments['distinguishMonoGenicDiags'],
-                                     pThreshold=arguments['pThreshold'],
-                                     gapMaxMicroInv=arguments['gapMaxMicroInv'],
-                                     identifyMonoGenicInversion=arguments["identifyMonoGenicInversion"],
-                                     identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
-                                     overlapMax=arguments['overlapMax'],
-                                     sameStrand=arguments['sameStrand'],
-                                     validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
-                                     nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
-                                     targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
+                                     filterType=kwargs['filterType'],
+                                     minChromLength=kwargs['minChromLength'],
+                                     tandemGapMax=kwargs['tandemGapMax'],
+                                     distanceMetric=kwargs['distanceMetric'],
+                                     gapMax=kwargs['gapMax'],
+                                     distinguishMonoGenicDiags=kwargs['distinguishMonoGenicDiags'],
+                                     pThreshold=kwargs['pThreshold'],
+                                     gapMaxMicroInv=kwargs['gapMaxMicroInv'],
+                                     identifyMonoGenicInversion=kwargs["identifyMonoGenicInversion"],
+                                     identifyBreakpointsWithinGaps=kwargs['identifyBreakpointsWithinGaps'],
+                                     overlapMax=kwargs['overlapMax'],
+                                     sameStrand=kwargs['sameStrand'],
+                                     validateImpossToCalc_mThreshold=kwargs['validateImpossToCalc_mThreshold'],
+                                     nbHpsRecommendedGap=kwargs['nbHpsRecommendedGap'],
+                                     targetProbaRecommendedGap=kwargs['targetProbaRecommendedGap'],
                                      chromosomesRewrittenInTbs=arguments['mode:chromosomesRewrittenInTbs'],
                                      drawAllInformations=arguments['drawAllInformations'],
                                      scaleFactorRectangles=arguments['scaleFactorRectangles'],
                                      considerAllPairComps=arguments['considerAllPairComps'],
                                      switchOnDirectView=arguments['switchOnDirectView'],
-                                     optimisation=arguments['optimisation'],
-                                     inSbsInPairComp=inSbsInPairComp,
+                                     optimisation=kwargs['optimisation'],
+                                     inSbsInPairComp=sbsInPairComp,
                                      outSyntenyBlocksFileName=arguments['out:SyntenyBlocks'],
-                                     outImageFileName=arguments['out:ImageName'],
+                                     outImageFileName=arguments['out:ImageFileName'],
                                      verbose=arguments['verbose'])

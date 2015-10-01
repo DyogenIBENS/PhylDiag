@@ -77,7 +77,7 @@ phylDiagCommandLines+=(
 # phylDiag with all options -- options that yield the best synteny blocks for the human mouse comparison
 "src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
 # view the sbs from the former output file in the X-X comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
 )
 for line in "${phylDiagCommandLines[@]}"
 	do
@@ -96,9 +96,9 @@ gm=5
 dm=CD
 phylDiagHomologyMatrixViewerCommandLines=(
 # phylDiagHomologyMatrixViewer -- MH
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} -out:ImageName=res/MH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} -out:ImageFileName=res/MH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
 # phylDiagHomologyMatrixViewer -- MHP
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs -out:ImageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
 )
 tgm=9
 gm=10
@@ -107,7 +107,7 @@ ibwg='+'
 om=10
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om} -out:ImageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
 )
 Title=PhylDiag
 gm=5
@@ -117,7 +117,7 @@ C2=X
 R2="1-100"
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om}"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageFileName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyBreakpointsWithinGaps -overlapMax=${om}"
 #many computations known to be difficult
 "src/postprocessing/listOfDifficultSyntenies.sh"
 )
@@ -171,7 +171,7 @@ done
 #	Check integrity of geneTeamsHomologyMatrixViewer #
 ####################################################
 geneTeamsHomologyMatrixViewerCommandLines=(
-"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:ImageName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:GeneTeams=res/geneTeamsHomologyMatrixViewer.txt"
+"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:ImageFileName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:GeneTeams=res/geneTeamsHomologyMatrixViewer.txt"
 )
 for line in "${geneTeamsHomologyMatrixViewerCommandLines[@]}"
 	do

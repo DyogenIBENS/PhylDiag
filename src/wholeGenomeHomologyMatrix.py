@@ -21,7 +21,8 @@ arguments = myTools.checkArgs(
         [('removeUnofficialChromosomes', bool, True),
          ('withSbs', bool, True),
          ('chromosomesRewrittenInTbs', bool, False),
-         ('outImageFileName', str, 'res/image.svg')],
+         ('out:ImageFileName', str, 'res/image.svg'),
+         ('scaleFactorRectangles', float, 10.0)],
         __doc__)
 
 kwargs = myDiags.defaultKwargsPhylDiag(arguments=arguments)
@@ -45,12 +46,15 @@ WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genome1, genome2, families
                                                   filterType=kwargs['filterType'],
                                                   minChromLength=kwargs['minChromLength'],
                                                   tandemGapMax=kwargs['tandemGapMax'],
-                                                  scaleFactorRectangles=10,
+                                                  scaleFactorRectangles=arguments['scaleFactorRectangles'],
                                                   outputFileName=None,
                                                   maxWidth=100,
                                                   maxHeight=100)
 
-nbSbs = len(sbsInPairComp.intoList())
+if sbsInPairComp:
+    nbSbs = len(sbsInPairComp.intoList())
+else:
+    nbSbs = 0
 
 myGenomesDrawer.writeSVGFileForPairwiseCompOfGenomes(genome1.name,
                                                      genome2.name,
@@ -61,8 +65,8 @@ myGenomesDrawer.writeSVGFileForPairwiseCompOfGenomes(genome1.name,
                                                      gapMax=kwargs['gapMax'],
                                                      distanceMetric=kwargs['distanceMetric'],
                                                      gapMaxMicroInv=kwargs['gapMaxMicroInv'],
-                                                     identifyBreakpointsWithinGaps=kwargs['gapMaxMicroInv'],
+                                                     identifyBreakpointsWithinGaps=kwargs['identifyBreakpointsWithinGaps'],
                                                      overlapMax=kwargs['overlapMax'],
                                                      nbSbs=nbSbs,
-                                                     outImageFileName=arguments['outImageFileName'],
+                                                     outImageFileName=arguments['out:ImageFileName'],
                                                      switchOnDirectView=False)
