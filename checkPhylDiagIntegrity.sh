@@ -140,6 +140,17 @@ done
 
 # needs numpy and matplotlib
 
+#####################################################
+#	Check integrity of wholeGenomeHomologyMatrix.py #
+#####################################################
+commandLines=(
+"src/wholeGenomeHomologyMatrix.py res/simu1/genes.Homo.sapiens.list.bz2 res/simu1/genes.Mus.musculus.list.bz2 res/simu1/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:ImageFileName=res/simu1/WMH_Simu_Hs_Mm.svg +withSbs -scaleFactorRectangles=40
+)
+for line in "${commandLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
 
 ###################################
 #	Check integrity of geneTeams.py #
