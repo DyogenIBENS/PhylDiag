@@ -4,6 +4,8 @@ import collections
 import itertools
 from numpy import random
 import sys
+import os
+import subprocess
 from utils import myTools, myDiags, myLightGenomes
 
 GENOMENAME = 0
@@ -93,7 +95,9 @@ def main():
     __doc__ = \
     """use synteny blocks of PhylDiag to find the minimum scenario of rearrangements from GRIMM
     """
-    arguments = myTools.checkArgs([('syntenyBlocks', file), ('genome1', file), ('genome2', file)], [], __doc__)
+    arguments = myTools.checkArgs([('syntenyBlocks', file), ('genome1', file), ('genome2', file)],
+                                  [('outPath', str, './res'), ('pathToGRIMM', str, '/home/jlucas/Libs/GRIMM-2.01/grimm')],
+                                  __doc__)
     genome1 = myLightGenomes.LightGenome(arguments['genome1'], withDict=True)
     genome2 = myLightGenomes.LightGenome(arguments['genome2'], withDict=True)
     sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'],
@@ -121,11 +125,28 @@ def main():
         dictOldGeneNameToNewGeneName[gn] = str(cptGeneName)
         cptGeneName += 1
     for i, g in enumerate(genome1WithOnlyX['X']):
-        g = genome1WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
+        genome1WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
     for i, g in enumerate(genome2WithOnlyX['X']):
-        g = genome2WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
-    printGenomeInto_GRIMM_format(genome1WithOnlyX)
-    printGenomeInto_GRIMM_format(genome2WithOnlyX)
+        genome2WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
+
+    pathToSyntenyBmlocksForGrimm = arguments['outPath'] + '/syntenyBlocksForGRIMM.txt'
+    with open(pathToSyntenyBmlocksForGrimm, 'w') as f:
+        printGenomeInto_GRIMM_format(genome1WithOnlyX, stream=f)
+        printGenomeInto_GRIMM_format(genome2WithOnlyX, stream=f)
+
+    # wrap the grimm executable
+    pathToGrimm = arguments['pathToGRIMM']
+    if os.path.isfile(pathToGrimm):
+        bashComand = pathToGrimm + ' -f ' + pathToSyntenyBmlocksForGrimm
+        subProcStdin = None  #  subprocess.PIPE, if you want it
+        subProcStderr = None  #  subprocess.PIPE, if you want it
+        proc = subprocess.Popen(bashComand, shell=True, stdin=subProcStdin, stdout=subprocess.PIPE, stderr=subProcStderr)
+        # returns stdout and stderr
+        stdout, subProcStderr = proc.communicate(subProcStdin)
+        # proc.returncode, might be interesting too
+        print >> sys.stdout, stdout
+    else:
+        raise ValueError('The path to the executable file of grimm is incorrect')
 
 if __name__ == '__main__':
     main()
