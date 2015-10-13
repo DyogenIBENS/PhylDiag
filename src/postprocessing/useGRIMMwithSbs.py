@@ -111,9 +111,15 @@ def main():
     genome1InSbs.sort(byName=True)
     genome2InSbs.sort(byName=True)
 
+    # print these two representation of the genomes
+    pathToSyntenyBlocksForGrimm = arguments['outPath'] + '/syntenyBlocksForGRIMM_allChromosomes.txt'
+    with open(pathToSyntenyBlocksForGrimm, 'w') as f:
+        printGenomeInto_GRIMM_format(genome1InSbs, stream=f)
+        printGenomeInto_GRIMM_format(genome2InSbs, stream=f)
+
+    # reduce genomes to only chromosomes X
     genome1WithOnlyX = myLightGenomes.LightGenome()
     genome2WithOnlyX = myLightGenomes.LightGenome()
-
     genome1WithOnlyX['X'] = genome1InSbs['X']
     genome2WithOnlyX['X'] = genome2InSbs['X']
     setGeneNames = genome1WithOnlyX.getGeneNames() & genome2WithOnlyX.getGeneNames()
@@ -129,15 +135,15 @@ def main():
     for i, g in enumerate(genome2WithOnlyX['X']):
         genome2WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
 
-    pathToSyntenyBmlocksForGrimm = arguments['outPath'] + '/syntenyBlocksForGRIMM.txt'
-    with open(pathToSyntenyBmlocksForGrimm, 'w') as f:
+    pathToSyntenyBlocksForGrimm = arguments['outPath'] + '/syntenyBlocksForGRIMM.txt'
+    with open(pathToSyntenyBlocksForGrimm, 'w') as f:
         printGenomeInto_GRIMM_format(genome1WithOnlyX, stream=f)
         printGenomeInto_GRIMM_format(genome2WithOnlyX, stream=f)
 
     # wrap the grimm executable
     pathToGrimm = arguments['pathToGRIMM']
     if os.path.isfile(pathToGrimm):
-        bashComand = pathToGrimm + ' -f ' + pathToSyntenyBmlocksForGrimm
+        bashComand = pathToGrimm + ' -f ' + pathToSyntenyBlocksForGrimm
         subProcStdin = None  #  subprocess.PIPE, if you want it
         subProcStderr = None  #  subprocess.PIPE, if you want it
         proc = subprocess.Popen(bashComand, shell=True, stdin=subProcStdin, stdout=subprocess.PIPE, stderr=subProcStderr)
