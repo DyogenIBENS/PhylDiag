@@ -4,8 +4,33 @@
 # This script wraps the GRIMM v2.01 software
 # http://grimm.ucsd.edu/GRIMM/
 
+# # Install GRIMM
+# PATH_GRIMM_PARENT=/home/${USER}/Libs
+# mkdir -p ${PATH_GRIMM}
+# cd ${PATH_GRIMM}
+# wget http://grimm.ucsd.edu/DIST/GRIMM-2.01.zip
+# unzip GRIMM-2.01.zip
+# PATH_GRIMM=${PATH_GRIMM_PARENT}/GRIMM-2.01
+# cd ${PATH_GRIMM}
+# # Compile
+# make
+# # If compilation does not work, comment these lines in ./MakeFile:
+# ---------------------------------------
+# ifeq ($(strip $(CC)), gcc)
+# ifeq ($(OS), Linux)
+# CFLAGS := -march=pentiumpro $(CFLAGS)
+# endif
+# ifeq ($(OS), SunOS)
+# CFLAGS := -mv8 $(CFLAGS)
+# endif
+# endif
+# ----------------------------------------
+# echo "export PATH=\"\$PATH:${PATH_GRIMM}\"" >> ~/.bashrc
+# cd
+#
+
 # The aim is to use PhylDiag's conserved segments between human and mouse in the X chromosome
-# and use these conserved segments to retrieve reversal scenarios infered from GRIMM
+# and use these conserved segments to retrieve reversal scenarios inferred from GRIMM
 
 import collections
 import itertools
