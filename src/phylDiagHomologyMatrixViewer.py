@@ -34,13 +34,13 @@ arguments = myTools.checkArgs(
     myDiags.defaultArgsPhylDiag +\
     [('removeUnofficialChromosomes', bool, True),
      ('withSbs', bool, True),
-     ("in:SyntenyBlocks", str, 'None'),
-     ("out:SyntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
+     ("in:syntenyBlocks", str, 'None'),
+     ("out:syntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
      ("mode:chromosomesRewrittenInTbs", bool, False),
      ('convertGenicToTbCoordinates', bool, False),
      ('drawAllInformations', bool, False),
      ("scaleFactorRectangles", float, 2.0),
-     ("out:ImageFileName", str, "./homologyMatrix.svg"),
+     ("out:imageFileName", str, "./homologyMatrix.svg"),
      ("considerAllPairComps", bool, True),
      ('switchOnDirectView', bool, False),
      ('verbose', bool, True)],
@@ -59,9 +59,9 @@ if arguments['removeUnofficialChromosomes']:
 
 sbsInPairComp = None
 if arguments['withSbs']:
-    if arguments['in:SyntenyBlocks'] != 'None':
+    if arguments['in:syntenyBlocks'] != 'None':
         # load precomputed sbs if any
-        sbsInPairComp = myDiags.parseSbsFile(arguments['in:SyntenyBlocks'], genome1=genome1, genome2=genome2)
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:syntenyBlocks'], genome1=genome1, genome2=genome2)
     else:
         sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
                                                             **kwargs)
@@ -90,6 +90,6 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      switchOnDirectView=arguments['switchOnDirectView'],
                                      optimisation=kwargs['optimisation'],
                                      inSbsInPairComp=sbsInPairComp,
-                                     outSyntenyBlocksFileName=arguments['out:SyntenyBlocks'],
-                                     outImageFileName=arguments['out:ImageFileName'],
+                                     outSyntenyBlocksFileName=arguments['out:syntenyBlocks'],
+                                     outImageFileName=arguments['out:imageFileName'],
                                      verbose=arguments['verbose'])

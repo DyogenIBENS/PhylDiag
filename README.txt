@@ -191,13 +191,13 @@ This returns :
 	  -filterType <type 'str'> (InCommonAncestor)
 	  -minChromLength <type 'int'> (1)
 	  -pThreshold <type 'float'> (0.001)
-	  -out:SyntenyBlocks <type 'str'> (./res/syntenyBlocksDrawer.txt)
+	  -out:syntenyBlocks <type 'str'> (./res/syntenyBlocksDrawer.txt)
 	+/-mode:chromosomesRewrittenInTbs (False)
 	+/-convertGenicToTbCoordinates (False)
 	  -distanceMetric <type 'str'> (CD)
 	  -nbHpsRecommendedGap <type 'int'> (2)
 	  -targetProbaRecommendedGap <type 'float'> (0.01)
-	  -out:ImageName <type 'str'> (./res/homologyMatrix.svg)
+	  -out:imageName <type 'str'> (./res/homologyMatrix.svg)
 	+/-verbose (True)
 
 
@@ -212,7 +212,7 @@ This returns :
 Numbered parameters are required and other parameters are optional, used default value are written between brackets.
 
 # To see the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome, launch:
-src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -tandemGapMax=5 -gapMax=5 -truncationMax=5 -out:ImageName=res/MH.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH.txt
+src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -tandemGapMax=5 -gapMax=5 -truncationMax=5 -out:imageName=res/MH.svg -out:syntenyBlocks=res/syntenyBlocksDrawerMH.txt
 
 "X:1-~" means X chromosome from the 1st gene to the last gene
 For instance "4:45-80" means the 4th chromosome from the 45th gene to the 80th gene
@@ -220,8 +220,8 @@ For instance "4:45-80" means the 4th chromosome from the 45th gene to the 80th g
 The image MH.svg can be viewed with an internet browser as firefox.
 
 # It is also possible to draw the Matrix of Homology Packs (MHP):
-src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -tandemGapMax=5 -gapMax=5 -truncationMax=5 -out:ImageName=./res/MHP.svg -out:SyntenyBlocks=./res/syntenyBlocksDrawerMHP.txt
+src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -tandemGapMax=5 -gapMax=5 -truncationMax=5 -out:imageName=./res/MHP.svg -out:syntenyBlocks=./res/syntenyBlocksDrawerMHP.txt
 
 # Many parameters can be customised, for instance a user can run:
-Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && C2=X && R2="1-100" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:ImageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001
+Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && C2=X && R2="1-100" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:imageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:syntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001
 

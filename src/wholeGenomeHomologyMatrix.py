@@ -19,7 +19,7 @@ arguments = myTools.checkArgs(
         [('removeUnofficialChromosomes', bool, True),
          ('withSbs', bool, True),
          ('chromosomesRewrittenInTbs', bool, False),
-         ('out:ImageFileName', str, 'res/image.svg'),
+         ('out:imageFileName', str, 'res/image.svg'),
          ('scaleFactorRectangles', float, 10.0)],
         __doc__)
 
@@ -66,5 +66,5 @@ myGenomesDrawer.writeSVGFileForPairwiseCompOfGenomes(genome1.name,
                                                      identifyMicroRearrangements=kwargs['identifyMicroRearrangements'],
                                                      truncationMax=kwargs['truncationMax'],
                                                      nbSbs=nbSbs,
-                                                     outImageFileName=arguments['out:ImageFileName'],
+                                                     outImageFileName=arguments['out:imageFileName'],
                                                      switchOnDirectView=False)

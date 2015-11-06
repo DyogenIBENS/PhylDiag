@@ -77,7 +77,7 @@ phylDiagCommandLines+=(
 # phylDiag with all options -- options that yield the best synteny blocks for the human mouse comparison
 "src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyMicroRearrangements -truncationMax=${om} +verbose > res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}`"
 # view the sbs from the former output file in the X-X comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:SyntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyMicroRearrangements -truncationMax=${om} +verbose -out:SyntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:ImageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -in:syntenyBlocks=res/`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -filterType=InFamilies -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=0.001 ${ibwg}identifyMicroRearrangements -truncationMax=${om} +verbose -out:syntenyBlocks=res/viewer_`sbFileName ${S1} ${S2} ${A} ${tgm} ${gm} ${dm} ${ibwg} ${om}` -out:imageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg"
 )
 for line in "${phylDiagCommandLines[@]}"
 	do
@@ -96,9 +96,9 @@ gm=5
 dm=CD
 phylDiagHomologyMatrixViewerCommandLines=(
 # phylDiagHomologyMatrixViewer -- MH
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} -out:ImageFileName=res/MH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} -out:imageFileName=res/MH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:syntenyBlocks=res/syntenyBlocksDrawerMH_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
 # phylDiagHomologyMatrixViewer -- MHP
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs -out:ImageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs -out:imageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:syntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.txt"
 )
 tgm=9
 gm=10
@@ -107,7 +107,7 @@ ibwg='+'
 om=10
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:ImageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:SyntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 X:1-~ X:1-~ -tandemGapMax=${tgm} -gapMax=${gm} -distanceMetric=${dm} +mode:chromosomesRewrittenInTbs ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:imageFileName=res/MHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}.svg -out:syntenyBlocks=res/syntenyBlocksDrawerMHP_${S1}_X_${S2}_X_f${A}_Gm${gm}${dm}IbwgOm${om}.txt"
 )
 Title=PhylDiag
 gm=5
@@ -117,7 +117,8 @@ C2=X
 R2="1-100"
 phylDiagHomologyMatrixViewerCommandLines+=(
 # phylDiagHomologyMatrixViewer with all options -- options that yield the best synteny blocks for the human mouse comparison
-"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:ImageFileName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:SyntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyMicroRearrangements -truncationMax=${om}"
+# FIXME -out:syntenyBlocks=res/syntenyBlocksDrawer
+"src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${dm} -gapMax=${gm} ${C1}:${R1} ${C2}:${R2} -out:imageFileName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_MHP.svg -out:syntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${dm}${gm}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001 ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:syntenyBlocks=res/syntenyBlocksDrawer.txt"
 #many computations known to be difficult
 "src/postprocessing/listOfDifficultSyntenies.sh"
 )
@@ -130,7 +131,7 @@ done
 # Check the graph construction of the distribution of the lengths of synteny
 # blocks
 commandLines=(
-"src/postprocessing/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_Tgm10gM5Gmmi0IbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minShownLength=1 -maxShownLength=81 > res/distributionOfSbsLengthsInMb.svg"
+"src/postprocessing/distributionSbLengths.py res/Homo.sapiens_Mus.musculus_Tgm10gM5Gmmi0IbwgOm10.sbs data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 -lengthUnit=Mb -minSbLength=1 -maxSbLength=81 > res/distributionOfSbsLengthsInMb.svg"
 )
 for line in "${commandLines[@]}"
 	do
@@ -144,7 +145,7 @@ done
 #	Check integrity of wholeGenomeHomologyMatrix.py #
 #####################################################
 commandLines=(
-"src/wholeGenomeHomologyMatrix.py res/simu1/genes.Homo.sapiens.list.bz2 res/simu1/genes.Mus.musculus.list.bz2 res/simu1/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:ImageFileName=res/simu1/WMH_Simu_Hs_Mm.svg +withSbs -scaleFactorRectangles=40
+"src/wholeGenomeHomologyMatrix.py res/simu1/genes.Homo.sapiens.list.bz2 res/simu1/genes.Mus.musculus.list.bz2 res/simu1/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:imageFileName=res/simu1/WMH_Simu_Hs_Mm.svg +withSbs -scaleFactorRectangles=40
 )
 for line in "${commandLines[@]}"
 	do
@@ -182,7 +183,7 @@ done
 #	Check integrity of geneTeamsHomologyMatrixViewer #
 ####################################################
 geneTeamsHomologyMatrixViewerCommandLines=(
-"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:ImageFileName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:GeneTeams=res/geneTeamsHomologyMatrixViewer.txt"
+"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:imageFileName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:GeneTeams=res/geneTeamsHomologyMatrixViewer.txt"
 )
 for line in "${geneTeamsHomologyMatrixViewerCommandLines[@]}"
 	do

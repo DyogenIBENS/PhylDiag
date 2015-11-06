@@ -49,10 +49,10 @@ arguments = myTools.checkArgs(
      ("tandemGapMax", int, 0),
      ("filterType", str, 'InFamilies'),
      ("minChromLength", int, 1),
-     ("out:GeneTeams", str, "./res/geneTeamsDrawer.txt"),
+     ("out:geneTeams", str, "./res/geneTeamsDrawer.txt"),
      #TODO ("mode:chromosomesRewrittenInTbs", bool, False),
      #TODO ('convertGenicToTbCoordinates', bool, False),
-     ("out:ImageName", str, "./res/homologyMatrix.svg"),
+     ("out:imageName", str, "./res/homologyMatrix.svg"),
      ('verbose', bool, True)],
     __doc__)
 
@@ -129,10 +129,10 @@ strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix(
     (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),
     genesHomologiesHpSign, genesHomologyGroupsInWindow,
     genesGeneTeamsIndices,
-    outputFileName=arguments["out:ImageName"], maxWidth=100, maxHeight=100 )
+    outputFileName=arguments["out:imageName"], maxWidth=100, maxHeight=100 )
 
 #copy the css style sheet
-dirNameImage = os.path.dirname(arguments["out:ImageName"])
+dirNameImage = os.path.dirname(arguments["out:imageName"])
 dirNameImage = dirNameImage if dirNameImage != "" else "."
 print >> sys.stderr, "cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage)
 os.system("cp %s/styleForHomologyMatrixWithSBs.css %s/" % (os.path.dirname(os.path.realpath(sys.argv[0])), dirNameImage))
@@ -216,7 +216,7 @@ for line in strArray:
 var += ["</svg>\n"]
 var += ["</g>\n", "</svg>\n"]
 
-file = open(arguments["out:ImageName"],'w')
+file = open(arguments["out:imageName"],'w')
 file.writelines(var)
 file.close()
-#os.system("%s %s" % ('firefox',arguments["out:ImageName"]))
+#os.system("%s %s" % ('firefox',arguments["out:imageName"]))
