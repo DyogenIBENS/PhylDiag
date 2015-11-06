@@ -18,7 +18,7 @@
 		*Weighted average
 		*ancestral gene sign is also infered during the merging process of diagonals
 		*explain the output file format, analog of genes.%s/list.bz2
-		*identifyBreakpointsWithinGaps
+		*identifyMicroRearrangements
 		*nonOverlapping sbs
 
 5) Explain better probabilities using the thesis of Hobermann rather than her paper

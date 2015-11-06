@@ -24,9 +24,9 @@ arguments = myTools.checkArgs(
      ('distanceMetric', str, 'CD'),
      ('pThreshold', str, 'None'),
      ('gapMaxMicroInv', str, '0'),
-     ('identifyMonoGenicInversion', bool, False),
-     ('identifyBreakpointsWithinGaps', bool, True),
-     ('overlapMax', str, 'None'),
+     ('identifyMonoGenicInvs', bool, False),
+     ('identifyMicroRearrangements', bool, True),
+     ('truncationMax', str, 'None'),
      ("minChromLength", int, 2),
      ("sameStrand", bool, True),
      ('nbHpsRecommendedGap', int, 2), ('targetProbaRecommendedGap', float, 0.01),
@@ -38,7 +38,7 @@ arguments = myTools.checkArgs(
     __doc__
     )
 
-for (argN, tpe) in [('gapMax', int), ('overlapMax', int), ('gapMaxMicroInv', int), ('pThreshold', float)]:
+for (argN, tpe) in [('gapMax', int), ('truncationMax', int), ('gapMaxMicroInv', int), ('pThreshold', float)]:
     if arguments[argN] == 'None':
         arguments[argN] = None
     else:
@@ -82,9 +82,9 @@ for (sp1, sp2, anc) in allPComps:
         distanceMetric=arguments['distanceMetric'],
         pThreshold=arguments['pThreshold'],
         gapMaxMicroInv=arguments["gapMaxMicroInv"],
-        identifyMonoGenicInversion=arguments["identifyMonoGenicInversion"],
-        identifyBreakpointsWithinGaps=arguments['identifyBreakpointsWithinGaps'],
-        overlapMax=arguments['overlapMax'],
+        identifyMonoGenicInvs=arguments["identifyMonoGenicInvs"],
+        identifyMicroRearrangements=arguments['identifyMicroRearrangements'],
+        truncationMax=arguments['truncationMax'],
         minChromLength=arguments["minChromLength"],
         sameStrand=arguments["sameStrand"],
         nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],

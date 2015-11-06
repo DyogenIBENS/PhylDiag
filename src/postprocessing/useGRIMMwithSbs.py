@@ -1,5 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+# This script wraps the GRIMM v2.01 software
+# http://grimm.ucsd.edu/GRIMM/
+
+# The aim is to use PhylDiag's conserved segments between human and mouse in the X chromosome
+# and use these conserved segments to retrieve reversal scenarios infered from GRIMM
+
 import collections
 import itertools
 from numpy import random

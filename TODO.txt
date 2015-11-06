@@ -1,8 +1,7 @@
 Highly important:
 -----------------
-Update the README to consider 'identifyBreakpointsWithinGaps' and 
+Update the README to consider 'identifyMicroRearrangements' and
 'nonOverlappingSbs' new options in phylDiag.
-
 
 For sbs file names, always mention the two extant species, the ancestor, the
 filtering, the tandemGapMax, the gapMax and the distance metric used.
@@ -138,7 +137,7 @@ TODO:
 		purposes)
 * Check that genes are not overlapping in raw data
 * Use single hps to infer micro-inversion within the function
-		'identifyBreakpointsWithinGaps'of synteny blocks.
+		'identifyMicroRearrangements'of synteny blocks.
 * Allow more cases of micro-rearrangements (not only intra-sb-inversion,
 	  intra-sb-transposition and transpositions)
 * code a viewer of the results of phylDiag.py that take sbFile.sbs as input
@@ -154,6 +153,10 @@ TODO:
   because of the tandemGapMax parameter.
 * Typical usage of PhylDiag with misc.compareMatrix
 * use a standard library to parse options
+
+###########################################
+Change synteny block -> conserved segments
+
 
 ####################
 Update Data Base:

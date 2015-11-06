@@ -379,6 +379,8 @@ ax4.legend()
 fig.suptitle("Distribution of the lengths of synteny blocks\n%s-%s comparison" % (genome1.name, genome2.name))
 plt.show()
 
+
+
 ##################
 # Some tests
 ##################

@@ -1,16 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# PhylDiag v1.02
+
+# PhylDiag version 2.0 (6/11/2015)
 # python 2.7
-# Copyright © 2013 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
+# Copyright © 2015 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
 # mail : hrc@ens.fr or jlucas@ens.fr
-# This is free software, you may copy, modify and/or distribute this work under the terms of the GNU General Public License, version 3 (GPL v3) or later and the CeCiLL v2 license in France
+# Licences GLP v3 and CeCILL v2
 
 import utils.myLightGenomes as myLightGenomes
 import utils.myTools as myTools
 import utils.myGenomesDrawer as myGenomesDrawer
 
-# PhylDiag core algorithm
+# import PhylDiag core algorithm
 import utils.myDiags as myDiags
 
 filterType = list(myDiags.FilterType._keys)
@@ -75,9 +76,9 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      distinguishMonoGenicDiags=kwargs['distinguishMonoGenicDiags'],
                                      pThreshold=kwargs['pThreshold'],
                                      gapMaxMicroInv=kwargs['gapMaxMicroInv'],
-                                     identifyMonoGenicInversion=kwargs["identifyMonoGenicInversion"],
-                                     identifyBreakpointsWithinGaps=kwargs['identifyBreakpointsWithinGaps'],
-                                     overlapMax=kwargs['overlapMax'],
+                                     identifyMonoGenicInvs=kwargs["identifyMonoGenicInvs"],
+                                     identifyMicroRearrangements=kwargs['identifyMicroRearrangements'],
+                                     truncationMax=kwargs['truncationMax'],
                                      sameStrand=kwargs['sameStrand'],
                                      validateImpossToCalc_mThreshold=kwargs['validateImpossToCalc_mThreshold'],
                                      nbHpsRecommendedGap=kwargs['nbHpsRecommendedGap'],

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 # Wrapper for 'homologyteams'
 # http://euler.slu.edu/~goldwasser/homologyteams/
 # Identifying Conserved Gene Clusters in the Presence of Homology Families
