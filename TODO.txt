@@ -3,6 +3,7 @@ Highly important:
 * Update the README to consider 'identifyMicroRearrangements' and 'nonOverlappingSbs' new options in phylDiag.
 * split identify microinvs into 1) identify monoG-Cs and 2) use these monoG-cs to split sbs in the ibwg step
 (newly named imr)
+* update geneTeamsHomologyMatrixViewer to use myGenomesDrawer
 
 For sbs file names, always mention the two extant species, the ancestor, the
 filtering, the tandemGapMax, the gapMax and the distance metric used.

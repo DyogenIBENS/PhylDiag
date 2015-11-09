@@ -10,7 +10,7 @@
 import collections
 
 __doc__ = """
-Wrapper for PhylDiag Library
+Wrapper for the PhylDiag Library in LibsDyogen
 """
 
 import sys
@@ -46,9 +46,7 @@ families = myLightGenomes.Families(arguments["families"])
 statsDiags = []
 
 print >> sys.stderr, "Beginning of the extraction of synteny blocks"
-sbsInPairComp = \
-    myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
-                                        **kwargs)
+sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families, **kwargs)
 print >> sys.stderr, "End of the synteny block research"
 nbOfSbs = sum([len(sbsInPairComp[c1][c2]) for (c1, c2) in sbsInPairComp.keys2d()])
 print >> sys.stderr, "Number of synteny blocks = %s" % nbOfSbs

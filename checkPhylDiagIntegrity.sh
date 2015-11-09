@@ -145,7 +145,7 @@ done
 #	Check integrity of wholeGenomeHomologyMatrix.py #
 #####################################################
 commandLines=(
-"src/wholeGenomeHomologyMatrix.py res/simu1/genes.Homo.sapiens.list.bz2 res/simu1/genes.Mus.musculus.list.bz2 res/simu1/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:imageFileName=res/simu1/WMH_Simu_Hs_Mm.svg +withSbs -scaleFactorRectangles=40
+"src/wholeGenomeHomologyMatrix.py data/genesST.Homo.sapiens.light.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:imageFileName=res/WMH_Hs_Mm.svg +withSbs -scaleFactorRectangles=40"
 )
 for line in "${commandLines[@]}"
 	do
@@ -182,14 +182,14 @@ done
 ####################################################
 #	Check integrity of geneTeamsHomologyMatrixViewer #
 ####################################################
-geneTeamsHomologyMatrixViewerCommandLines=(
-"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:imageFileName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:GeneTeams=res/geneTeamsHomologyMatrixViewer.txt"
-)
-for line in "${geneTeamsHomologyMatrixViewerCommandLines[@]}"
-	do
-		echo -e "${green}${line}${NC}"
-		eval ${line}
-done
+#geneTeamsHomologyMatrixViewerCommandLines=(
+#"src/geneTeamsHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -gapMax=${gm} -out:imageName=res/${Title}_${S1}_${C1}_${S2}_${C2}_gM${gm}_MH.svg -out:geneTeams=res/geneTeamsHomologyMatrixViewer.txt"
+#)
+#for line in "${geneTeamsHomologyMatrixViewerCommandLines[@]}"
+#	do
+#		echo -e "${green}${line}${NC}"
+#		eval ${line}
+#done
 
 
 

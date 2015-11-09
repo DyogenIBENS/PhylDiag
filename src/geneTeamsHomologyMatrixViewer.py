@@ -12,7 +12,7 @@ import utils.myTools as myTools
 import utils.myDiags as myDiags
 import utils.myGeneTeams as myGeneTeams
 
-from PhylDiag.src.analysis import drawHomologyMatrixWithSBs
+import utils.myGenomesDrawer as myGenomesDrawer
 
 __doc__= """
         Show the homology matrix with coloured gene teams.
@@ -87,8 +87,8 @@ filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
 #print >> sys.stderr, "List of (chromosomes, length in genes) of Genome 2, for chr of size > %s " % thresholdChr
 #for (chr2,len2) in [(key2, len(chr2)) for (key2,chr2) in genome2.items() if len(chr2) > thresholdChr]:
 #       print >> sys.stderr, "chr %s has %s genes" % (chr2,len2)
-(chr1,range1) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
-(chr2,range2) = drawHomologyMatrixWithSBs.parseChrRange(arguments["chr2:deb2-fin2"], genome2)
+(chr1,range1) = myGenomesDrawer.parseChrRange(arguments["chr1:deb1-fin1"], genome1)
+(chr2,range2) = myGenomesDrawer.parseChrRange(arguments["chr2:deb2-fin2"], genome2)
 chrom1 = myLightGenomes.LightGenome()
 chrom2 = myLightGenomes.LightGenome()
 chrom1[chr1] = genome1[chr1][range1[0]:range1[1]]
@@ -100,15 +100,16 @@ chrom2[chr2] = genome2[chr2][range2[0]:range2[1]]
 genesStrandsC1 = [s for (_,s) in chrom1[chr1]]
 genesStrandsC2 = [s for (_,s) in chrom2[chr2]]
 
-((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
- genesHomologiesHpSign,
- (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
- genesHomologyGroupsInWindow) =\
-    drawHomologyMatrixWithSBs.genesComputeHomologyInformations(chr1, chr2, chrom1, chrom2,
-                                          families,
-                                          filterType,
-                                          arguments['minChromLength'],
-                                          arguments['tandemGapMax'])
+# ((genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
+#  genesHomologiesHpSign,
+#  (genesNoHomologiesInWindowC1,genesNoHomologiesInWindowC2),
+#  genesHomologyGroupsInWindow) = \
+#     myGenomesDrawer.computeHomologyInformations(chr1, chr2, (genome1, g1_tb, g1_fID, Gtb2GfID1), (g2, g2_tb, g2_fID, Gtb2GfID2))
+#                                                 chr1, chr2, chrom1, chrom2,
+#                                                 families,
+#                                                 filterType,
+#                                                 arguments['minChromLength'],
+#                                                 arguments['tandemGapMax'])
 
 # Search gene teams
 #FIXME : calculate gene teams before, on the whole chromosome, not the ROI specified by the user ranges
@@ -121,9 +122,12 @@ listOfGeneTeams =\
                                                  filterType=filterType,
                                                  minChromLength=arguments["minChromLength"],
                                                  verbose=arguments['verbose']))
+
 genesGeneTeamsIndices = genesComputeGeneTeamsIndices(listOfGeneTeams)
 
-strArray = drawHomologyMatrixWithSBs.drawHomologyMatrix(
+myGenomesDrawer.drawHomologyMatrix()
+
+strArray = myGenomesDrawer.drawHomologyMatrix(
     (range1, range2), (genesStrandsC1, genesStrandsC2),
     (genesRemovedDuringFilteringC1, genesRemovedDuringFilteringC2),
     (genesNoHomologiesInWindowC1, genesNoHomologiesInWindowC2),

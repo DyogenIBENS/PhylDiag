@@ -60,6 +60,8 @@ sudo apt-get install git
 # Install cython (not necessary)
 # http://docs.cython.org/src/quickstart/install.html
 sudo apt-get install cython
+# Install numpy and scipy (not necessary, just for analysis)
+sudo apt-get install python-numpy python-scipy
 
 # Choose a path for the installation (here it is /home/<user>/Libs)
 PATH_PHYLDIAG="/home/${USER}/Libs"
