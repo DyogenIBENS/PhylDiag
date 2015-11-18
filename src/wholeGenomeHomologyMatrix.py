@@ -20,7 +20,8 @@ arguments = myTools.checkArgs(
          ('withSbs', bool, True),
          ('chromosomesRewrittenInTbs', bool, False),
          ('out:imageFileName', str, 'res/image.svg'),
-         ('scaleFactorRectangles', float, 10.0)],
+         ('scaleFactorRectangles', float, 10.0),
+         ('fillCompsWithSbs', bool, False)],
         __doc__)
 
 kwargs = myDiags.defaultKwargsPhylDiag(arguments=arguments)
@@ -40,14 +41,15 @@ if arguments['withSbs']:
                                                         **kwargs)
 
 WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genome1, genome2, families,
-                                                  inSbsInPairComp=sbsInPairComp,
-                                                  filterType=kwargs['filterType'],
-                                                  minChromLength=kwargs['minChromLength'],
-                                                  tandemGapMax=kwargs['tandemGapMax'],
-                                                  scaleFactorRectangles=arguments['scaleFactorRectangles'],
-                                                  outputFileName=None,
-                                                  maxWidth=100,
-                                                  maxHeight=100)
+                                                      inSbsInPairComp=sbsInPairComp,
+                                                      filterType=kwargs['filterType'],
+                                                      minChromLength=kwargs['minChromLength'],
+                                                      tandemGapMax=kwargs['tandemGapMax'],
+                                                      scaleFactorRectangles=arguments['scaleFactorRectangles'],
+                                                      outputFileName=None,
+                                                      maxWidth=100,
+                                                      maxHeight=100,
+                                                      fillCompsWithSbs=arguments['fillCompsWithSbs'])
 
 if sbsInPairComp:
     nbSbs = len(sbsInPairComp.intoList())

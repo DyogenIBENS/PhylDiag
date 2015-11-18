@@ -68,36 +68,6 @@ def fit_exp_linear(t, y, C=0, removeNullValues=True, maxT=None, doPlot=True):
     A = np.exp(A_log)
     return A, K
 
-def lengthProjectionOnGenome(rankGenome, sb, c, genome, correctLens=True, meanInterGeneLen=0.0):
-    lGeneCoord = []
-    sblX = sb.l1 if rankGenome == 1 else sb.l2
-    for tbX in sblX:
-        for gIdx in tbX:
-            #g1Pos = genome1.getPosition([g1n]).pop()
-            #chromosome = g1Pos.chromosome
-            #assert c1 == chromosome
-            #index = g1Pos.index
-            c = myGenomes.commonChrName(c)
-            g = genome.lstGenes[c][gIdx]
-            lGeneCoord.extend([g.beginning, g.end])
-    minOnG = min(lGeneCoord)
-    maxOnG = max(lGeneCoord)
-    lengthG = maxOnG - minOnG
-    if correctLens:
-        # see Nadeau & Taylor 1984 815-816
-        n = len(sblX)
-        r = lengthG
-        if n >= 2:
-            # this consider the local density of markers
-            m = r * float(n+1)/float(n-1)
-        elif n == 1:
-            # add for each extremity (twice), the mean intergene length / 2
-            m = r + 2 * float(meanInterGeneLen) / 2
-        else:
-            raise ValueError('A sb should at least contain one marker')
-        lengthG = m
-    return lengthG
-
 def plotDensityFunction(ax, lSbsLengths, bins, binwidth, minSbLength):
     print >> sys.stderr, '\n'.join([str(lSbsLengths), str(bins), str(binwidth), str(minSbLength)])
     n, _, patches = ax.hist(lSbsLengths, bins=bins, histtype='bar')
@@ -211,35 +181,7 @@ def plotDensityFunction2(ax, lSbsLengths, bins, binwidth, minSbLength):
     # ax.set_xlabel("Lengths of synteny blocks in %s\n$%s \leq$ length $\leq %s$" % (arguments['lengthUnit'], minSbLength, str_maxSbLength))
     ax.legend()
 
-def computeMeanInterHomologLen(genome, setConsideredGeneNames):
-    assert isinstance(genome, myGenomes.Genome)
-    chromosomesMeanInterConsideredGeneLen = {}
-    lGeneCoord = []
-    totalLenChrom = 0
-    totalLenConsideredGenes = 0
-    for c in genome.chrList[myGenomes.ContigType.Chromosome]:
-        lenConsideredGenes = 0
-        nbConsideredGenes = 0
-        for g in genome.lstGenes[c]:
-            assert g.beginning < g.end
-            lGeneCoord.extend([g.beginning, g.end])
-            assert len(g.names) == 1, g.names
-            if g.names[0] in setConsideredGeneNames:
-                lenConsideredGenes += g.end - g.beginning
-                nbConsideredGenes += 1
-        # convert in Mb
-        minC = float(min(lGeneCoord)) / 1000000
-        maxC = float(max(lGeneCoord)) / 1000000
-        lenChrom = maxC - minC
-        print >> sys.stderr, c
-        chromosomesMeanInterConsideredGeneLen[str(c)] = float(lenChrom) / lenConsideredGenes if lenConsideredGenes > 0 else float(lenChrom)
-        totalLenChrom += lenChrom if lenChrom > 0 else None
-        totalLenConsideredGenes += lenConsideredGenes
-    if totalLenChrom:
-        densityInConsideredGenes = totalLenConsideredGenes / totalLenChrom
-    else:
-        densityInConsideredGenes = None
-    return (chromosomesMeanInterConsideredGeneLen, densityInConsideredGenes)
+
 
 # Arguments
 modesOrthos = list(myDiags.FilterType._keys)
@@ -275,40 +217,9 @@ genome2 = myGenomes.Genome(arguments["genome2"])
 genome2L = myLightGenomes.LightGenome(genome2)
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "nb of Chr = ", len(genome2L)
-sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'], genome1=genome1L, genome2=genome2L)
-
-# preprocess data
-# record all mapped homologs
-setOfMappedHomologs1 = set()
-setOfMappedHomologs2 = set()
-for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
-    sblX = sb.l1
-    for tbX in sblX:
-        for gIdx in tbX:
-            g = genome1L[c1][gIdx]
-            setOfMappedHomologs1.add(g.n)
-    sblX = sb.l2
-    for tbX in sblX:
-        for gIdx in tbX:
-            g = genome2L[c2][gIdx]
-            setOfMappedHomologs2.add(g.n)
-lSbsLengths = []
-# compute sb lengths
-if arguments['lengthUnit'] == 'gene':
-    for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
-        nbAncGenes = len(sb.la)
-        lSbsLengths.append(nbAncGenes)
-elif arguments['lengthUnit'] == 'Mb':
-    (meanInterHomologLenInChr1, densityInG1) = computeMeanInterHomologLen(genome1, setOfMappedHomologs1)
-    (meanInterHomologLenInChr2, densityInG2) = computeMeanInterHomologLen(genome2, setOfMappedHomologs2)
-    for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
-        lengthG1 = lengthProjectionOnGenome(1, sb, c1, genome1, correctLens=True, meanInterGeneLen=meanInterHomologLenInChr1[c1])
-        lengthG2 = lengthProjectionOnGenome(2, sb, c2, genome2, correctLens=True, meanInterGeneLen=meanInterHomologLenInChr2[c2])
-        averageSbLength = float(lengthG1 + lengthG2) / 2.0
-        # in megabases
-        averageSbLength = averageSbLength / 1000000
-        lSbsLengths.append(averageSbLength)
-lSbsLengths.sort()
+sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'], genome1=genome1L, genome2=genome2L, withIds=False)
+sbId2Length = myDiags.getSbsLengths(genome1, genome2, sbsInPairComp, lengthUnit='Mb')
+lSbsLengths = sorted(sbId2Length.values())
 #print >> sys.stderr, lSbsLengths
 
 # remove lengths not in [minSbLength, maxSbLength]

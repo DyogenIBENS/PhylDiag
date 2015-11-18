@@ -43,6 +43,7 @@ arguments = myTools.checkArgs(
      ("out:imageFileName", str, "./homologyMatrix.svg"),
      ("considerAllPairComps", bool, True),
      ('switchOnDirectView', bool, False),
+     ('withIdsOfSbs', bool, True),
      ('verbose', bool, True)],
     __doc__)
 
@@ -61,7 +62,11 @@ sbsInPairComp = None
 if arguments['withSbs']:
     if arguments['in:syntenyBlocks'] != 'None':
         # load precomputed sbs if any
-        sbsInPairComp = myDiags.parseSbsFile(arguments['in:syntenyBlocks'], genome1=genome1, genome2=genome2)
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:syntenyBlocks'], genome1=genome1, genome2=genome2, withIds=arguments['withIdsOfSbs'])
+        if arguments['withIdsOfSbs']:
+            assert isinstance(sbsInPairComp, myTools.OrderedDict2dOfLists)
+        else:
+            assert isinstance(sbsInPairComp, myTools.Dict2d)
     else:
         sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
                                                             **kwargs)

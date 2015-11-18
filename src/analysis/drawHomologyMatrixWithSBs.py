@@ -362,9 +362,9 @@ def test(arguments):
         height = 4 * lengthGene
         scene = svgDrw.Scene(name='chromosome', width=width, height=height)
         chromosomeMouseItems = myGenomesDrawer.drawLightGenome(genome_Mouse, families,
-                                                               familyName2color=familyName2color, lengthGene=lengthGene)['5']
+                                                               familyName2color=familyName2color, lengthGenes=lengthGene)['5']
         chromosomeChickenItems = myGenomesDrawer.drawLightGenome(genome_Chicken, families,
-                                                                 familyName2color=familyName2color, lengthGene=lengthGene)['4']
+                                                                 familyName2color=familyName2color, lengthGenes=lengthGene)['4']
         for item in chromosomeMouseItems:
             item.start = Point(item.start.x, item.start.y + lengthGene)
             item.end = Point(item.end.x, item.end.y + lengthGene)
@@ -435,7 +435,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
@@ -482,7 +482,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
@@ -551,7 +551,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
@@ -622,7 +622,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
@@ -631,7 +631,7 @@ def test(arguments):
             sbsItems = myGenomesDrawer.drawLightGenome(sbS,
                                                        families=families,
                                                        familyName2color=familyName2color,
-                                                       lengthGene=sizeGene,
+                                                       lengthGenes=sizeGene,
                                                        homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             sbssItems[sbsName] = sbsItems
 
@@ -709,7 +709,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems1[genomeName] = genomeItems
 
@@ -718,7 +718,7 @@ def test(arguments):
             sbsItems = myGenomesDrawer.drawLightGenome(sbS,
                                                        families=families,
                                                        familyName2color=familyName2color,
-                                                       lengthGene=sizeGene,
+                                                       lengthGenes=sizeGene,
                                                        homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             sbssItems1[sbsName] = sbsItems
 
@@ -727,7 +727,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems2[genomeName] = genomeItems
 
@@ -736,7 +736,7 @@ def test(arguments):
             sbsItems = myGenomesDrawer.drawLightGenome(sbS,
                                                        families=families,
                                                        familyName2color=familyName2color,
-                                                       lengthGene=sizeGene,
+                                                       lengthGenes=sizeGene,
                                                        homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             sbssItems2[sbsName] = sbsItems
 
@@ -825,7 +825,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
@@ -896,7 +896,7 @@ def test(arguments):
             genomeItems = myGenomesDrawer.drawLightGenome(genome,
                                                           families=families,
                                                           familyName2color=familyName2color,
-                                                          lengthGene=sizeGene,
+                                                          lengthGenes=sizeGene,
                                                           homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 

@@ -38,7 +38,9 @@ from numpy import random
 import sys
 import os
 import subprocess
-from utils import myTools, myDiags, myLightGenomes
+from utils import myTools, myDiags, myLightGenomes, myGenomes, myGenomesDrawer, mySvgDrawer, myIntervals
+import bidict
+from utils. mySvgDrawer import Point as Point
 
 GENOMENAME = 0
 
@@ -62,13 +64,17 @@ def projectSbsOnGenome(listOfSbsInCompC1C2, cx):
             listSbsInCx[i] = (id, sb, s)
     return listSbsInCx
 
-def rewriteGenomesIntoSbs(sbsInPairComp, checkNoOverlap=True):
-    assert isinstance(sbsInPairComp, myTools.Dict2d)
+def rewriteGenomesIntoSbs(sbsInPairComp, checkNoOverlap=True, inputWithIds=True):
 
-    # give ids to each sbs
-    sbsInPairCompWithIds = myTools.OrderedDict2dOfLists()
-    for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
-        sbsInPairCompWithIds.addToLocation((c1, c2), sb)
+    if inputWithIds == False:
+        # give ids to each sbs
+        assert isinstance(sbsInPairComp, myTools.Dict2d)
+        sbsInPairCompWithIds = myTools.OrderedDict2dOfLists()
+        for ((c1, c2), sb) in sbsInPairComp.iteritems2d():
+            sbsInPairCompWithIds.addToLocation((c1, c2), sb)
+    else:
+        assert isinstance(sbsInPairComp, myTools.OrderedDict2dOfLists)
+        sbsInPairCompWithIds = sbsInPairComp
 
     genome1 = myLightGenomes.LightGenome()
     genome2 = myLightGenomes.LightGenome()
@@ -128,15 +134,33 @@ def main():
     """use synteny blocks of PhylDiag to find the minimum scenario of rearrangements from GRIMM
     """
     arguments = myTools.checkArgs([('syntenyBlocks', file), ('genome1', file), ('genome2', file)],
-                                  [('outPath', str, './res'), ('pathToGRIMM', str, '/home/jlucas/Libs/GRIMM-2.01/grimm')],
+                                  [('outPath', str, './res'),
+                                   ('pathToGRIMM', str, '/home/jlucas/Libs/GRIMM-2.01/grimm'),
+                                   ('renameSbsByOrder', bool, True)],
                                   __doc__)
     genome1 = myLightGenomes.LightGenome(arguments['genome1'], withDict=True)
     genome2 = myLightGenomes.LightGenome(arguments['genome2'], withDict=True)
-    sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'],
+    sbsInPairCompWithIds = myDiags.parseSbsFile(arguments['syntenyBlocks'],
                                          genome1=genome1,
-                                         genome2=genome2)
+                                         genome2=genome2,
+                                         withIds=True)
+    # rename : id=1 (longest sb), .....
+    if arguments['renameSbsByOrder']:
+        new_sbsInPairCompWithIds = myTools.OrderedDict2dOfLists()
+        newId = 1
+        for (id, (k1, k2), sb) in sorted([(id, (k1, k2), sb) for (id, (k1, k2), sb) in sbsInPairCompWithIds.iterByOrderedIds()], key=lambda x: len(x[2].la), reverse=True):
+            new_sbsInPairCompWithIds.addToLocationWithId((k1, k2), sb, newId)
+            newId += 1
+        sbsInPairCompWithIds = new_sbsInPairCompWithIds
+        with open(arguments['outPath'] + '/syntenyBlocksNewNames.txt', 'w') as f:
+            myDiags.printSbsFile(sbsInPairCompWithIds, genome1, genome2, stream=f)
 
-    (genome1InSbs, genome2InSbs) = rewriteGenomesIntoSbs(sbsInPairComp)
+    # get the lengths of sbs
+    genome1H = myGenomes.Genome(arguments['genome1'])
+    genome2H = myGenomes.Genome(arguments['genome2'])
+    sbId2Length = myDiags.getSbsLengths(genome1H, genome2H, sbsInPairCompWithIds, lengthUnit='Mb')
+
+    (genome1InSbs, genome2InSbs) = rewriteGenomesIntoSbs(sbsInPairCompWithIds)
 
     genome1InSbs.name = genome1.name
     genome2InSbs.name = genome2.name
@@ -152,37 +176,189 @@ def main():
     # reduce genomes to only chromosomes X
     genome1WithOnlyX = myLightGenomes.LightGenome()
     genome2WithOnlyX = myLightGenomes.LightGenome()
+    genome1WithOnlyX.name = genome1.name
+    genome2WithOnlyX.name = genome2.name
     genome1WithOnlyX['X'] = genome1InSbs['X']
     genome2WithOnlyX['X'] = genome2InSbs['X']
     setGeneNames = genome1WithOnlyX.getGeneNames() & genome2WithOnlyX.getGeneNames()
     genome1WithOnlyX.removeGenes(genome1WithOnlyX.getGeneNames() - setGeneNames)
     genome1WithOnlyX.removeGenes(genome2WithOnlyX.getGeneNames() - setGeneNames)
-    dictOldGeneNameToNewGeneName = {}
-    cptGeneName = 1
-    for gn in setGeneNames:
-        dictOldGeneNameToNewGeneName[gn] = str(cptGeneName)
-        cptGeneName += 1
-    for i, g in enumerate(genome1WithOnlyX['X']):
-        genome1WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
-    for i, g in enumerate(genome2WithOnlyX['X']):
-        genome2WithOnlyX['X'][i] = myLightGenomes.OGene(dictOldGeneNameToNewGeneName[g.n], g.s)
+
+    # renaming should be done because of internal limitations of GRIMM (that do not want gene names to be superior than
+    # the total number of genes.
+    oldGn2newGn = bidict.bidict()
+    if max([int(gn) for (gn, gs) in genome1WithOnlyX['X']]) > len(genome1WithOnlyX['X']):
+        cptGeneName = 1
+        for gn in setGeneNames:
+            oldGn2newGn[gn] = str(cptGeneName)
+            cptGeneName += 1
+        for i, g in enumerate(genome1WithOnlyX['X']):
+            genome1WithOnlyX['X'][i] = myLightGenomes.OGene(oldGn2newGn[g.n], g.s)
+        for i, g in enumerate(genome2WithOnlyX['X']):
+            genome2WithOnlyX['X'][i] = myLightGenomes.OGene(oldGn2newGn[g.n], g.s)
+    else:
+        for gn in setGeneNames:
+            oldGn2newGn[gn] = gn
 
     pathToSyntenyBlocksForGrimm = arguments['outPath'] + '/syntenyBlocksForGRIMM.txt'
     with open(pathToSyntenyBlocksForGrimm, 'w') as f:
         printGenomeInto_GRIMM_format(genome1WithOnlyX, stream=f)
         printGenomeInto_GRIMM_format(genome2WithOnlyX, stream=f)
+    # lengths in bp of all conserved segments
+    lengthOfCS = {}
 
     # wrap the grimm executable
     pathToGrimm = arguments['pathToGRIMM']
     if os.path.isfile(pathToGrimm):
-        bashComand = pathToGrimm + ' -f ' + pathToSyntenyBlocksForGrimm
+        options = ' -v -L'
+        bashComand = pathToGrimm + options +' -f ' + pathToSyntenyBlocksForGrimm
         subProcStdin = None  #  subprocess.PIPE, if you want it
         subProcStderr = None  #  subprocess.PIPE, if you want it
         proc = subprocess.Popen(bashComand, shell=True, stdin=subProcStdin, stdout=subprocess.PIPE, stderr=subProcStderr)
         # returns stdout and stderr
-        stdout, subProcStderr = proc.communicate(subProcStdin)
+        grimmStdOut, subProcStderr = proc.communicate(subProcStdin)
         # proc.returncode, might be interesting too
-        print >> sys.stdout, stdout
+        # stdout is a str
+        # Use this line to output the output of GRIMM
+        with open('res/grimmOutputFile.txt', 'w') as grimmOutputFile:
+            print >> grimmOutputFile, grimmStdOut
+
+        approx_equal = lambda a, b, t: abs(a - b) < t
+        stepWasOnPrevLine = False
+        # print >> sys.stderr, [oldGn2newGn.inv[gn] for (gn, s) in genome1WithOnlyX['X']]
+        # print >> sys.stderr, sbId2Length.keys()
+        totalLength = sum([sbId2Length[int(oldGn2newGn.inv[gn])] for (gn, s) in genome1WithOnlyX['X']])
+        import libs.myEvents as myEvents
+        for (n, s) in genome1WithOnlyX['X']:
+            assert s == +1 or s == -1
+
+        seevolutionInputFile = open('res/grimmOutputFile.txt', 'w')
+        # input xml file for seevolution
+        print >> seevolutionInputFile, '<?xml version="1.0" encoding="ISO-8859-1"?>'
+        print >> seevolutionInputFile, '<genomemutations id="1">'
+        print >> seevolutionInputFile, '<organism id="Organism">'
+        # the small +1 is here to avoid bound error in seevolution
+        # only the circular version works
+        print >> seevolutionInputFile, '<chromosome id="%s" circular="true" length="%s"/>' % ('X', int(round(totalLength*1000, 0)))
+        print >> seevolutionInputFile, '<speciation name="ancestor">'
+
+        cptStep = 0
+        scenarioItems = []
+        halfIntergeneLength = 1.5
+        interLineFactor = 6.0
+        import libs.myBreakpointsAnalyser
+        bra = libs.myBreakpointsAnalyser.BreakpointsAnalyser(genome1WithOnlyX)
+        nbBreakpoints = 0
+        nbBreakpointReuse = 0
+        nbBreakpointsAtChromExtremity = 0
+        setBreakpointFlanks = set([])
+        for line in grimmStdOut.split('\n'):
+            print >> sys.stderr, line
+            if 'Step' in line:
+                stepWasOnPrevLine = True
+                if '(Source)' in line:
+                    genome1WithOnlyXWithOldNames = myLightGenomes.LightGenome(genome1WithOnlyX)
+                    genome1WithOnlyXWithOldNames['X'] = [myLightGenomes.OGene(oldGn2newGn.inv[gn], s) for (gn, s) in genome1WithOnlyX['X']]
+                    scenarioItems += myGenomesDrawer.drawLightGenome(genome1WithOnlyXWithOldNames,
+                                                                  lengthGenes={'X': [sbId2Length[int(gn)] for (gn, s) in genome1WithOnlyXWithOldNames['X']]},
+                                                                  halfIntergeneLength=halfIntergeneLength)['X']
+                    pass
+                else:
+                    linesBracketsL = line.split('[')
+                    linesGBL = line.split('gene ')
+                    # leftGn: leftmost gene on the left of the inverted segment
+                    (leftGn, rightGn) = (linesBracketsL[1].split(']')[0],  linesBracketsL[2].split(']')[0])
+                    # rightGn: rightmost gene on the right of the inverted segment
+                    (leftGn, rightGn) = (leftGn.replace('-', ''), rightGn.replace('-', ''))
+                    # to get the former id:
+                    # leftGn_old = oldGn2newGn.inv[leftGn]
+                    # indexes start at 0
+                    (leftGidx, rightGidx) = (linesGBL[1].split(' [')[0],  linesGBL[2].split(' [')[0])
+                    (leftGidx, rightGidx) = (int(leftGidx), int(rightGidx))
+                    # print >> sys.stderr, '(leftGn, rightGn)= (%s, %s)' % (leftGn, rightGn)
+                    assert genome1WithOnlyX['X'][leftGidx].n == leftGn, '%s == %s' % (genome1WithOnlyX['X'][leftGidx].n, leftGn)
+                    assert genome1WithOnlyX['X'][rightGidx].n == rightGn, '%s == %s' % (genome1WithOnlyX['X'][rightGidx].n, rightGn)
+
+                    leftLength = sum([sbId2Length[int(oldGn2newGn.inv[gn])] for (gn, s) in genome1WithOnlyX['X'][:leftGidx]])
+                    invLength = sum([sbId2Length[int(oldGn2newGn.inv[gn])] for (gn, s) in genome1WithOnlyX['X'][leftGidx:rightGidx+1]])
+                    rightLength = sum([sbId2Length[int(oldGn2newGn.inv[gn])] for (gn, s) in genome1WithOnlyX['X'][rightGidx+1:]])
+                    assert approx_equal(leftLength + invLength + rightLength, totalLength, 0.01)
+
+                    # because of seevolution
+                    if leftGidx == rightGidx:
+                        invLength = 0
+                    print >> seevolutionInputFile, "<inversion left=\"%s\" right=\"%s\" chromosome=\"%s\"/>" % (int(round(leftLength*1000, 0)),
+                                                                                                      int(round(leftLength*1000, 0)) + int(round(invLength*1000,0)),
+                                                                                                      'X')
+                    cptStep += 1
+                    # analyse breakpoints before performing them
+                    nbBreakpoints += 2
+                    if leftGidx == 0:
+                        nbBreakpointsAtChromExtremity += 1
+                    else:
+                        assert leftGidx < len(genome1WithOnlyX['X'])
+                        leftBreakpointFlanks = myIntervals.geneExtremitiesFromIntergeneInChrom(leftGidx, genome1WithOnlyX['X'])
+                        print >> sys.stderr, 'left breakpoint = %s' % leftBreakpointFlanks
+                        assert len(leftBreakpointFlanks) == 2
+                        if len(leftBreakpointFlanks & setBreakpointFlanks) > 0:
+                            nbBreakpointReuse += 1
+                    if rightGidx == len(genome1WithOnlyX['X']) - 1:
+                        nbBreakpointsAtChromExtremity += 1
+                    else:
+                        assert rightGidx > 0
+                        rightBreakpointFlanks = myIntervals.geneExtremitiesFromIntergeneInChrom(rightGidx + 1, genome1WithOnlyX['X'])
+                        print >> sys.stderr, 'right breakpoint = %s' % rightBreakpointFlanks
+                        assert len(rightBreakpointFlanks) == 2
+                        if len(rightBreakpointFlanks & setBreakpointFlanks) > 0:
+                            nbBreakpointReuse += 1
+                    setBreakpointFlanks |= leftBreakpointFlanks | rightBreakpointFlanks
+
+                    bra.recordBreakpoint(('X', leftGidx), genome1WithOnlyX)
+                    bra.recordBreakpoint(('X', rightGidx + 1), genome1WithOnlyX)
+                    # perform the inversions
+                    genome1WithOnlyX = myEvents.performInversion(genome1WithOnlyX, ('X', leftGidx, rightGidx + 1))
+                    bra.recordNewAdjacencyFromNewIntergene(genome1WithOnlyX, ('X', leftGidx))
+                    bra.recordNewAdjacencyFromNewIntergene(genome1WithOnlyX, ('X', rightGidx + 1))
+
+                    # change cs names
+                    genome1WithOnlyXWithOldNames = myLightGenomes.LightGenome(genome1WithOnlyX)
+                    genome1WithOnlyXWithOldNames['X'] = [myLightGenomes.OGene(oldGn2newGn.inv[gn], s) for (gn, s) in genome1WithOnlyX['X']]
+                    genomeItems = myGenomesDrawer.drawLightGenome(genome1WithOnlyXWithOldNames,
+                                                                  lengthGenes={'X': [sbId2Length[int(gn)] for (gn, s) in genome1WithOnlyXWithOldNames['X']]},
+                                                                  halfIntergeneLength=halfIntergeneLength)
+                    scenarioItems += mySvgDrawer.tanslateItems(genomeItems['X'], (0, interLineFactor * cptStep))
+                    # 0.1 is the halfintergene length
+                    leftLengthGraph = sum([(sbId2Length[int(oldGn2newGn.inv[gn])] + 2 * halfIntergeneLength) for (gn, s) in genome1WithOnlyX['X'][:leftGidx]])
+                    invLengthGraph = sum([(sbId2Length[int(oldGn2newGn.inv[gn])] + 2 * halfIntergeneLength) for (gn, s) in genome1WithOnlyX['X'][leftGidx:rightGidx+1]])
+                    rightLengthGraph = leftLengthGraph + invLengthGraph
+                    leftLengthGraph -= halfIntergeneLength / 2.0
+                    rightLengthGraph -= halfIntergeneLength / 2.0
+                    # add lines to visualise the inversion
+                    scenarioItems.append(mySvgDrawer.Line(Point(leftLengthGraph, interLineFactor * (cptStep-1)), Point(rightLengthGraph, interLineFactor * cptStep), width=0.2))
+                    scenarioItems.append(mySvgDrawer.Line(Point(rightLengthGraph, interLineFactor * (cptStep-1)), Point(leftLengthGraph, interLineFactor * cptStep), width=0.2))
+                    # print >> sys.stderr, [('-' if s == -1 else '') + oldGn2newGn.inv[n] for (n, s) in genome1WithOnlyX['X']]
+            elif stepWasOnPrevLine:
+                stepWasOnPrevLine = False
+            else:
+                stepWasOnPrevLine = False
+
+        # TODO: solve this, the adjacency 1 - 20 is never broken !!!!!!!
+
+        print >> sys.stderr, 'nb breakpoints = %s' % nbBreakpoints
+        print >> sys.stderr, 'nb breakpoints reuse = %s' % nbBreakpointReuse
+        print >> sys.stderr, 'nb breakpoints at chromosomes extremities = %s' % nbBreakpointsAtChromExtremity
+
+        print >> sys.stderr, '############# bra statistics ##########'
+        bra.printStats()
+
+        scenarioItems = mySvgDrawer.zItems(scenarioItems, mySvgDrawer.Gene)
+        scene = mySvgDrawer.Scene(name='chromosome', width=100, height=100)
+        for item in scenarioItems:
+            scene.add(item)
+        scene.write_svg(filename='svgScenario.svg')
+
+        print >> seevolutionInputFile, '</speciation>\n</organism>\n</genomemutations>'
+        seevolutionInputFile.close()
     else:
         raise ValueError('The path to the executable file of grimm is incorrect')
 
