@@ -21,7 +21,9 @@ arguments = myTools.checkArgs(
          ('chromosomesRewrittenInTbs', bool, False),
          ('out:imageFileName', str, 'res/image.svg'),
          ('scaleFactorRectangles', float, 10.0),
-         ('fillCompsWithSbs', bool, False)],
+         ('fillCompsWithSbs', bool, False),
+         ('in:syntenyBlocks', str, 'res/syntenyBlocks.txt'),
+         ('withIdsOfSbs', bool, False)],
         __doc__)
 
 kwargs = myDiags.defaultKwargsPhylDiag(arguments=arguments)
@@ -37,8 +39,16 @@ if arguments['removeUnofficialChromosomes']:
 
 sbsInPairComp = None
 if arguments['withSbs']:
-    sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
-                                                        **kwargs)
+    if arguments['in:syntenyBlocks'] != 'None':
+        # load precomputed sbs if any
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:syntenyBlocks'], genome1=genome1, genome2=genome2,
+                                             withIds=arguments['withIdsOfSbs'])
+        if arguments['withIdsOfSbs']:
+            assert isinstance(sbsInPairComp, myTools.OrderedDict2dOfLists)
+        else:
+            assert isinstance(sbsInPairComp, myTools.Dict2d)
+    else:
+        sbsInPairComp = None
 
 WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genome1, genome2, families,
                                                       inSbsInPairComp=sbsInPairComp,

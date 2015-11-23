@@ -58,8 +58,6 @@ for anc in phylTree.listAncestr:
         l1 = phylTree.species[f1]
         l2 = phylTree.species[f2]
         for (sp1, sp2) in itertools.product(l1, l2):
-            sp1 = sp1.replace(' ', '.')
-            sp2 = sp2.replace(' ', '.')
             setOfExtantSpecies = setOfExtantSpecies | {sp1, sp2}
             allPComps.append((sp1, sp2, anc))
 nbExtantSpecies = len(setOfExtantSpecies)

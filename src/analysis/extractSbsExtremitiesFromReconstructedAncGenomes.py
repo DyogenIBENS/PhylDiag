@@ -60,7 +60,7 @@ ancGenes = myLightGenomes.Families(arguments['ancGenes'])
 OGene = myLightGenomes.OGene
 allSbsExtremities = {}
 for sp in setOfExtantSpecies:
-    extantGenome = myLightGenomes.LightGenome(arguments['extantGenomes'] % str(sp).replace(' ', '.'))
+    extantGenome = myLightGenomes.LightGenome(arguments['extantGenomes'] % str(sp))
     allSbsExtremities[sp] = set()
     sbsInPairComp = myDiags.extractSbsInPairCompGenomes(ancGenome, extantGenome, ancGenes,
         filterType=filterType,

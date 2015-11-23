@@ -145,7 +145,7 @@ done
 #	Check integrity of wholeGenomeHomologyMatrix.py #
 #####################################################
 commandLines=(
-"src/wholeGenomeHomologyMatrix.py data/genesST.Homo.sapiens.light.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:imageFileName=res/WMH_Hs_Mm.svg +withSbs -scaleFactorRectangles=40"
+"src/wholeGenomeHomologyMatrix.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -out:imageFileName=res/WMH_Hs_Mm.svg +withSbs -scaleFactorRectangles=40"
 )
 for line in "${commandLines[@]}"
 	do

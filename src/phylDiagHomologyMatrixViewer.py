@@ -43,7 +43,7 @@ arguments = myTools.checkArgs(
      ("out:imageFileName", str, "./homologyMatrix.svg"),
      ("considerAllPairComps", bool, True),
      ('switchOnDirectView', bool, False),
-     ('withIdsOfSbs', bool, True),
+     ('withIdsOfSbs', bool, False),
      ('verbose', bool, True)],
     __doc__)
 
@@ -62,15 +62,16 @@ sbsInPairComp = None
 if arguments['withSbs']:
     if arguments['in:syntenyBlocks'] != 'None':
         # load precomputed sbs if any
-        sbsInPairComp = myDiags.parseSbsFile(arguments['in:syntenyBlocks'], genome1=genome1, genome2=genome2, withIds=arguments['withIdsOfSbs'])
+        sbsInPairComp = myDiags.parseSbsFile(arguments['in:syntenyBlocks'], genome1=genome1, genome2=genome2,
+                                             withIds=arguments['withIdsOfSbs'])
         if arguments['withIdsOfSbs']:
             assert isinstance(sbsInPairComp, myTools.OrderedDict2dOfLists)
         else:
             assert isinstance(sbsInPairComp, myTools.Dict2d)
     else:
-        sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
-                                                            **kwargs)
-
+        sbsInPairComp = None
+        #myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
+        #                                                    **kwargs)
 myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1:deb1-fin1'], arguments['chr2:deb2-fin2'],
                                      convertGenicToTbCoordinates=arguments['convertGenicToTbCoordinates'],
                                      filterType=kwargs['filterType'],
@@ -97,4 +98,5 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      inSbsInPairComp=sbsInPairComp,
                                      outSyntenyBlocksFileName=arguments['out:syntenyBlocks'],
                                      outImageFileName=arguments['out:imageFileName'],
+                                     nbCaractersForGeneNamesInSymlbols=0,
                                      verbose=arguments['verbose'])

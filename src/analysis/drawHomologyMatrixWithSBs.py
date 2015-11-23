@@ -353,7 +353,7 @@ def test(arguments):
         families = newFamilies
 
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
@@ -361,10 +361,10 @@ def test(arguments):
         width = max(len(genome_Mouse['5']), len(genome_Chicken['4'])) + 2 * lengthGene
         height = 4 * lengthGene
         scene = svgDrw.Scene(name='chromosome', width=width, height=height)
-        chromosomeMouseItems = myGenomesDrawer.drawLightGenome(genome_Mouse, families,
-                                                               familyName2color=familyName2color, lengthGenes=lengthGene)['5']
-        chromosomeChickenItems = myGenomesDrawer.drawLightGenome(genome_Chicken, families,
-                                                                 familyName2color=familyName2color, lengthGenes=lengthGene)['4']
+        chromosomeMouseItems = myGenomesDrawer.svgItemsLightGenome(genome_Mouse, families,
+                                                                   name2color=familyName2color, lengthGenes=lengthGene)['5']
+        chromosomeChickenItems = myGenomesDrawer.svgItemsLightGenome(genome_Chicken, families,
+                                                                     name2color=familyName2color, lengthGenes=lengthGene)['4']
         for item in chromosomeMouseItems:
             item.start = Point(item.start.x, item.start.y + lengthGene)
             item.end = Point(item.end.x, item.end.y + lengthGene)
@@ -426,17 +426,17 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems = collections.OrderedDict()
         for (genomeName, genome) in genomes.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
@@ -473,17 +473,17 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems = collections.OrderedDict()
         for (genomeName, genome) in genomes.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
@@ -542,17 +542,17 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems = collections.OrderedDict()
         for (genomeName, genome) in genomes.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
@@ -613,26 +613,26 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems = collections.OrderedDict()
         for (genomeName, genome) in genomes.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
         sbssItems = collections.OrderedDict()
         for (sbsName, sbS) in sbs1.iteritems():
-            sbsItems = myGenomesDrawer.drawLightGenome(sbS,
-                                                       families=families,
-                                                       familyName2color=familyName2color,
-                                                       lengthGenes=sizeGene,
-                                                       homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            sbsItems = myGenomesDrawer.svgItemsLightGenome(sbS,
+                                                           families=families,
+                                                           name2color=familyName2color,
+                                                           lengthGenes=sizeGene,
+                                                           colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             sbssItems[sbsName] = sbsItems
 
         width = (2 + 8) * sizeGene
@@ -700,44 +700,44 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems1 = collections.OrderedDict()
         for (genomeName, genome) in genomes1.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems1[genomeName] = genomeItems
 
         sbssItems1 = collections.OrderedDict()
         for (sbsName, sbS) in sbs1.iteritems():
-            sbsItems = myGenomesDrawer.drawLightGenome(sbS,
-                                                       families=families,
-                                                       familyName2color=familyName2color,
-                                                       lengthGenes=sizeGene,
-                                                       homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            sbsItems = myGenomesDrawer.svgItemsLightGenome(sbS,
+                                                           families=families,
+                                                           name2color=familyName2color,
+                                                           lengthGenes=sizeGene,
+                                                           colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             sbssItems1[sbsName] = sbsItems
 
         genomesItems2 = collections.OrderedDict()
         for (genomeName, genome) in genomes2.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems2[genomeName] = genomeItems
 
         sbssItems2 = collections.OrderedDict()
         for (sbsName, sbS) in sbs2.iteritems():
-            sbsItems = myGenomesDrawer.drawLightGenome(sbS,
-                                                       families=families,
-                                                       familyName2color=familyName2color,
-                                                       lengthGenes=sizeGene,
-                                                       homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            sbsItems = myGenomesDrawer.svgItemsLightGenome(sbS,
+                                                           families=families,
+                                                           name2color=familyName2color,
+                                                           lengthGenes=sizeGene,
+                                                           colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             sbssItems2[sbsName] = sbsItems
 
         width = (2 + 8) * sizeGene
@@ -816,17 +816,17 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems = collections.OrderedDict()
         for (genomeName, genome) in genomes.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
@@ -887,17 +887,17 @@ def test(arguments):
 
         sizeGene = 1
         familyName2color = {}
-        homologColorGenerator = myGenomesDrawer.levelIdxGenerator(farIdxs=5)
+        homologColorGenerator = myGenomesDrawer.LevelIdxGenerator(farIdxs=5)
         for family in families:
             familyName2color[family.fn] = homologColorGenerator.getLevel()
 
         genomesItems = collections.OrderedDict()
         for (genomeName, genome) in genomes.iteritems():
-            genomeItems = myGenomesDrawer.drawLightGenome(genome,
-                                                          families=families,
-                                                          familyName2color=familyName2color,
-                                                          lengthGenes=sizeGene,
-                                                          homologsColorsGenerator=myGenomesDrawer.levelIdxGenerator(farIdxs=5))
+            genomeItems = myGenomesDrawer.svgItemsLightGenome(genome,
+                                                              families=families,
+                                                              name2color=familyName2color,
+                                                              lengthGenes=sizeGene,
+                                                              colorsGenerator=myGenomesDrawer.LevelIdxGenerator(farIdxs=5))
             genomesItems[genomeName] = genomeItems
 
         width = (2 + 8) * sizeGene
