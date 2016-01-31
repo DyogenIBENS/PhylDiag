@@ -22,7 +22,7 @@ arguments = myTools.checkArgs(
          ('out:imageFileName', str, 'res/image.svg'),
          ('scaleFactorRectangles', float, 10.0),
          ('fillCompsWithSbs', bool, False),
-         ('in:syntenyBlocks', str, 'res/syntenyBlocks.txt'),
+         ('in:syntenyBlocks', str, 'None'),
          ('withIdsOfSbs', bool, False)],
         __doc__)
 
@@ -48,7 +48,8 @@ if arguments['withSbs']:
         else:
             assert isinstance(sbsInPairComp, myTools.Dict2d)
     else:
-        sbsInPairComp = None
+        sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
+                                                            **kwargs)
 
 WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genome1, genome2, families,
                                                       inSbsInPairComp=sbsInPairComp,

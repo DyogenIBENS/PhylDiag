@@ -43,7 +43,7 @@ arguments = myTools.checkArgs(
      ("out:imageFileName", str, "./homologyMatrix.svg"),
      ("considerAllPairComps", bool, True),
      ('switchOnDirectView', bool, False),
-     ('withIdsOfSbs', bool, False),
+     ('withIdsOfSbs', bool, True),
      ('verbose', bool, True)],
     __doc__)
 
@@ -69,9 +69,9 @@ if arguments['withSbs']:
         else:
             assert isinstance(sbsInPairComp, myTools.Dict2d)
     else:
-        sbsInPairComp = None
-        #myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
-        #                                                    **kwargs)
+        sbsInPairComp = myDiags.extractSbsInPairCompGenomes(genome1, genome2, families,
+                                                            **kwargs)
+
 myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1:deb1-fin1'], arguments['chr2:deb2-fin2'],
                                      convertGenicToTbCoordinates=arguments['convertGenicToTbCoordinates'],
                                      filterType=kwargs['filterType'],
@@ -100,3 +100,4 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      outImageFileName=arguments['out:imageFileName'],
                                      nbCaractersForGeneNamesInSymlbols=0,
                                      verbose=arguments['verbose'])
+

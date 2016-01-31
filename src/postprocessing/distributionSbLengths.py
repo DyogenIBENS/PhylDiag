@@ -218,7 +218,7 @@ genome2L = myLightGenomes.LightGenome(genome2)
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "nb of Chr = ", len(genome2L)
 sbsInPairComp = myDiags.parseSbsFile(arguments['syntenyBlocks'], genome1=genome1L, genome2=genome2L, withIds=False)
-sbId2Length = myDiags.getSbsLengths(genome1, genome2, sbsInPairComp, lengthUnit='Mb')
+sbId2Length = myDiags.getSbsMeanLengths(genome1, genome2, sbsInPairComp, lengthUnit='Mb')
 lSbsLengths = sorted(sbId2Length.values())
 #print >> sys.stderr, lSbsLengths
 

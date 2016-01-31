@@ -1,9 +1,9 @@
 Amniota	0
 	Theria	0
 		Euarchontoglires	0
-			Homo sapiens
-			Mus musculus
-		Monodelphis domestica
+			Homo.sapiens
+			Mus.musculus
+		Monodelphis.domestica
 	Sauria	0
-		Gallus gallus
-		Anolis carolinensis
+		Gallus.gallus
+		Anolis.carolinensis
