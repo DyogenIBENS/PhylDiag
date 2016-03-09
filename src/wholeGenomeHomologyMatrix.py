@@ -37,6 +37,8 @@ if arguments['removeUnofficialChromosomes']:
     genome1.removeUnofficialChromosomes()
     genome2.removeUnofficialChromosomes()
 
+assert len(genome1.values()) > 0, "genome1 contains no chromosome, check the option \'removeUnofficialChromosomes\'"
+assert len(genome2.values()) > 0, "genome2 contains no chromosome, check the option \'removeUnofficialChromosomes\'"
 sbsInPairComp = None
 if arguments['withSbs']:
     if arguments['in:syntenyBlocks'] != 'None':
