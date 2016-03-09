@@ -287,7 +287,7 @@ def main():
     assert geneNamesInBothGenomes == genome2OnlySchr.getGeneNames()
     oldGn2newGn = bidict.bidict()
     if max([int(gn) for (gn, gs) in genome1OnlySchr[sChr]]) > len(genome1OnlySchr[sChr]):
-        snewGeneName = 1
+        newGeneName = 1
         for gn in geneNamesInBothGenomes:
             oldGn2newGn[gn] = str(newGeneName)
             newGeneName += 1
