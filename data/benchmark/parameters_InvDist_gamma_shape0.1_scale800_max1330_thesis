@@ -1,0 +1,18 @@
+b_randomAccel	False
+breakpointAnalyzer	True
+chr:absOrRelChoiceOfInvLength	absolute
+chr:invDist	gamma
+chr:invDistMean	800.0
+chr:invDistShape	0.1
+chr:maxLengthOfInvertedSegments	1330.0
+chrFission	1.0
+chrFusion	1.0
+chrInvert	1.0
+chrTransloc	1.0
+forceClustering	True
+gene:clusteredGenesRatio	0.99
+globalFactor	1.0
+printIntermGenomes	False
+rate:eventMaxRandomFactor	1.5
+rate:eventRandomVonMisesKappa	2.0
+startChrLengths	(2903.0, 1706.0, 1409.0, 1268.0, 1138.0, 969.0, 941.0, 933.0, 916.0, 886.0, 869.0, 793.0, 764.0, 728.0, 667.0, 618.0, 544.0, 489.0, 431.0, 304.0, 271.0)

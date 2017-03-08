@@ -1,0 +1,24 @@
+dans data/
+
+# Ensure that genomes are indexed by 5'
+for n in Homo.sapiens Mus.musculus
+do
+/home/jlucas/Libs/LibsDyogen/scripts/indexGenesUsingExtremityThatStartsTranscription.py genesST.$n.list.bz2 +removeUnofficialChrNames=True -out:genome=genesSTE.$n.list.bz2
+done
+
+# Use PhylDiag
+#../src/phylDiag.py genesSTE.Homo.sapiens.list.bz2 genesSTE.Mus.musculus.list.bz2 ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -truncationMax=5 +verbose -pThreshold=None -optimisation=None -gapMaxMicroInv=0 +identifyMonoGenicInvs > ../res/syntenyBlocks.txt 
+
+# Use GRIMM and invert species
+../src/postprocessing/useGRIMMwithSbs.py syntenyBlocks_Hs_X_Mm_X_CuratedByHand_Ensemblv81_good.txt genesSTE.Homo.sapiens.list.bz2 genesSTE.Mus.musculus2.list.bz2 -selectedChrom=X -unitOfGenomes=Mb -removeMonoGenicConservedSegments +invertSpeciesOrder -outPath=../res/
+# then look at ../res/svgScenario.svg
+
+# From now on species are inverted
+
+# View MHP
+ns='genesSTE.Mus.musculus.list.bz2 genesSTE.Homo.sapiens.list.bz2 '
+../src/phylDiagHomologyMatrixViewer.py ${ns} ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -in:syntenyBlocks=../res/syntenyBlocksOnSelectedChr.txt -out:imageFileName=../res/scenarioMHP.svg +withIdsOfSbs +mode:chromosomesRewrittenInTbs
+# then look at ../res/scenarioMH.svg
+
+# For the MH
+../src/phylDiagHomologyMatrixViewer.py ${ns} ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -in:syntenyBlocks=../res/syntenyBlocksOnSelectedChr.txt -out:imageFileName=../res/scenarioMH.svg +withIdsOfSbs -mode:chromosomesRewrittenInTbs

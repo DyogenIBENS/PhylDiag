@@ -1,0 +1,2 @@
+In the folder : /home/jlucas/Libs/PhylDiag/data/benchmark
+/home/jlucas/Libs/PhylDiag/src/benchmark/compareCyntenatorSbsToSimulatedSbs.py speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=genes.%s.list.bz2 -pAncGenes=ancGenes.%s.list.bz2 -pSimulatedSbs=sbs.genes.%s.%s.list.bz2 -tandemGapMax=5  -filterType=InBothGenomes -analyseMistakesOneByOne +preComputePairwiseSbs -oriented

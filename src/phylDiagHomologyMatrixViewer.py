@@ -39,7 +39,7 @@ arguments = myTools.checkArgs(
      ("mode:chromosomesRewrittenInTbs", bool, False),
      ('convertGenicToTbCoordinates', bool, False),
      ('drawAllInformations', bool, False),
-     ("scaleFactorRectangles", float, 2.0),
+     ("scaleFactorRectangles", float, 1.0),
      ("out:imageFileName", str, "./homologyMatrix.svg"),
      ("considerAllPairComps", bool, True),
      ('switchOnDirectView', bool, False),
