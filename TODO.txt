@@ -5,6 +5,9 @@ Highly important:
 (newly named imr)
 * update geneTeamsHomologyMatrixViewer to use myGenomesDrawer
 
+* Compute coverage in the benchmark
+
+
 For sbs file names, always mention the two extant species, the ancestor, the
 filtering, the tandemGapMax, the gapMax and the distance metric used.
 Example:
@@ -158,7 +161,6 @@ TODO:
 
 ###########################################
 Change synteny block -> conserved segments
-
 
 ####################
 Update Data Base:
