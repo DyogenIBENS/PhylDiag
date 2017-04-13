@@ -211,12 +211,22 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
 else:
     # deserialize results
     dictStatsCompCyntenator = pickle.load(open(serialisationFile, 'r'))
+    myIntervals.Efficiency2 = collections.namedtuple('Efficiency', ('tp', 'tn', 'fp', 'fn', 'r', 'p', 'f1'))
+    for key in dictStatsCompCyntenator.keys():
+        for (type, eff) in [(type, dictStatsCompCyntenator[key][type]) for type in
+                            ['adjacency', 'chromExtremity', 'familyContent']]:
+            (tp, tn, fp, fn, sn, sp) = eff
+            r = sn
+            p = sp
+            f1 = float(2 * r * p) / float(r + p)
+            new_eff = myIntervals.Efficiency2(tp, tn, fp, fn, r, p, f1)
+            dictStatsCompCyntenator[key][type] = new_eff
 
 ####################################################################
 # Plot Results
 ####################################################################
 import matplotlib.pyplot as plt
-def plot(dictStatsComp, arguments):
+def plotRecallAndPrecision(dictStatsComp, arguments):
     fig, axes = plt.subplots(nrows=2, ncols=3)
     colTitles = ['cs extremities', 'cs genes adjacencies', 'cs anc. families']
     rowTitles = ['sensitivity', 'specificity']
@@ -294,5 +304,106 @@ def plot(dictStatsComp, arguments):
     plt.show(block=True)
     plt.savefig(arguments['outFigureName'], format='svg')
 
+def plotRecallPrecisionAndF1(dictStatsComp, arguments, Mylimits):
+    fig, axes = plt.subplots(nrows=3, ncols=3)
+    colTitles = ['extremities', 'adjacencies', 'gene names']
+    rowTitles = ['recall', 'precision', 'F1-score']
+
+    # varying parameter
+    thresholds = arguments['thresholds']
+    # thresholds = (1,2,3,4,5,10,50)
+
+    for ax, colTitle in zip(axes[0], colTitles):
+        ax.set_title(colTitle)
+    for ax, rowTitle in zip(axes[:, 0], rowTitles):
+        ax.set_ylabel(rowTitle, rotation=90, size='large')
+    for ax in axes.flatten():
+        ax.set_xticks(xrange(len(thresholds)))
+        ax.set_xticklabels([str(threshold) for threshold in thresholds])
+    for ax in axes[2]:
+        ax.set_xlabel('threshold')
+    lineWidth = 2.5
+    # for (i,j), ax in numpy.ndenumerate(axes):
+    #     ax.set_ylim((0, 1))
+    # Axes limits
+    # axes[0][0].set_ylim((0, 1))
+    # axes[1][0].set_ylim((0, 1))
+    # axes[2][0].set_ylim((0, 1))
+    # axes[2][2].set_ylim((0.92, 1))
+    # axes[0][2].set_ylim((0.95, 1))
+    for (i, j), yl in numpy.ndenumerate(Mylimits):
+        axes[i][j].set_ylim(yl)
+
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+    colorcycler = itertools.cycle(colors)
+    # lines = ["-", "--", "-.", ":"]
+    # linecycler = itertools.cycle(lines)
+    lineStyle = '-'
+
+    # choose values of parameters to plot
+    m = -3
+    linesCyntenator = [None] * (len(arguments['gaps']) * len(arguments['mismatchs']))
+    cpt = 0
+    for ig, g in enumerate(arguments['gaps']):
+        for im, m in enumerate(arguments['mismatchs']):
+            assert g in arguments['gaps']
+            assert m in arguments['mismatchs']
+
+            color = next(colorcycler)
+            label = 'Cyntenator (%s, %s)' % (g, m)
+
+            modeOfComparisons = ['chromExtremity', 'adjacency', 'familyContent']
+            for i, modeOfComparison in enumerate(modeOfComparisons):
+                axis_recall = axes[0][i]
+                axis_precision = axes[1][i]
+                axis_f1 = axes[2][i]
+                recall = [eff.r for eff in [dictStatsComp[(g, m, t)][modeOfComparison] for t in thresholds]]
+                precision = [eff.p for eff in [dictStatsComp[(g, m, t)][modeOfComparison] for t in thresholds]]
+                f1s = [eff.f1 for eff in [dictStatsComp[(g, m, t)][modeOfComparison] for t in thresholds]]
+                Yss = (recall, precision, f1s)
+                for ax, Ys in zip((axis_recall, axis_precision, axis_f1), Yss):
+                    linesCyntenator[cpt], = ax.plot(xrange(len(thresholds)), Ys, color=color, linestyle=lineStyle,
+                                                    linewidth=lineWidth)
+            cpt += 1
+    # nbSbss = [nbSbs for (_, (nbSbs, _), _) in [dictStatsComp[(g,m,t)] for t in thresholds]]
+    # nbSbsTrues = [nbSbsTrue for (eff, (_, nbSbsTrue), _) in [dictStatsComp[(g, m, t)] for t in thresholds]]
+    # nbFamiliesInSbss = [nbFamiliesInSbs for (_, _, (nbFamiliesInSbs, _)) in [dictStatsComp[(g, m, t)] for t in thresholds]]
+    # nbAncGenesInSbsTrues = [nbAncGenesInSbsTrue for (_, _, (_, nbAncGenesInSbsTrue)) in [dictStatsComp[(g, m, t)] for t in thresholds]]
+    #                                        linewidth=3.0)
+
+    # change the format of x and y values
+    #setOfAxesCoordsWithIncreasedPrecision = {(1, 2)}
+    setOfAxesCoordsWithIncreasedPrecision = {}
+    for (i, j), ax in numpy.ndenumerate(axes):
+        ax.tick_params(labelsize=10)
+        vals = ax.get_yticks()
+        if not (i, j) in setOfAxesCoordsWithIncreasedPrecision:
+            ax.set_yticklabels(['{:3.0f}%'.format(x * 100) for x in vals])
+        else:
+            ax.set_yticklabels(['{:3.1f}%'.format(x * 100) for x in vals])
+
+    lines = linesCyntenator
+    labels = ['Cyntenator (%s, %s)' % (g, m) for g in arguments['gaps'] for m in arguments['mismatchs']]
+    titleLegend = '(gaps, mismatchs)'
+    assert len(lines) == len(labels), '%s = %s' % (len(lines), len(labels))
+    fig.legend(lines, labels, ncol=2, title=titleLegend, loc='upper center', fontsize=12)
+
+    # print ylim
+    for (i, j), ax in numpy.ndenumerate(axes):
+        (yl, yh) = ax.get_ylim()
+        print >> sys.stderr, "ax[%s,%s].ylim = (%.2f, %.2f)" % (i,j,yl,yh)
+
+    fig.tight_layout()
+    plt.show(block=True)
+    plt.savefig(arguments['outFigureName'], format='svg')
+
 arguments['mismatchs'] = [-3]
-plot(dictStatsCompCyntenator, arguments)
+arguments['thresholds'] = (1,2,3,5,10)
+plotRecallPrecisionAndF1(dictStatsCompCyntenator, arguments, benchTools.Mylimits)
+
+
+# print >> sys.stderr, dictStatsCompCyntenator.keys()
+# print >> sys.stderr, dictStatsCompCyntenator[(-2, -3, 1)]['familyContent']
+# print >> sys.stderr, dictStatsCompCyntenator[(-1000000000, -3, 1)]['familyContent']
+# print >> sys.stderr, dictStatsCompCyntenator[(-2, -3, 2)]['familyContent']
+# print >> sys.stderr, dictStatsCompCyntenator[(-1000000000, -3, 2)]['familyContent']

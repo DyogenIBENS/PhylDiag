@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import numpy
 import collections
 import utils.myMapping as myMapping
 import utils.myIntervals as myIntervals
@@ -180,3 +181,27 @@ def ensureNamesDifferBetweenGenome1AndGenome2(genome1, genome2, families):
             newDns.add('2' + dn)
         newFamilies.addFamily(myLightGenomes.Family(family.fn, newDns))
     return (newGenome1, newGenome2, newFamilies)
+
+Mylimits = numpy.zeros((3,3), dtype=object)
+# very tight limits
+# Mylimits[0][0] = (0.1,0.8)
+# Mylimits[1][0] = (0.45,1)
+# Mylimits[2][0] = (0.25,1)
+# Mylimits[0][1] = (0.5,1)
+# Mylimits[1][1] = (0.79,0.92)
+# Mylimits[2][1] = (0.60,0.95)
+# Mylimits[0][2] = (0.5,1)
+# Mylimits[1][2] = (0.955,0.98)
+# Mylimits[2][2] = (0.70,1)
+
+Mylimits[0][0] = (0.1,1)
+Mylimits[1][0] = (0.4,1)
+Mylimits[2][0] = (0.2,1)
+
+Mylimits[0][1] = (0.5,1)
+Mylimits[1][1] = (0.7,1)
+Mylimits[2][1] = (0.6,1)
+
+Mylimits[0][2] = (0.5,1)
+Mylimits[1][2] = (0.9,1)
+Mylimits[2][2] = (0.7,1)

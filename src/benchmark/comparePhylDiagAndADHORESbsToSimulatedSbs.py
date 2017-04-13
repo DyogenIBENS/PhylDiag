@@ -225,12 +225,12 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
 
     dictStatsCompAdhore = {}
     for gapMax in arguments['gapMaxs']:
-        dictStatsCompAdhore[gapMax] = {}
-        print >> sys.stderr, "gapMax = %s" % gapMax
         # ADHoRe
         if gapMax == 0:
             # ADHoRe does not allow gapMax = 0
             continue
+        print >> sys.stderr, "gapMax = %s" % gapMax
+        dictStatsCompAdhore[gapMax] = {}
         assert gapMax != 0
 
         adhoreSbsGenome = myADHoRe.launchADHoRe(newGenome1, newGenome2, newFamilies,
@@ -275,15 +275,33 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
 else:
     # Deserialize
     (dictStatsCompPhylDiag, dictStatsCompAdhore)  = pickle.load(open(serialisationFile, 'r'))
+    myIntervals.Efficiency2 = collections.namedtuple('Efficiency', ('tp', 'tn', 'fp', 'fn', 'r', 'p', 'f1'))
+    for varArg in dictStatsCompPhylDiag.keys():
+        for gapMax in dictStatsCompPhylDiag[varArg].keys():
+            for (type, eff) in [(type, dictStatsCompPhylDiag[varArg][gapMax][type]) for type in ['adjacency', 'chromExtremity', 'familyContent']]:
+                (tp, tn, fp, fn, sn, sp) = eff
+                r = sn
+                p = sp
+                f1 = float(2 * r * p)/float(r + p)
+                new_eff = myIntervals.Efficiency2(tp, tn, fp, fn, r, p, f1)
+                dictStatsCompPhylDiag[varArg][gapMax][type] = new_eff
+    for gapMax in [gapMax for gapMax in dictStatsCompAdhore.keys() if gapMax != 0]:
+        for (type, eff) in [(type, dictStatsCompAdhore[gapMax][type]) for type in ['adjacency', 'chromExtremity', 'familyContent']]:
+            (tp, tn, fp, fn, sn, sp) = eff
+            r = sn
+            p = sp
+            f1 = float(2 * r * p) / float(r + p)
+            new_eff = myIntervals.Efficiency2(tp, tn, fp, fn, r, p, f1)
+            dictStatsCompAdhore[gapMax][type] = new_eff
 
 ####################################################################
 # Plot Results
 ####################################################################
 import matplotlib.pyplot as plt
-def plot(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
+def plotRecallAndPrecision(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
     fig, axes = plt.subplots(nrows=2, ncols=3)
-    colTitles = ['cs extremities', 'cs genes adjacencies', 'cs anc. families']
-    rowTitles = ['sensitivity', 'specificity']
+    colTitles = ['extremities', 'adjacencies', 'anc. families']
+    rowTitles = ['recall', 'precision', 'F1-score']
     # mapping between gapMaxs and ticksLocations
     #gapMaxs = sorted(dictStatsCompPhylDiag.values()[0])
     gapMaxs = arguments['gapMaxs']
@@ -320,8 +338,8 @@ def plot(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
 
     modeOfComparisons = ['chromExtremity', 'adjacency', 'familyContent']
     for i, modeOfComparison in enumerate(modeOfComparisons):
-        axis_sensitivity = axes[0][i]
-        axis_specificity = axes[1][i]
+        axis_recall = axes[0][i]
+        axis_precision = axes[1][i]
 
         algo = 'PhylDiag'
         linesPhylDiag = [None] * len(variableArg[1])
@@ -330,10 +348,10 @@ def plot(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
             label = algo + ' (' + ','.join(label) + ')'
             color = next(colorcycler)
             lineStyle = next(linecycler)
-            sensitivitys = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].sn for gapMax in gapMaxs]
-            specificitys = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].sp for gapMax in gapMaxs]
-            Yss = (sensitivitys, specificitys)
-            for ii, (ax, Ys) in enumerate(zip((axis_sensitivity, axis_specificity), Yss)):
+            recalls = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].r for gapMax in gapMaxs]
+            precisions = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].p for gapMax in gapMaxs]
+            Yss = (recalls, precisions)
+            for ii, (ax, Ys) in enumerate(zip((axis_recall, axis_precision), Yss)):
                 #minY[subTitle] = min(Ys) if min(Ys) < minY[subTitle] else minY[subTitle]
                 linesPhylDiag[ivar], = ax.plot(tickIdxByGapMaxPhylDiag.values(), Ys, color=color, linestyle=lineStyle, label=label, linewidth=lineWidth)
 
@@ -349,14 +367,106 @@ def plot(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
         lineStyle = next(linecycler)
         gapMaxsAdhore = sorted([gapMax for gapMax in dictStatsCompAdhore.keys() if gapMax in arguments['gapMaxs']])
         gapMaxsAdhore.remove(0)
-        sensitivitys = [dictStatsCompAdhore[gapMax][modeOfComparison].sn for gapMax in gapMaxsAdhore]
-        specificitys = [dictStatsCompAdhore[gapMax][modeOfComparison].sp for gapMax in gapMaxsAdhore]
-        Yss = (sensitivitys, specificitys)
+        recalls = [dictStatsCompAdhore[gapMax][modeOfComparison].r for gapMax in gapMaxsAdhore]
+        precisions = [dictStatsCompAdhore[gapMax][modeOfComparison].p for gapMax in gapMaxsAdhore]
+        Yss = (recalls, precisions)
         # no gapMax = 0 for ADHoRe
         tickIdxByGapMaxADHoRe = collections.OrderedDict([(gapMax, tickIdxByGapMaxPhylDiag[gapMax]) for gapMax in gapMaxsAdhore])
-        for ax, Ys in zip((axis_sensitivity, axis_specificity), Yss):
+        for ax, Ys in zip((axis_recall, axis_precision), Yss):
             #minY[subTitle] = min(Ys) if min(Ys) < minY[subTitle] else minY[subTitle]
             lineADhoRe, = ax.plot(tickIdxByGapMaxADHoRe.values(), Ys, color=color, linestyle=lineStyle, label=label, linewidth=lineWidth)
+
+        # nbSbsAdhores = [dictStatsCompAdhore[gapMax]['nbSbs'][1] for gapMax in gapMaxsAdhore]
+        # nbFamiliesInSbsAdhores = [dictStatsCompAdhore[gapMax]['nbFamilies'][0] for gapMax in gapMaxsAdhore]
+
+
+    # change the format of y values
+    for (i, j), ax in numpy.ndenumerate(axes):
+        vals = ax.get_yticks()
+        if not (i == 1 and j == 2):
+            ax.set_yticklabels(['{:3.1f}%'.format(x * 100) for x in vals])
+        else:
+            ax.set_yticklabels(['{:3.0f}%'.format(x * 100) for x in vals])
+
+    # Legend
+    lines = linesPhylDiag + [lineADhoRe] # + [lineTrue]
+    labelsPhylDiag = ['PhylDiag (' + ','.join(vs) + ')' for vs in variableArg_str[1]]
+    labels = labelsPhylDiag + ['i-ADHoRe 3.0'] #+ ['Simulation']
+    titleLegend = '(' + ','.join(variableArg_str[0]) + ')'
+    assert len(lines) == len(labels)
+    fig.legend(lines, labels, ncol=4, title=titleLegend, loc='upper center', fontsize=15)
+    fig.tight_layout()
+    plt.show(block=False)
+    plt.savefig(arguments['outFigureName'], format='svg')
+    #plt.close()
+def plotF1(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
+    fig, axes = plt.subplots(nrows=1, ncols=3, squeeze=False)
+    colTitles = ['extremities', 'adjacencies', 'anc. families']
+    rowTitles = ['F1-score']
+    # mapping between gapMaxs and ticksLocations
+    #gapMaxs = sorted(dictStatsCompPhylDiag.values()[0])
+    gapMaxs = arguments['gapMaxs']
+    tickIdxByGapMaxPhylDiag = collections.OrderedDict([(gapMax, i) for i, gapMax in enumerate(gapMaxs)])
+    for ax, colTitle in zip(list(axes[0]), colTitles):
+        ax.set_title(colTitle)
+    for ax, rowTitle in zip(axes[:, 0], rowTitles):
+        ax.set_ylabel(rowTitle, rotation=90, size='large')
+    for ax in axes[0]:
+        ax.set_xticks(tickIdxByGapMaxPhylDiag.values())
+        ax.set_xticklabels([str(gapMax) for gapMax in tickIdxByGapMaxPhylDiag.keys()])
+    for ax in axes[0]:
+        ax.set_xticks(tickIdxByGapMaxPhylDiag.values())
+        ax.set_xticklabels([str(gapMax) for gapMax in tickIdxByGapMaxPhylDiag.keys()])
+        ax.set_xlabel('gapMax')
+    # for (i, j), ax in numpy.ndenumerate(axes):
+    #     ax.set_ylim((0, 1)
+    #     plt.setp(ax.get_xticklabels(), rotation=-45, horizontalalignment='left')
+    #     for tick in ax.xaxis.get_major_ticks():
+    #         tick.label.set_fontsize(10)
+    #     for label in ax.xaxis.get_ticklabels()[::2]:
+    #         label.set_visible(False)
+    #plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
+    axes[0][0].set_ylim((0, 1))
+    #axes[1][0].set_ylim((0, 1))
+    lineWidth = 2.5
+
+    variableArg_str = benchTools.variableArgIntoVariableArgString(variableArg)
+    # lines = ["-", "--", "-.", ":"]
+    lines = ["-"]
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+    linecycler = itertools.cycle(lines)
+    colorcycler = itertools.cycle(colors)
+
+    modeOfComparisons = ['chromExtremity', 'adjacency', 'familyContent']
+    for i, modeOfComparison in enumerate(modeOfComparisons):
+        axis_F1 = axes[0][i]
+
+        algo = 'PhylDiag'
+        linesPhylDiag = [None] * len(variableArg[1])
+        for ivar, varArg in enumerate(variableArg[1]):
+            label = variableArg_str[1][ivar]
+            label = algo + ' (' + ','.join(label) + ')'
+            color = next(colorcycler)
+            lineStyle = next(linecycler)
+            F1s = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].f1 for gapMax in gapMaxs]
+            linesPhylDiag[ivar], = axis_F1.plot(tickIdxByGapMaxPhylDiag.values(), F1s, color=color, linestyle=lineStyle, label=label, linewidth=lineWidth)
+
+            # nbSbsPhylDiags = [dictStatsCompPhylDiag[varArg][gapMax]['nbSbs'] for gapMax in gapMaxs]
+            # nbFamiliesInSbsPhylDiag = [dictStatsCompPhylDiag[varArg][gapMax]['nbFamilies'] for gapMax in gapMaxs]
+
+        # nbSbsTrues = [dictStatsCompPhylDiag[varArg][gapMax]['nbSbs'][1] for gapMax in gapMaxs]
+        # nbAncGenesInSbsTrues = [dictStatsCompPhylDiag[varArg][gapMax]['nbFamilies'][1] for gapMax in gapMaxs]
+
+        algo = 'ADHoRe'
+        label = algo
+        color = next(colorcycler)
+        lineStyle = next(linecycler)
+        gapMaxsAdhore = sorted([gapMax for gapMax in dictStatsCompAdhore.keys() if gapMax in arguments['gapMaxs']])
+        gapMaxsAdhore.remove(0)
+        F1s = [dictStatsCompAdhore[gapMax][modeOfComparison].f1 for gapMax in gapMaxsAdhore]
+        # no gapMax = 0 for ADHoRe
+        tickIdxByGapMaxADHoRe = collections.OrderedDict([(gapMax, tickIdxByGapMaxPhylDiag[gapMax]) for gapMax in gapMaxsAdhore])
+        lineADhoRe, = axis_F1.plot(tickIdxByGapMaxADHoRe.values(), F1s, color=color, linestyle=lineStyle, label=label, linewidth=lineWidth)
 
         # nbSbsAdhores = [dictStatsCompAdhore[gapMax]['nbSbs'][1] for gapMax in gapMaxsAdhore]
         # nbFamiliesInSbsAdhores = [dictStatsCompAdhore[gapMax]['nbFamilies'][0] for gapMax in gapMaxsAdhore]
@@ -382,5 +492,117 @@ def plot(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg):
     plt.savefig(arguments['outFigureName'], format='svg')
     plt.close()
 
+def plotRecallPrecisionAndF1(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg, Mylimits):
+    fig, axes = plt.subplots(nrows=3, ncols=3)
+    colTitles = ['extremities', 'adjacencies', 'gene names']
+    rowTitles = ['recall', 'precision', 'F1-score']
+    # mapping between gapMaxs and ticksLocations
+    #gapMaxs = sorted(dictStatsCompPhylDiag.values()[0])
+    gapMaxs = arguments['gapMaxs']
+    tickIdxByGapMaxPhylDiag = collections.OrderedDict([(gapMax, i) for i, gapMax in enumerate(gapMaxs)])
+    for ax, colTitle in zip(axes[0], colTitles):
+        ax.set_title(colTitle)
+    for ax, rowTitle in zip(axes[:, 0], rowTitles):
+        ax.set_ylabel(rowTitle, rotation=90, size='large')
+    for ax in axes.flatten():
+        ax.set_xticks(tickIdxByGapMaxPhylDiag.values())
+        ax.set_xticklabels([str(gapMax) for gapMax in tickIdxByGapMaxPhylDiag.keys()])
+    for ax in axes[2]:
+        ax.set_xlabel('gapMax')
+    # for (i, j), ax in numpy.ndenumerate(axes):
+    #     ax.set_ylim((0, 1)
+    #     plt.setp(ax.get_xticklabels(), rotation=-45, horizontalalignment='left')
+    #     for tick in ax.xaxis.get_major_ticks():
+    #         tick.label.set_fontsize(10)
+    #     for label in ax.xaxis.get_ticklabels()[::2]:
+    #         label.set_visible(False)
+    #plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
+
+    # axes limits
+    # axes[0][0].set_ylim((0, 1))
+    # axes[1][0].set_ylim((0, 1))
+    # axes[2][0].set_ylim((0, 1))
+    for (i, j), yl in numpy.ndenumerate(Mylimits):
+        axes[i][j].set_ylim(yl)
+    lineWidth = 2.5
+
+    variableArg_str = benchTools.variableArgIntoVariableArgString(variableArg)
+    # lines = ["-", "--", "-.", ":"]
+    lines = ["-"]
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+    linecycler = itertools.cycle(lines)
+    colorcycler = itertools.cycle(colors)
+
+    modeOfComparisons = ['chromExtremity', 'adjacency', 'familyContent']
+    for i, modeOfComparison in enumerate(modeOfComparisons):
+        axis_recall = axes[0][i]
+        axis_precision = axes[1][i]
+        axis_f1 = axes[2][i]
+
+        algo = 'PhylDiag'
+        linesPhylDiag = [None] * len(variableArg[1])
+        for ivar, varArg in enumerate(variableArg[1]):
+            label = variableArg_str[1][ivar]
+            label = algo + ' (' + ','.join(label) + ')'
+            color = next(colorcycler)
+            lineStyle = next(linecycler)
+            recalls = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].r for gapMax in gapMaxs]
+            precisions = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].p for gapMax in gapMaxs]
+            f1s = [dictStatsCompPhylDiag[varArg][gapMax][modeOfComparison].f1 for gapMax in gapMaxs]
+            Yss = (recalls, precisions, f1s)
+            for ii, (ax, Ys) in enumerate(zip((axis_recall, axis_precision, axis_f1), Yss)):
+                #minY[subTitle] = min(Ys) if min(Ys) < minY[subTitle] else minY[subTitle]
+                linesPhylDiag[ivar], = ax.plot(tickIdxByGapMaxPhylDiag.values(), Ys, color=color, linestyle=lineStyle, label=label, linewidth=lineWidth)
+
+            # nbSbsPhylDiags = [dictStatsCompPhylDiag[varArg][gapMax]['nbSbs'] for gapMax in gapMaxs]
+            # nbFamiliesInSbsPhylDiag = [dictStatsCompPhylDiag[varArg][gapMax]['nbFamilies'] for gapMax in gapMaxs]
+
+        # nbSbsTrues = [dictStatsCompPhylDiag[varArg][gapMax]['nbSbs'][1] for gapMax in gapMaxs]
+        # nbAncGenesInSbsTrues = [dictStatsCompPhylDiag[varArg][gapMax]['nbFamilies'][1] for gapMax in gapMaxs]
+
+        algo = 'ADHoRe'
+        label = algo
+        color = next(colorcycler)
+        lineStyle = next(linecycler)
+        gapMaxsAdhore = sorted([gapMax for gapMax in dictStatsCompAdhore.keys() if gapMax in arguments['gapMaxs']])
+        gapMaxsAdhore.remove(0)
+        recalls = [dictStatsCompAdhore[gapMax][modeOfComparison].r for gapMax in gapMaxsAdhore]
+        precisions = [dictStatsCompAdhore[gapMax][modeOfComparison].p for gapMax in gapMaxsAdhore]
+        f1s = [dictStatsCompAdhore[gapMax][modeOfComparison].f1 for gapMax in gapMaxsAdhore]
+        Yss = (recalls, precisions, f1s)
+        # no gapMax = 0 for ADHoRe
+        tickIdxByGapMaxADHoRe = collections.OrderedDict([(gapMax, tickIdxByGapMaxPhylDiag[gapMax]) for gapMax in gapMaxsAdhore])
+        for ax, Ys in zip((axis_recall, axis_precision, axis_f1), Yss):
+            #minY[subTitle] = min(Ys) if min(Ys) < minY[subTitle] else minY[subTitle]
+            lineADhoRe, = ax.plot(tickIdxByGapMaxADHoRe.values(), Ys, color=color, linestyle=lineStyle, label=label, linewidth=lineWidth)
+
+        # nbSbsAdhores = [dictStatsCompAdhore[gapMax]['nbSbs'][1] for gapMax in gapMaxsAdhore]
+        # nbFamiliesInSbsAdhores = [dictStatsCompAdhore[gapMax]['nbFamilies'][0] for gapMax in gapMaxsAdhore]
+
+
+    # change the format of x and y values
+    #setOfAxesCoordsWithIncreasedPrecision = {(1,2), (2,2)}
+    #setOfAxesCoordsWithIncreasedPrecision = {(1,2)}
+    setOfAxesCoordsWithIncreasedPrecision = {}
+    for (i, j), ax in numpy.ndenumerate(axes):
+        ax.tick_params(labelsize=10)
+        vals = ax.get_yticks()
+        if not (i,j) in setOfAxesCoordsWithIncreasedPrecision:
+            ax.set_yticklabels(['{:3.0f}%'.format(x * 100) for x in vals])
+        else:
+            ax.set_yticklabels(['{:3.1f}%'.format(x * 100) for x in vals])
+
+    # Legend
+    lines = linesPhylDiag + [lineADhoRe] # + [lineTrue]
+    labelsPhylDiag = ['PhylDiag (' + ','.join(vs) + ')' for vs in variableArg_str[1]]
+    labels = labelsPhylDiag + ['i-ADHoRe 3.0'] #+ ['Simulation']
+    titleLegend = '(' + ','.join(variableArg_str[0]) + ')'
+    assert len(lines) == len(labels)
+    fig.legend(lines, labels, ncol=4, title=titleLegend, loc='upper center', fontsize=12)
+    fig.tight_layout()
+    plt.show(block=True)
+    plt.savefig(arguments['outFigureName'], format='svg')
+    #plt.close()
+
 arguments['gapMaxs'] = (0,1,2,3,4,5,10,15,20,50)
-plot(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg)
+plotRecallPrecisionAndF1(dictStatsCompPhylDiag, dictStatsCompAdhore, arguments, variableArg, benchTools.Mylimits)
