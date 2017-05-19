@@ -1,10 +1,15 @@
+Priority for faster computations:
+---------------------------------
+use the "sort-join" algorithm of "step2" (page 3) to increase the speed when building the homology matrix
+ref : Khalid Mahmood, Geoffrey I. Webb, Jiangning Song, James C. Whisstock, Arun S. Konagurthu; Efficient large-scale protein sequence comparison and gene matching to identify orthologs and co-orthologs. Nucleic Acids Res 2012; 40 (6): e44. doi: 10.1093/nar/gkr1261
+url : https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315314/pdf/gkr1261.pdf
+
 Highly important:
 -----------------
 * Update the README to consider 'identifyMicroRearrangements' and 'nonOverlappingSbs' new options in phylDiag.
 * split identify microinvs into 1) identify monoG-Cs and 2) use these monoG-cs to split sbs in the ibwg step
 (newly named imr)
 * update geneTeamsHomologyMatrixViewer to use myGenomesDrawer
-
 * Compute coverage in the benchmark
 
 
@@ -111,12 +116,19 @@ Small issues:
 	are not the absolute coordinates of synteny blocks
 *check if the option -filterType=InBothSpecies works well with the viewer
 
-Use the Cairo library to render svg graphics:
----------------------------------------------
-Instead of using mySvgDrawer.py use Cairo, a widely used library to draw
+Use D3 or even Cairo library to render svg graphics:
+----------------------------------------------------
+Instead of using mySvgDrawer.py use D3 or Cairo, widely used libraries to draw
 vectorial images (http://cairographics.org/)
 Use also Pango for text rendering inside Cairo, both libraries are working
 together (http://www.pango.org/)
+
+help for zooming D3 : http://stackoverflow.com/questions/28445540/d3-update-plotted-data-upon-zoom-pan
+http://bl.ocks.org/bollwyvl/871b7c781b92fd0044f5
+http://jsfiddle.net/QMKm3/719/
+
+s'inspirer de : https://bl.ocks.org/mbostock/3213173
+Use Json file to stock data of the sparse matrix and homologies
 
 TODO:
 -----
