@@ -5,7 +5,7 @@
 |_|   |_| |_|\__, |_|____/|_|\__,_|\__, |
              |___/                 |___/
 
-PhylDiag version 2.0 (6/11/2015)
+PhylDiag version 2.01 (02/06/2017)
 python v2.7 at least is needed
 
 This code may be freely distributed and modified under the terms of the GNU General Public License version 3 (GPL v3)
@@ -27,10 +27,10 @@ This code is based on two publications
     Hugues ROEST CROLLIUS (IBENS, Paris, France, hrc@ens.fr)
     Published in BMC Bioinformatics, August 2014
 FIXME update as soon as published
-[2] "Towards the perfect conserved segments: fine-tuning synteny blocks to identify unbroken chromosomal segments"
+[2] "High precision detection of conserved segments from synteny blocks"
     Joseph LUCAS (IBENS, Paris, France, jlucas@ens.fr)
     Hugues ROEST CROLLIUS (IBENS, Paris, France, hrc@ens.fr)
-    submitted in BMC Genomics, november 2015
+    submitted in PLOS ONE, minor revisions
 
 Both articles are in the doc/ folder, and they can be downloaded at the next urls:
 Pdf version:
@@ -53,36 +53,26 @@ This code uses a personal library: contained in git@depot.biologie.ens.fr:LibsDy
 ###########
 ###########
 
-# Install python 2.7:
-sudo apt-get install python2.7
-# Install git:
-sudo apt-get install git
-# Install cython (not necessary)
-# http://docs.cython.org/src/quickstart/install.html
-sudo apt-get install cython
-# Install numpy and scipy (not necessary, just for analysis)
-sudo apt-get install python-numpy python-scipy
+# Install the LibsDyogen library
+# read : https://github.com/DyogenIBENS/LibsDyogen/blob/master/README.txt
+# From now on we assume that the libsDyogen root is in the PYTHONPATH
 
-# Choose a path for the installation (here it is /home/<user>/Libs)
-PATH_PHYLDIAG="/home/${USER}/Libs"
-
-# Create the root folder of PhylDiag
-mkdir ${PATH_PHYLDIAG}
-cd ${PATH_PHYLDIAG}
-
-# Clone the LibsDyogen library
-git clone git@depot.biologie.ens.fr:LibsDyogen
-
-# Add the LibsDyogen to the PYTHONPATH environment variable
-echo 'export PYTHONPATH="$PYTHONPATH:${PATH_PHYLDIAG}/LibsDyogen"' >> ~/.bashrc
-
+# Choose a path for the parent folder of PhylDiag (here it is /home/<user>/Libs)
+PATH_PARENT_PHYLDIAG="/home/${USER}/Libs"
+mkdir -p ${PATH_PARENT_PHYLDIAG}
+cd ${PATH_PARENT_PHYLDIAG}
 # Clone the PhylDiag deposit
 git clone git@depot.biologie.ens.fr:PhylDiag
-# Give execution rights
-chmod +x ${Home}/Libs/PhylDiag/src/*.py
-chmod +x ${Home}/Libs/PhylDiag/src/analysis*.py
-chmod +x ${Home}/Libs/PhylDiag/src/preprocessing/*.py
-chmod +x ${Home}/Libs/PhylDiag/src/postprocessing/*.py
+# If necessary give execution rights
+# chmod +x ${Home}/Libs/PhylDiag/src/*.py
+# chmod +x ${Home}/Libs/PhylDiag/src/analysis*.py
+# chmod +x ${Home}/Libs/PhylDiag/src/preprocessing/*.py
+# chmod +x ${Home}/Libs/PhylDiag/src/postprocessing/*.py
+
+# It should be installed. Check that everything works properly by launching :
+cd PhylDiag
+bash ./checkPhylDiagIntegrity.sh
+# this should run several tests on phyldiag
 
 ##########
 ##########
@@ -90,24 +80,12 @@ chmod +x ${Home}/Libs/PhylDiag/src/postprocessing/*.py
 ##########
 ##########
 
-#############################################################
-# Preprocessing step: define gene families using gene trees #
-#############################################################
+##############################################################
+# Preprocessing steps: define gene families using gene trees #
+##############################################################
 
-# Convert nhx (or .nwk, newick) gene trees to our tabular format (phylTree):
-src/preprocessing/nhxGeneTrees2phylTreeGeneTrees.py data/geneTrees.example.nhx > res/geneTrees.protTree
-
-# Convert a newick species tree into a phylTree species tree:
-src/preprocessing/newickSpeciesTree2phylTreeSpeciesTree.py data/speciesTree.nwk > res/speciesTree.phylTree
-
-# Extract the ancestral gene content (ancGene) from the gene trees:
-src/preprocessing/ancGenesFromGeneTrees.py res/speciesTree.phylTree res/geneTrees.protTree -out:ancGenes=res/ancGenes.example.%s.list.bz2 > res/geneTrees.afterExtractingAncGenes.protTree
-
-These ancGenes files define gene families. An "ancGene" is an ancestral gene, a gene of the ancestor of interest,
-usually the MRCA (Most Recent Common Ancestor). All descendant genes of the same ancestral gene belong to the same
-family.
-
-Usually when two species Sa and Sb are compared, gene families are defined by ancGenes.<MRCA(Sa,Sb)>
+# the scripts for pre-processing species tree, gene trees, gene families... have been moved to LibsDyogen/scripts
+# because they are used by other programs than PhylDiag
 
 ##########################
 # Processing of PhylDiag #

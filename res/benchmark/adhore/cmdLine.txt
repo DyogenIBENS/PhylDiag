@@ -1,2 +1,2 @@
-In the folder : /home/jlucas/Libs/PhylDiag/data/benchmark
-/home/jlucas/Libs/PhylDiag/src/benchmark/comparePhylDiagAndADHORESbsToSimulatedSbs.py speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=genes.%s.list.bz2 -pAncGenes=ancGenes.%s.list.bz2 -pSimulatedSbs=sbs.genes.%s.%s.list.bz2 -tandemGapMax=5  -pThresholdADHORE=0.001 -filterType=InBothGenomes  -analyseMistakesOneByOne +preComputePairwiseSbs -oriented
+In the folder : ${PATH_PARENT_PHYLDIAG}/PhylDiag/data/benchmark
+${PATH_PARENT_PHYLDIAG}/PhylDiag/src/benchmark/comparePhylDiagAndADHORESbsToSimulatedSbs.py speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=genes.%s.list.bz2 -pAncGenes=ancGenes.%s.list.bz2 -pSimulatedSbs=sbs.genes.%s.%s.list.bz2 -tandemGapMax=5  -pThresholdADHORE=0.001 -filterType=InBothGenomes  -analyseMistakesOneByOne +preComputePairwiseSbs -oriented

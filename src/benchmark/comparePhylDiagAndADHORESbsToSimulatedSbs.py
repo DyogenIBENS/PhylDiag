@@ -24,7 +24,9 @@ import benchmarkTools as benchTools
 
 LOAD_PRECOMPUTED_BENCHMARK = True
 # 5 lines to change to adapt this script to a local installation
-BIN_ADHORE = '/home/jlucas/Libs/i-adhore-3.0.01/build/src/i-adhore'
+BIN_ADHORE = myADHoRe.PATH_ADHORE_BIN
+# or BIN_ADHORE = '/home/jlucas/Libs/i-adhore-3.0.01/build/src/i-adhore' with the right path on the local machine
+
 # DATA_ADHORE = '/home/jlucas/Libs/PhylDiag/data/benchmark/adhore'
 RES_ADHORE = '/home/jlucas/Libs/PhylDiag/res/benchmark/adhore'
 DATA_ADHORE = RES_ADHORE

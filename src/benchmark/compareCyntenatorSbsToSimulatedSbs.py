@@ -25,7 +25,8 @@ import benchmarkTools as benchTools
 
 LOAD_PRECOMPUTED_BENCHMARK = True
 # 5 lines to change to adapt this script to a local installation
-BIN_CYNTENATOR = '/home/jlucas/Libs/cyntenator/cyntenator'
+BIN_CYNTENATOR = myCyntenator.PATH_CYNTENATOR_BIN
+# or BIN_CYNTENATOR = '/home/jlucas/Libs/cyntenator/cyntenator' with the right path on the local machine
 #DATA_CYNTENATOR = '/home/jlucas/Libs/PhylDiag/data/benchmark/cyntenator'
 RES_CYNTENATOR = '/home/jlucas/Libs/PhylDiag/res/benchmark/cyntenator'
 DATA_CYNTENATOR = RES_CYNTENATOR
