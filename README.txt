@@ -90,6 +90,15 @@ bash ./checkPhylDiagIntegrity.sh
 # this should run several tests on phyldiag
 
 ##########
+# Update #
+##########
+# If you want to keep PhylDiag up to date
+# 1) Update the LibsDyogen deposit: see the Update section of the README.txt of LibsDyogen
+# 2) Update the PhylDiag deposit
+cd ${PATH_PHYLDIAG}
+git pull
+
+##########
 ##########
 # MANUAL #
 ##########

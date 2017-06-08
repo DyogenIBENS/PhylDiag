@@ -8,6 +8,7 @@ import numpy
 
 import enum
 import pickle
+import getpass # https://stackoverflow.com/questions/842059/is-there-a-portable-way-to-get-the-current-username-in-python
 import itertools
 import collections
 
@@ -18,17 +19,19 @@ from utils import myPhylTree
 from utils import myIntervals
 from utils import myLightGenomes
 
-from libs import myBreakpointsAnalyser
-
+# TODO When MagSimus is published uncomment the next line, remove benchTools.computePairwiseSyntenyBlocksOfMagSimus,
+# remove its sub functions and update links properly.
+# from libs import myBreakpointsAnalyser
 import benchmarkTools as benchTools
 
 LOAD_PRECOMPUTED_BENCHMARK = True
 # 5 lines to change to adapt this script to a local installation
 BIN_ADHORE = myADHoRe.PATH_ADHORE_BIN
-# or BIN_ADHORE = '/home/jlucas/Libs/i-adhore-3.0.01/build/src/i-adhore' with the right path on the local machine
 
 # DATA_ADHORE = '/home/jlucas/Libs/PhylDiag/data/benchmark/adhore'
-RES_ADHORE = '/home/jlucas/Libs/PhylDiag/res/benchmark/adhore'
+# You might want to change this folder depending on where you installed PhylDiag
+# /home/<user>/Libs/PhylDiag/res/benchmark/adhore
+RES_ADHORE = '/home/' + getpass.getuser() + '/Libs/PhylDiag/res/benchmark/adhore'
 DATA_ADHORE = RES_ADHORE
 serialisationFile = RES_ADHORE + '/serialisationPhylDiagAndADHoReBenchmarkValues'
 
@@ -37,9 +40,9 @@ for directory in [RES_ADHORE, DATA_ADHORE]:
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-__doc__ = """This script compares the sbs of PhylDiag and i-ADHoRe 3.0 with the reference sbs recorded during simulation of magSimus
-          (with the breakpoint analyser feature)
-          """
+__doc__ = """This script compares the sbs of PhylDiag and the base_clusters of i-ADHoRe 3.0 with the reference
+conserved segments (cs) recorded during the simulation of MagSimus (with the breakpoint analyser feature)
+"""
 FilterType = enum.Enum('InFamilies', 'InBothGenomes', 'None')
 
 arguments = myTools.checkArgs(
@@ -54,10 +57,10 @@ arguments = myTools.checkArgs(
         ('ancGenes', str)
     ],
     [
-        # data
-        ('pSimGenomes', str, 'res/simu1/genes.%s.list.bz2'),
-        ('pAncGenes', str, 'res/simu1/ancGenes.%s.list.bz2'),
-        ('pSimulatedSbs', str, 'res/simu1/sbs.genes.%s.%s.list.bz2'),
+        # data (in PhylDiag/data/benchmark)
+        ('pSimGenomes', str, 'genes.%s.list.bz2'),
+        ('pAncGenes', str, 'ancGenes.%s.list.bz2'),
+        ('pSimulatedSbs', str, 'cs.genes.%s.%s.list.bz2'),
 
         # pre-process
         # filterType should be in ['None', 'InFamilies', 'InBothGenomes']
@@ -126,7 +129,7 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
     # Load data
     speciesTree = myPhylTree.PhylogeneticTree(arguments['speciesTree'])
     if arguments['preComputePairwiseSbs']:
-        myBreakpointsAnalyser.computePairwiseSyntenyBlocksOfMagSimus(speciesTree, arguments['pSimGenomes'],
+        benchTools.computePairwiseSyntenyBlocksOfMagSimus(speciesTree, arguments['pSimGenomes'],
                                                                      arguments['pAncGenes'], arguments['pSimulatedSbs'])
     genome1 = myLightGenomes.LightGenome(arguments['pSimGenomes'] % arguments['species1'])
     genome2 = myLightGenomes.LightGenome(arguments['pSimGenomes'] % arguments['species2'])
@@ -273,28 +276,9 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
     # Serialize
     pickle.dump((dictStatsCompPhylDiag, dictStatsCompAdhore), open(serialisationFile, 'w'))
 
-
 else:
     # Deserialize
     (dictStatsCompPhylDiag, dictStatsCompAdhore)  = pickle.load(open(serialisationFile, 'r'))
-    myIntervals.Efficiency2 = collections.namedtuple('Efficiency', ('tp', 'tn', 'fp', 'fn', 'r', 'p', 'f1'))
-    for varArg in dictStatsCompPhylDiag.keys():
-        for gapMax in dictStatsCompPhylDiag[varArg].keys():
-            for (type, eff) in [(type, dictStatsCompPhylDiag[varArg][gapMax][type]) for type in ['adjacency', 'chromExtremity', 'familyContent']]:
-                (tp, tn, fp, fn, sn, sp) = eff
-                r = sn
-                p = sp
-                f1 = float(2 * r * p)/float(r + p)
-                new_eff = myIntervals.Efficiency2(tp, tn, fp, fn, r, p, f1)
-                dictStatsCompPhylDiag[varArg][gapMax][type] = new_eff
-    for gapMax in [gapMax for gapMax in dictStatsCompAdhore.keys() if gapMax != 0]:
-        for (type, eff) in [(type, dictStatsCompAdhore[gapMax][type]) for type in ['adjacency', 'chromExtremity', 'familyContent']]:
-            (tp, tn, fp, fn, sn, sp) = eff
-            r = sn
-            p = sp
-            f1 = float(2 * r * p) / float(r + p)
-            new_eff = myIntervals.Efficiency2(tp, tn, fp, fn, r, p, f1)
-            dictStatsCompAdhore[gapMax][type] = new_eff
 
 ####################################################################
 # Plot Results
@@ -567,7 +551,8 @@ def plotRecallPrecisionAndF1(dictStatsCompPhylDiag, dictStatsCompAdhore, argumen
         color = next(colorcycler)
         lineStyle = next(linecycler)
         gapMaxsAdhore = sorted([gapMax for gapMax in dictStatsCompAdhore.keys() if gapMax in arguments['gapMaxs']])
-        gapMaxsAdhore.remove(0)
+        if 0 in gapMaxsAdhore:
+            gapMaxsAdhore.remove(0)
         recalls = [dictStatsCompAdhore[gapMax][modeOfComparison].r for gapMax in gapMaxsAdhore]
         precisions = [dictStatsCompAdhore[gapMax][modeOfComparison].p for gapMax in gapMaxsAdhore]
         f1s = [dictStatsCompAdhore[gapMax][modeOfComparison].f1 for gapMax in gapMaxsAdhore]

@@ -11,6 +11,7 @@ import numpy
 import enum
 import time
 import pickle
+import getpass # https://stackoverflow.com/questions/842059/is-there-a-portable-way-to-get-the-current-username-in-python
 import collections
 from utils import myTools
 from utils import myDiags
@@ -19,16 +20,19 @@ from utils import myIntervals
 from utils import myCyntenator
 from utils import myLightGenomes
 
-from libs import myBreakpointsAnalyser
-
+# TODO When MagSimus is published uncomment the next line, remove benchTools.computePairwiseSyntenyBlocksOfMagSimus,
+# remove its sub functions and update links properly.
+# from libs import myBreakpointsAnalyser
 import benchmarkTools as benchTools
 
 LOAD_PRECOMPUTED_BENCHMARK = True
 # 5 lines to change to adapt this script to a local installation
 BIN_CYNTENATOR = myCyntenator.PATH_CYNTENATOR_BIN
-# or BIN_CYNTENATOR = '/home/jlucas/Libs/cyntenator/cyntenator' with the right path on the local machine
+
 #DATA_CYNTENATOR = '/home/jlucas/Libs/PhylDiag/data/benchmark/cyntenator'
-RES_CYNTENATOR = '/home/jlucas/Libs/PhylDiag/res/benchmark/cyntenator'
+# You might want to change this folder depending on where you installed PhylDiag
+# /home/<user>/Libs/PhylDiag/res/benchmark/cyntenator
+RES_CYNTENATOR = '/home/' + getpass.getuser() + '/Libs/PhylDiag/res/benchmark/cyntenator'
 DATA_CYNTENATOR = RES_CYNTENATOR
 serialisationFile = RES_CYNTENATOR + '/serialisationCyntenatorBenchmarkValues'
 
@@ -37,9 +41,9 @@ for directory in [DATA_CYNTENATOR, RES_CYNTENATOR]:
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-__doc__ = """This script compares the sbs of Cyntenator with the reference sbs recorded during simulation of magSimus
-          (with the breakpoint analyser feature)
-          """
+__doc__ = """This script compares the RSBs of Cyntenator with the reference conserved segments (cs) recorded during
+the simulation of MagSimus (with the breakpoint analyser feature)
+"""
 FilterType = enum.Enum('InFamilies', 'InBothGenomes', 'None')
 
 arguments = myTools.checkArgs(
@@ -54,10 +58,10 @@ arguments = myTools.checkArgs(
         ('ancGenes', str)
     ],
     [
-        # data
-        ('pSimGenomes', str, '../../res/simu1/genes.%s.list.bz2'),
-        ('pAncGenes', str, '../../res/simu1/ancGenes.%s.list.bz2'),
-        ('pSimulatedSbs', str, '../../res/simu1/sbs.genes.%s.%s.list.bz2'),
+        # data (in PhylDiag/data/benchmark)
+        ('pSimGenomes', str, 'genes.%s.list.bz2'),
+        ('pAncGenes', str, 'ancGenes.%s.list.bz2'),
+        ('pSimulatedSbs', str, 'cs.genes.%s.%s.list.bz2'),
 
         # pre-process
         # filterType should be in ['None', 'InFamilies', 'InBothGenomes']
@@ -117,7 +121,7 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
     # Load data
     speciesTree = myPhylTree.PhylogeneticTree(arguments['speciesTree'])
     if arguments['preComputePairwiseSbs']:
-        myBreakpointsAnalyser.computePairwiseSyntenyBlocksOfMagSimus(speciesTree, arguments['pSimGenomes'],
+        benchTools.computePairwiseSyntenyBlocksOfMagSimus(speciesTree, arguments['pSimGenomes'],
                                                                      arguments['pAncGenes'], arguments['pSimulatedSbs'])
     genome1 = myLightGenomes.LightGenome(arguments['pSimGenomes'] % arguments['species1'])
     genome2 = myLightGenomes.LightGenome(arguments['pSimGenomes'] % arguments['species2'])
@@ -212,16 +216,6 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
 else:
     # deserialize results
     dictStatsCompCyntenator = pickle.load(open(serialisationFile, 'r'))
-    myIntervals.Efficiency2 = collections.namedtuple('Efficiency', ('tp', 'tn', 'fp', 'fn', 'r', 'p', 'f1'))
-    for key in dictStatsCompCyntenator.keys():
-        for (type, eff) in [(type, dictStatsCompCyntenator[key][type]) for type in
-                            ['adjacency', 'chromExtremity', 'familyContent']]:
-            (tp, tn, fp, fn, sn, sp) = eff
-            r = sn
-            p = sp
-            f1 = float(2 * r * p) / float(r + p)
-            new_eff = myIntervals.Efficiency2(tp, tn, fp, fn, r, p, f1)
-            dictStatsCompCyntenator[key][type] = new_eff
 
 ####################################################################
 # Plot Results

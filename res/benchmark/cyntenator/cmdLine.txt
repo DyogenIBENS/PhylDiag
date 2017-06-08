@@ -1,3 +1,2 @@
 In the folder : ${PATH_PARENT_PHYLDIAG}/PhylDiag/data/benchmark
-${PATH_PARENT_PHYLDIAG}/PhylDiag/src/benchmark/compareCyntenatorSbsToSimulatedSbs.py speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=genes.%s.list.bz2 -pAncGenes=ancGenes.%s.list.bz2 -pSimulatedSbs=sbs.genes.%s.%s.list.bz2 -tandemGapMax=5  -filterType=InBothGenomes -analyseMistakesOneByOne +preComputePairwiseSbs -oriented
-
+${PATH_PARENT_PHYLDIAG}/PhylDiag/src/benchmark/compareCyntenatorSbsToSimulatedSbs.py speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=genes.%s.list.bz2 -pAncGenes=ancGenes.%s.list.bz2 -pSimulatedSbs=cs.genes.%s.%s.list.bz2 -preComputePairwiseSbs -oriented

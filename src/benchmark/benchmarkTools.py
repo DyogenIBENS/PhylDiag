@@ -182,6 +182,157 @@ def ensureNamesDifferBetweenGenome1AndGenome2(genome1, genome2, families):
         newFamilies.addFamily(myLightGenomes.Family(family.fn, newDns))
     return (newGenome1, newGenome2, newFamilies)
 
+import copy
+import itertools
+from utils import myFile
+from utils import myTools
+# TODO this function is the same as in MagSimus/src/libs/myBreakpointsAnalyser.py
+# Once MagSimus is published, only conserve the function in MagSimus/src/libs/myBreakpointsAnalyser.py and remove this
+# function and the subfunctions
+# and edit links/imports properly
+# instead of import 'from libs import myBreakpointsAnalyser.py' that already contains this function
+def computePairwiseSyntenyBlocksOfMagSimus(speciesTree, pSimGenomes, pAncGenes, pReferenceSbs):
+
+    # same function as MagSimus/src/libs/myEvents.performFission
+    # fission on chromosome 'c', inner intergene of index 'x'
+    # x is in [1, len(c)-1]
+    # c -> c=c[:x] & newC=c[x:]
+    def performFission(genome, (c, x), updateGenomeDict=False, keepOriginalGenome=False):
+        assert isinstance(genome, myLightGenomes.LightGenome)
+        if x == 0 or x == len(genome[c]):
+            # do not create a new chromosome, do nothing
+            newGenome = genome
+        else:
+            if keepOriginalGenome:
+                newGenome = copy.copy(genome)
+                newGenome[c] = copy.copy(genome[c])
+            else:
+                newGenome = genome
+            newC = myLightGenomes.newChromName(genome)
+            newGenome[newC] = newGenome[c][x:]
+            del newGenome[c][x:]
+            if updateGenomeDict:
+                assert newGenome.withDict
+                for (idx, g) in enumerate(newGenome[newC]):
+                    newGenome.g2p[g.n] = myLightGenomes.GeneP(newC, idx)
+        return newGenome
+
+    # same function as MagSimus/src/libs/myEvents.combineTwoSbs
+    def combineTwoSbs(sbs_1, sbs_2, verbose=False):
+        """
+        Combine two empirical sbs into one synthetic empirical sb
+
+        :param sbs_1: sbs with positional orthologous gene names
+        :param sbs_2: sbs with positional orthologous gene names
+        :param verbose:
+        :return: synthetic sbs
+        """
+        assert isinstance(sbs_1, myLightGenomes.LightGenome) and isinstance(sbs_2, myLightGenomes.LightGenome)
+        sbs_1Gns = sbs_1.getGeneNames()
+        sbs_2Gns = sbs_2.getGeneNames()
+
+        ######################################
+        # 1) reduce to the same set of genes #
+        ######################################
+        setGenesInBothSpecies = sbs_1Gns & sbs_2Gns
+        setGenesToRemove = (sbs_1Gns | sbs_2Gns) - setGenesInBothSpecies
+        (sbs_1, _, (nbRemovedSbsAnc, nbRemovedGenesAnc)) = myMapping.remapFilterGeneContent(sbs_1, setGenesToRemove)
+        (sbs_2, _, (nbRemovedSbsDes, nbRemovedGenesDes)) = myMapping.remapFilterGeneContent(sbs_2, setGenesToRemove)
+        assert sbs_1.getGeneNames() == sbs_2.getGeneNames()
+        nbSbsRmed = nbRemovedSbsAnc + nbRemovedSbsDes
+
+        ########################
+        # 2) share breakpoints #
+        ########################
+        sbsExtremities1 = myIntervals.analyseGenomeIntoChromExtremities(sbs_1)
+        sbsExtremities2 = myIntervals.analyseGenomeIntoChromExtremities(sbs_2)
+        sbsExtremities = sbsExtremities1 | sbsExtremities2
+        syntheticSbs = copy.deepcopy(sbs_1)
+        assert all(len(sb) > 0 for sb in syntheticSbs.values())
+        syntheticSbs.computeDictG2P()
+        for breakpointGeneExtr in sbsExtremities:
+            (c, x) = myIntervals.intergeneFromGeneExtremity(breakpointGeneExtr, syntheticSbs)
+            syntheticSbs = performFission(syntheticSbs, (c, x), updateGenomeDict=True)
+        assert all(len(sb) > 0 for sb in syntheticSbs.values())
+        assert isinstance(syntheticSbs, myLightGenomes.LightGenome)
+
+        return (syntheticSbs, nbSbsRmed)
+
+    # same function as MagSimus/src/libs/myEvents.integrateAllBreakpoints
+    def integrateAllBreakpoints(evolutivePathFromLCAtoD, empiricalSbs):
+        """
+        :param evolutivePathFromLCAtoD: example ['Amniota', 'Theria', 'Boreoeutheria', 'Euarchontoglires', 'Homo sapiens']
+        :param empiricalSbs: dict of sbs with keys (Amniota, Theria, ..., 'Homo sapiens', ...)
+        :param ancGenes: dict of ancGenes Families with keys (Amniota, Theria, ..., ...)
+        :return: sbs
+        """
+        # ancestor -> descendant chain
+        a_d_chain = myTools.myIterator.slidingTuple(evolutivePathFromLCAtoD, width=2)
+        (lca, d) = a_d_chain.next()
+        sbs = empiricalSbs[(lca, d)]
+        assert all(len(sb) > 0 for sb in sbs.values())
+        old_d = d
+        # a: ancestor
+        # d: descendant
+        nbSbsRmed = 0
+        for (a, d) in a_d_chain:
+            assert a == old_d
+            new_sbs = empiricalSbs[(a, d)]
+            assert all(len(sb) > 0 for sb in new_sbs.values())
+            # print >> sys.stdout, "in integrateAllBreakpoints %s->%s" % (a, d)
+            (sbs, tmp_nbSbsRmed) = combineTwoSbs(sbs, new_sbs, verbose=True)
+            nbSbsRmed += tmp_nbSbsRmed
+            assert all(len(sb) > 0 for sb in sbs.values())
+            old_d = d
+        return (sbs, nbSbsRmed)
+
+    # load families
+    ancGenesOf = {}
+    for s in speciesTree.listAncestr:
+        ancGenesOf[s] = myLightGenomes.Families(pAncGenes % s)
+    # load genomes
+    genomeOf = {}
+    for s in speciesTree.allNames:
+        print >> sys.stderr, pSimGenomes % str(s)
+        genomeOf[s] = myLightGenomes.LightGenome(pSimGenomes % str(s))
+    # load sbs
+    simSbsOf = {}
+
+    def loadSbs(speciesTree, pSbs, parent):
+        for (child, bLength) in speciesTree.items[parent]:
+            simSbsOf[(parent, child)] = myLightGenomes.LightGenome(pSbs % (parent, str(child)))
+            if child in speciesTree.items:
+                # if child is an internal node of the species tree
+                loadSbs(speciesTree, pSbs, child)
+    loadSbs(speciesTree, pReferenceSbs, speciesTree.root)
+
+    # for each pairwise comparison of two extant species compute the corresponding sbs
+    for (sp1, sp2) in itertools.combinations(speciesTree.listSpecies, 2):
+        lca = speciesTree.lastCommonAncestor([sp1, sp2])
+        # print lca
+        lca_genome = genomeOf[lca]
+        nbGs_ini = len(lca_genome.getGeneNames(checkNoDuplicates=True))
+
+        # sbs in the lineage from lca to sp1
+        (sbs1, nbSbsRmed1) = integrateAllBreakpoints(speciesTree.dicLinks[lca][sp1], simSbsOf)
+        # sbs in the lineage from lca to sp2
+        (sbs2, nbSbsRmed2) = integrateAllBreakpoints(speciesTree.dicLinks[lca][sp2], simSbsOf)
+        assert all(len(chrom) > 0 for chrom in sbs1.values())
+        assert all(len(chrom) > 0 for chrom in sbs2.values())
+        assert len(sbs1.getGeneNames(asA=list)) == len(sbs1.getGeneNames(asA=set))
+        assert len(sbs2.getGeneNames(asA=list)) == len(sbs2.getGeneNames(asA=set))
+        (sbs, nbSbsRmed3)  = combineTwoSbs(sbs1, sbs2, verbose=False)
+        nbGsRmed = nbGs_ini - len(sbs.getGeneNames(checkNoDuplicates=True))
+        nbSbsRmed = nbSbsRmed1 + nbSbsRmed2 + nbSbsRmed3
+        # to have the species combination in alphabetical order
+        speciesNames = sorted([sp1, sp2])
+        print >> sys.stderr, "Computation of %s: %s sbs removed, %s genes removed" % \
+                             (pReferenceSbs % (speciesNames[0], speciesNames[1]), nbSbsRmed, nbGsRmed)
+        # sort sbs by decreasing sizes
+        sbs.sort()
+        with myFile.openFile(pReferenceSbs % (speciesNames[0], speciesNames[1]), 'w') as f:
+            sbs.printIn(f)
+
 Mylimits = numpy.zeros((3,3), dtype=object)
 # very tight limits
 # Mylimits[0][0] = (0.1,0.8)
