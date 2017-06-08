@@ -53,21 +53,30 @@ This code uses a personal library: contained in git@depot.biologie.ens.fr:LibsDy
 ###########
 ###########
 
-# Install the LibsDyogen library
-# read : https://github.com/DyogenIBENS/LibsDyogen/blob/master/README.txt
-# From now on we assume that the libsDyogen root is in the PYTHONPATH
+# Install dependencies:
+# LibsDyogen
+
+# Install the LibsDyogen library first
+# either run 'bash https://github.com/DyogenIBENS/LibsDyogen/blob/master/INSTALL.sh'
+# or read : https://github.com/DyogenIBENS/LibsDyogen/blob/master/README.txt
+# From now on we assume that the path to the folder libsDyogen is in the PYTHONPATH
+
+# The easiest way to install PhylDiag is to run the bash script INSTALL.sh
+# The installation will be set in /home/${USER}/Libs/PhylDiag
+bash INSTALL.sh
+# If this does not work, follow the next indications
 
 # Choose a path for the parent folder of PhylDiag (here it is /home/<user>/Libs)
 PATH_PARENT_PHYLDIAG="/home/${USER}/Libs"
 mkdir -p ${PATH_PARENT_PHYLDIAG}
 cd ${PATH_PARENT_PHYLDIAG}
+PATH_PHYLDIAG=${PATH_PARENT_PHYLDIAG}/PhylDiag
 # Clone the PhylDiag deposit
-git clone git@depot.biologie.ens.fr:PhylDiag
+git clone https://github.com/DyogenIBENS/PhylDiag ${PATH_PHYLDIAG}
 # If necessary give execution rights
-# chmod +x ${Home}/Libs/PhylDiag/src/*.py
-# chmod +x ${Home}/Libs/PhylDiag/src/analysis*.py
-# chmod +x ${Home}/Libs/PhylDiag/src/preprocessing/*.py
-# chmod +x ${Home}/Libs/PhylDiag/src/postprocessing/*.py
+chmod +x ${PATH_PHYLDIAG}/src/*.py
+chmod +x ${PATH_PHYLDIAG}/src/analysis/*.py
+chmod +x ${PATH_PHYLDIAG}/src/postprocessing/*.py
 
 # It should be installed. Check that everything works properly by launching :
 cd PhylDiag
