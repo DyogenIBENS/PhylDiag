@@ -3,14 +3,14 @@
 # check that libsDyogen is in the PYTHONPATH
 exec 3<<'HERE'
 try:
-    from utilsa import *
+    from utils import *
     print 0
 except ImportError:
     print 1
     raise ImportError('LibsDyogen is not in the PYTHONPATH')
 HERE
 res=$(python /dev/fd/3)
-echo ${res}
+# echo ${res}
 
 if [ ${res} = "0" ]
 then
