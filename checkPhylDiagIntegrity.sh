@@ -157,6 +157,21 @@ for line in "${geneTeamsCommandLines[@]}"
 		eval ${line}
 done
 
+
+##########################################################
+#	Check integrity of the benchmark scripts         #
+##########################################################
+data="data/benchmark"
+benchmarkCmdLines=(
+"src/benchmark/comparePhylDiagAndADHORESbsToSimulatedSbs.py ${data}/speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=${data}/genes.%s.list.bz2 -pAncGenes=${data}/ancGenes.%s.list.bz2 -pSimulatedSbs=${data}/sbs.genes.%s.%s.list.bz2  -preComputePairwiseSbs -oriented")
+benchmarkCmdLines+=(
+"src/benchmark/compareCyntenatorSbsToSimulatedSbs.py ${data}/speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=${data}/genes.%s.list.bz2 -pAncGenes=${data}/ancGenes.%s.list.bz2 -pSimulatedSbs=cs.genes.%s.%s.list.bz2 -preComputePairwiseSbs -oriented")
+for line in "${benchmarkCmdLines[@]}"
+	do
+		echo -e "${green}${line}${NC}"
+		eval ${line}
+done
+
 # TODO
 ##########################################################
 #	Check integrity of geneTeamsHomologyMatrixViewer #
