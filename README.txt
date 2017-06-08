@@ -53,18 +53,24 @@ This code uses a personal library: contained in git@depot.biologie.ens.fr:LibsDy
 ###########
 ###########
 
-# Install dependencies:
-# LibsDyogen
-
 # Install the LibsDyogen library first
-# either run 'bash https://github.com/DyogenIBENS/LibsDyogen/blob/master/INSTALL.sh'
-# or read : https://github.com/DyogenIBENS/LibsDyogen/blob/master/README.txt
+# Read : https://raw.githubusercontent.com/DyogenIBENS/LibsDyogen/master/README.txt
 # From now on we assume that the path to the folder libsDyogen is in the PYTHONPATH
 
-# The easiest way to install PhylDiag is to run the bash script INSTALL.sh
+# The easiest way to install PhylDiag is to launch the remote script INSTALL.sh hosted on github
+# This script will clone the github deposit itself
 # The installation will be set in /home/${USER}/Libs/PhylDiag
-bash INSTALL.sh
+
+# Install curl, if you don't have it
+sudo apt-get update
+sudo apt-get install curl
+# Use curl to execute the remote file INSTALL.sh hosted on github
+bash <(curl -s https://raw.githubusercontent.com/DyogenIBENS/PhylDiag/master/INSTALL.sh)
+
 # If this does not work, follow the next indications
+
+# Install dependencies:
+# LibsDyogen
 
 # Choose a path for the parent folder of PhylDiag (here it is /home/<user>/Libs)
 PATH_PARENT_PHYLDIAG="/home/${USER}/Libs"
