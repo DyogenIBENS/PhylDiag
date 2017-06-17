@@ -12,7 +12,7 @@ A genome is a set of chromosomes.
 A chromosome is a list of genes.
 A gene is a pair (gene name, strand).
 
-F is an associative array that links, for each family
+F is an associative array that links, for each family,
 * the family name (**key**)
 * to the set of names of the descendant genes (**values**)
 
@@ -35,22 +35,19 @@ PhylDiag is explained in more details in two publications
 1. [PhylDiag : identifying complex synteny blocks that include tandem duplications using phylogenetic gene trees](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-268)
 2. High precision detection of conserved segments from synteny blocks (FIXME update as soon as published)
 
-Articles and Supplementary information are in the doc/ folder.
-(TODO include the second article and second supplementary information once it is online)
+and in a french thesis manuscript
 
-### Link between synteny blocks and conserved segments
+3. [Étude de l’évolution de l’ordre des gènes de vertébrés par simulation](https://tel.archives-ouvertes.fr/tel-01398369/document)
+
+##### Link between synteny blocks and conserved segments
 
 > "there is no difference between a synteny block with no gap (g=0) and a conserved segment"
-> -- <cite> [Lucas, Roest Crollius][2]<cite/>
+> -- <cite> [in High precision detection of conserved segments from synteny blocks]<cite/>
 
-(Remark: "no gap", corresponds to "no micro-rearrangement" in its context)
+Remark: "no gap", corresponds to "no micro-rearrangement" in its context
 
 *Conserved segments* can be considered as a specific type of *synteny blocks*.
 For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code.
-
-Contacts :
-* [Joseph Lucas](jlucas@ens.fr)
-* [Hugues Roest Crollius](hrc@ens.fr)
 
 ## Installation
 [Install the LibsDyogen library first.](https://github.com/DyogenIBENS/LibsDyogen)
@@ -230,41 +227,33 @@ Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && 
 
 ## Update
 If you want to keep PhylDiag up to date, you need to update LibsDyogen first (see [the Update section of LibsDyogen](https://raw.githubusercontent.com/DyogenIBENS/LibsDyogen/master/README.md)).
-After, launch
+
+Then
 ```
 cd ${PATH_LIBSDYOGEN}
 git pull
 ```
 This will upgrade your local git deposit to the last commit.
 
-If you want a more stable version, after `git pull`, you can downgrade to the latest tagged version (=stable release), just execute
-```bash
-# Get tags from the github deposit
-git fetch --tags
-# Get the latest tag name
-latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-# Checkout the latest tag
-git checkout $latestTag
-```
+If you want a more stable version, after `git pull`, you can downgrade to the latest tagged version (=stable release)
+1. Get tags from the github deposit `git fetch --tags`
+2. Get the latest tag name ``latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)``
+3. Checkout the latest tag `git checkout $latestTag`
 
-Otherwise you can list all tagged versions
-```
-git tag -l
-```
-And switch to the version you want
-```
-git checkout <tagName>
-```
+Otherwise, after `git fetch --tags`
+1. List all tagged versions: `git tag -l`
+2. Checkout to the version you want: `git checkout <tagName>`
+
 
 **Please ensure that the versions of PylDiag and LibsDyogen share the same tagged version or correspond to the last commits.**
 
 ## Contributing
 If you want to contribute to this deposit please
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request
+1. fork it
+2. create your feature branch: `git checkout -b my-new-feature`
+3. commit your changes: `git commit -am 'Add some feature'`
+4. push to the branch: `git push origin my-new-feature`
+5. submit a pull request
 
 ## Credits
 * Joseph Lucas: conceptualization and implementation of phylDiag
@@ -281,4 +270,7 @@ and the CeCILL licence version 2 of the CNRS. These licences are contained in th
 Copyright for this code is held jointly by the Dyogen (DYnamic and Organisation of GENomes) team
 of the Institut de Biologie de l'Ecole Normale Supérieure (IBENS) 46 rue d'Ulm Paris, and the individual authors.
 
+## Contacts
 
+* [Joseph Lucas](jlucas@ens.fr)
+* [Hugues Roest Crollius](hrc@ens.fr)
