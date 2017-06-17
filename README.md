@@ -1,25 +1,35 @@
 # PhylDiag
 [![DOI](https://zenodo.org/badge/19742670.svg)](https://zenodo.org/badge/latestdoi/19742670)
 
+
+From the comparison of two extant genomes and corresponding gene trees (or gene families), PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
+
 **Inputs**
-1. two extant genomes, G1 and G2
-2. gene families, F
+1. two extant *genomes*, G1 and G2
+2. *gene families*, F
 
 A genome is a set of chromosomes.
 A chromosome is a list of genes.
-A gene is a pair (geneName, strand).
+A gene is a pair (gene name, strand).
 
 F is an associative array that links, for each family
-* a familyName (**key**), often the name of the ancestral gene, at the root of the family
-* to the set of descendant genes (**values**) {descendantGeneName1, ..., descendantGeneNameN}
+* the family name (**key**)
+* to the set of names of the descendant genes (**values**)
+
+The name of the family is often the name of the ancestral gene, at the root of the gene family.
 
 If you use phylogenetic gene trees, utils in LibsDyogen/scripts  can
 convert your trees into gene families.
 
 **Outputs**
 * Either (depending on the options of PhylDiag)
-    * conserved segments
-    * or synteny blocks (if the identification of micro-rearrangements and the identification of mono-genic conserved segments are disabled)
+    * *conserved segments*
+    * or *synteny blocks*, if
+        * the identification of micro-rearrangements,
+        * identification of mono-genic conserved segments,
+        * identification of mono-genic inversions
+
+        are disabled
 
 PhylDiag is explained in more details in two publications
 1. [PhylDiag : identifying complex synteny blocks that include tandem duplications using phylogenetic gene trees](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-268)
@@ -28,14 +38,22 @@ PhylDiag is explained in more details in two publications
 Articles and Supplementary information are in the doc/ folder.
 (TODO include the second article and second supplementary information once it is online)
 
-This code is dependent of the [LibsDyogen library](https://github.com/DyogenIBENS/LibsDyogen)
+### Link between synteny blocks and conserved segments
+
+> "there is no difference between a synteny block with no gap (g=0) and a conserved segment"
+> -- <cite> [Lucas, Roest Crollius][2]<cite/>
+
+(Remark: "no gap", corresponds to "no micro-rearrangement" in its context)
+
+*Conserved segments* can be considered as a specific type of *synteny blocks*.
+For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code.
 
 Contacts :
 * [Joseph Lucas](jlucas@ens.fr)
 * [Hugues Roest Crollius](hrc@ens.fr)
 
 ## Installation
-[Install the LibsDyogen library first.](https://raw.githubusercontent.com/DyogenIBENS/LibsDyogen/master/README.txt)
+[Install the LibsDyogen library first.](https://github.com/DyogenIBENS/LibsDyogen)
 From now on we assume that the path to the folder LibsDyogen is in the PYTHONPATH.
 
 The easiest way to install PhylDiag is to launch the remote script INSTALL.sh hosted on github.
