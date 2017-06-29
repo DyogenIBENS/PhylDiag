@@ -76,13 +76,13 @@ arguments = myTools.checkArgs(
         #('gapMaxs', str, '(5,10)'),
         #('gapMaxs', str, '(1,)'),
         #('tandemGapMaxs', tuple, (0, 10, 100)),
-        #('gapMaxMicroInv', int, 0),
-        #('identifyMonoGenicInvs', bool, False),
+        #('gapMax_DiagsHp_SbsHp', int, 0),
+        #('identifyMonoGenicCs', bool, False),
         ('pThresholdPhylDiag', str, 'None'),
         ('pThresholdADHORE', float, 0.001),
         ('distanceMetric', str, 'CD'),
         ('distinguishMonoGenicDiags', bool, True),
-        #('identifyMicroRearrangements', bool, False),
+        #('identifyMicroRearr', bool, False),
 
         ('preComputePairwiseSbs', bool, True),
 
@@ -109,16 +109,15 @@ variableArg = (('imr', ('imcs', 'gmmi'), 'tm'), [(False, (False, None), None),
                                                  (True, (True, 1), 4)])
 
 if not LOAD_PRECOMPUTED_BENCHMARK :
-    # if arguments['gapMaxMicroInv'] == 'None':
-    #     arguments['gapMaxMicroInv'] = None
+    # if arguments['gapMax_DiagsHp_SbsHp'] == 'None':
+    #     arguments['gapMax_DiagsHp_SbsHp'] = None
     # else:
-    #     arguments['gapMaxMicroInv'] = int(arguments['gapMaxMicroInv'])
+    #     arguments['gapMax_DiagsHp_SbsHp'] = int(arguments['gapMax_DiagsHp_SbsHp'])
     if arguments['gapMaxs'] == 'None':
         arguments['gapMaxs'] = None
     else:
         arguments['gapMaxs'] = tuple(eval(arguments['gapMaxs']))
-    filterType = list(myDiags.FilterType._keys)
-    filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
+        filterType = myDiags.FilterType.__getattr__(arguments["filterType"])
     pThresholdPhylDiag = arguments['pThresholdPhylDiag'] if arguments['pThresholdPhylDiag'] != 'None' else None
     # tandemGapMaxs = arguments['tandemGapMaxs']
     # identifyMonoGenicInversionS = [False, True]
@@ -177,13 +176,13 @@ if not LOAD_PRECOMPUTED_BENCHMARK :
                                                                 gapMax=gapMax,
                                                                 distanceMetric=arguments['distanceMetric'],
                                                                 tandemGapMax=arguments['tandemGapMax'],
-                                                                gapMaxMicroInv=gmmi,  #arguments['gapMaxMicroInv'],
+                                                                gapMax_Diag_Sbs=gmmi,  #arguments['gapMax_Diag_Sbs'],
                                                                 distinguishMonoGenicDiags=arguments['distinguishMonoGenicDiags'],
-                                                                #identifyMonoGenicInvs=varArg,  #arguments['identifyMonoGenicInvs'],
-                                                                identifyMonoGenicInvs=imcs,  #arguments['identifyMonoGenicInvs'],
-                                                                #identifyMicroRearrangements=arguments['identifyMicroRearrangements'],
+                                                                #identifyMonoGenicCs=varArg,  #arguments['identifyMonoGenicCs'],
+                                                                identifyMonoGenicCs=imcs,  #arguments['identifyMonoGenicCs'],
+                                                                #identifyMicroRearr=arguments['identifyMicroRearr'],
                                                                 truncationMax=tm,
-                                                                identifyMicroRearrangements=imr,
+                                                                identifyMicroRearr=imr,
                                                                 pThreshold=pThresholdPhylDiag,
                                                                 verbose=True)
             coverage = myDiags.computeMeanCoverageInGenes(newGenome1, newGenome2, sbsInPairComp, families=newFamilies)

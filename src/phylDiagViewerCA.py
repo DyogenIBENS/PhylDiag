@@ -14,8 +14,6 @@ import utils.myGenomesDrawer as myGenomesDrawer
 # import PhylDiag core algorithm
 import utils.myDiags as myDiags
 
-filterType = list(myDiags.FilterType._keys)
-
 __doc__ = """
         Show the homology matrix with coloured synteny blocks (also called diagonals).
         - On the x-axis are the genes of the 1st genome in the desired window
@@ -32,8 +30,7 @@ arguments = myTools.checkArgs(
      ("chr1:deb1-fin1", str),
      ("chr2:deb2-fin2", str)],
     myDiags.defaultArgsPhylDiag +\
-    [('removeUnofficialChromosomes', bool, True),
-     ('withSbs', bool, True),
+    [('withSbs', bool, True),
      ("in:syntenyBlocks", str, 'None'),
      ("out:syntenyBlocks", str, "./syntenyBlocksDrawer.txt"),
      ("mode:chromosomesRewrittenInTbs", bool, False),
@@ -41,7 +38,7 @@ arguments = myTools.checkArgs(
      ('drawAllInformations', bool, False),
      ("scaleFactorRectangles", float, 1.0),
      ("out:imageFileName", str, "./homologyMatrix.svg"),
-     ("considerAllPairComps", bool, True),
+     ("onlyROIcomp", bool, False),
      ('switchOnDirectView', bool, False),
      ('withIdsOfSbs', bool, True),
      ('verbose', bool, True)],
@@ -53,10 +50,6 @@ kwargs['verbose'] = True
 genome1 = myLightGenomes.LightGenome(arguments['genome1'], withDict=True)
 genome2 = myLightGenomes.LightGenome(arguments['genome2'], withDict=True)
 families = myLightGenomes.Families(arguments['families'])
-
-if arguments['removeUnofficialChromosomes']:
-    genome1.removeUnofficialChromosomes()
-    genome2.removeUnofficialChromosomes()
 
 sbsInPairComp = None
 if arguments['withSbs']:
@@ -81,18 +74,17 @@ myGenomesDrawer.homologyMatrixViewer(genome1, genome2, families, arguments['chr1
                                      gapMax=kwargs['gapMax'],
                                      distinguishMonoGenicDiags=kwargs['distinguishMonoGenicDiags'],
                                      pThreshold=kwargs['pThreshold'],
-                                     gapMaxMicroInv=kwargs['gapMaxMicroInv'],
-                                     identifyMonoGenicInvs=kwargs["identifyMonoGenicInvs"],
-                                     identifyMicroRearrangements=kwargs['identifyMicroRearrangements'],
+                                     gapMax_Diag_Sbs=kwargs['gapMax_Diag_Sbs'],
+                                     identifyMonoGenicCs=kwargs["identifyMonoGenicCs"],
+                                     identifyMicroRearr=kwargs['identifyMicroRearr'],
                                      truncationMax=kwargs['truncationMax'],
                                      sameStrand=kwargs['sameStrand'],
                                      validateImpossToCalc_mThreshold=kwargs['validateImpossToCalc_mThreshold'],
                                      nbHpsRecommendedGap=kwargs['nbHpsRecommendedGap'],
                                      targetProbaRecommendedGap=kwargs['targetProbaRecommendedGap'],
                                      chromosomesRewrittenInTbs=arguments['mode:chromosomesRewrittenInTbs'],
-                                     drawAllInformations=arguments['drawAllInformations'],
                                      scaleFactorRectangles=arguments['scaleFactorRectangles'],
-                                     considerAllPairComps=arguments['considerAllPairComps'],
+                                     onlyROIcomp=arguments['onlyROIcomp'],
                                      switchOnDirectView=arguments['switchOnDirectView'],
                                      optimisation=kwargs['optimisation'],
                                      inSbsInPairComp=sbsInPairComp,

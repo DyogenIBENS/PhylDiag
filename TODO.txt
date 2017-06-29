@@ -4,14 +4,15 @@ use the "sort-join" algorithm of "step2" (page 3) to increase the speed when bui
 ref : Khalid Mahmood, Geoffrey I. Webb, Jiangning Song, James C. Whisstock, Arun S. Konagurthu; Efficient large-scale protein sequence comparison and gene matching to identify orthologs and co-orthologs. Nucleic Acids Res 2012; 40 (6): e44. doi: 10.1093/nar/gkr1261
 url : https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315314/pdf/gkr1261.pdf
 
-Highly important:
+important:
 -----------------
-* Update the README to consider 'identifyMicroRearrangements' and 'nonOverlappingSbs' new options in phylDiag.
 * split identify microinvs into 1) identify monoG-Cs and 2) use these monoG-cs to split sbs in the ibwg step
 (newly named imr)
 * update geneTeamsHomologyMatrixViewer to use myGenomesDrawer
 * Compute coverage in the benchmark
-
+* look for artificial gaps, check that they are not due to horizontal gene transfer
+* check diagonals for small gene tree editing (curr we use threshold 0.30), but less artificial gaps may be present if we use less edited gene trees
+(lengths of ancestral genomes reconstructed with AGORA may not be the best criteria to edit trees).
 
 For sbs file names, always mention the two extant species, the ancestor, the
 filtering, the tandemGapMax, the gapMax and the distance metric used.
@@ -159,10 +160,7 @@ TODO:
 	  intra-sb-transposition and transpositions)
 * code a viewer of the results of phylDiag.py that take sbFile.sbs as input
 * implement the 'rewrittenInTbs' option in geneTeamsHomologyMatrixViewer.py
-!!!!!!!!
-* gene indexation should be based on the coordinate of the beginning of
-  transcription, not the coordinate that is the closest to the coordinate 0.
-!!!!!!!!
+
 * when selecting sbs during the nonOverlapping, if two sbs have the same
   number of homologies, take the sb that has the smalles bounding box, i.e. the 
   sb whose extremities on G1 and G2 are the closest.

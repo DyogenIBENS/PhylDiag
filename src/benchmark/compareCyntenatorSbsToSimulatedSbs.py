@@ -115,8 +115,7 @@ else:
     arguments['thresholds'] = tuple(eval(arguments['thresholds']))
 
 if not LOAD_PRECOMPUTED_BENCHMARK :
-    filterType = list(myDiags.FilterType._keys)
-    filterType = myDiags.FilterType[filterType.index(arguments["filterType"])]
+    filterType = myDiags.FilterType.__getattr__(arguments["filterType"])
 
     # Load data
     speciesTree = myPhylTree.PhylogeneticTree(arguments['speciesTree'])

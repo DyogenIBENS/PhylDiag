@@ -42,7 +42,7 @@ gm=5
 dm=CD
 ibwg='+'
 gmmi=0
-om=10
+tm=10
 # p-value threshold
 pt=1.0
 
@@ -60,7 +60,7 @@ S1=$(echo ${line}|cut -d" " -f1)
 S2=$(echo ${line}|cut -d" " -f2)
 A=$(echo ${line}|cut -d" " -f3)
 commandLines+=(
-"python -O src/phylDiag.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 -filterType=${f} -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyMicroRearrangements -truncationMax=${om} -verbose > res/${S1}_${S2}_Tgm${tgm}gM${gm}Gmmi${gmmi}IbwgOm${om}.sbs 2> >(tee logErr_syntenyBlocksDrawer.txt >&2)"
+"python -O src/phylDiag.py data/${S1}.genome.bz2 data/${S2}.genome.bz2 data/${A}.families.bz2 --filter=${f} --tandemGapMax=${tgm} --distanceMetric=${dm} --gapMax=${gm} --mmg=${gmmi} --${imrwg}imr --truncationMax=${tm} --verbose > res/${S1}_${S2}_Tgm${tgm}gM${gm}Gmmi${gmmi}ImrwgOm${tm}.sbs 2> >(tee logErr_syntenyBlocksDrawer.txt >&2)"
 )
 done
 
@@ -83,15 +83,15 @@ do
 	commandLines+=(
 	# MH
 	# recompute the sbs
-	#"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} -mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:imageFileName=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:syntenyBlocks=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	#"python -O src/phylDiagViewer.py data/${S1}.genome.bz2 data/${S2}.genome.bz2 data/${A}.families.bz2 --ROI1=${C1}:${R1} --ROI2=${C2}:${R2} --filter=${f} --tandemGapMax=${tgm} --distanceMetric=${dm} --gapMax=${gm} --verbose --mmg=${gmmi} --${imrwg}imr --truncationMax=${tm} res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${om}.svg --outSbs=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${tm}_syntenyBlocksDrawer.txt"
 	# reuse previously computed sbs
-	"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} -mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:imageFileName=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:syntenyBlocks=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt -in:syntenyBlocks=res/${S1}_${S2}_Tgm${tgm}gM${gm}Gmmi${gmmi}IbwgOm${om}.sbs"
+	"python -O src/phylDiagViewer.py data/${S1}.genome.bz2 data/${S2}.genome.bz2 data/${A}.families.bz2 --ROI1=${C1}:${R1} --ROI2=${C2}:${R2} --filter=${f} --tandemGapMax=${tgm} --distanceMetric=${dm} --gapMax=${gm} --verbose --mmg=${gmmi} --${imrwg}imr --truncationMax=${tm} res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${om}.svg --outSbs=res/MH_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${tm}_syntenyBlocksDrawer.txt --inSbs=res/${S1}_${S2}_Tgm${tgm}gM${gm}Gmmi${gmmi}ImrwgOm${tm}.sbs"
 
 	# MHP
 	# recompute the sbs
-	#"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:imageFileName=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:syntenyBlocks=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt"
+	#"python -O src/phylDiagViewer.py data/${S1}.genome.bz2 data/${S2}.genome.bz2 data/${A}.families.bz2 --ROI1=${C1}:${R1} --ROI2=${C2}:${R2} --filter=${f} --chrsInTbs --tandemGapMax=${tgm} --distanceMetric=${dm} --gapMax=${gm} --verbose --mmg=${gmmi} --${imrwg}imr --truncationMax=${tm} res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${om}.svg --outSbs=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${tm}_syntenyBlocksDrawer.txt"
 	# reuse previously computedsbs
-	"python -O src/phylDiagHomologyMatrixViewer.py data/genesST.${S1}.list.bz2 data/genesST.${S2}.list.bz2 data/ancGenes.${A}.list.bz2 ${C1}:${R1} ${C2}:${R2} -filterType=${f} +mode:chromosomesRewrittenInTbs -tandemGapMax=${tgm} -distanceMetric=${dm} -gapMax=${gm} -verbose -pThreshold=${pt} -gapMaxMicroInv=${gmmi} ${ibwg}identifyMicroRearrangements -truncationMax=${om} -out:imageFileName=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}.svg -out:syntenyBlocks=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}IbwgOm${om}_syntenyBlocksDrawer.txt -in:syntenyBlocks=res/${S1}_${S2}_Tgm${tgm}gM${gm}Gmmi${gmmi}IbwgOm${om}.sbs"
+	"python -O src/phylDiagViewer.py data/${S1}.genome.bz2 data/${S2}.genome.bz2 data/${A}.families.bz2 --ROI1=${C1}:${R1} --ROI2=${C2}:${R2} --filter=${f} --chrsInTbs --tandemGapMax=${tgm} --distanceMetric=${dm} --gapMax=${gm} --verbose --mmg=${gmmi} --${imrwg}imr --truncationMax=${tm} res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${om}.svg --outSbs=res/MHP_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_Tgm${tgm}gM${gm}ImrwgOm${tm}_syntenyBlocksDrawer.txt --inSbs=res/${S1}_${S2}_Tgm${tgm}gM${gm}Gmmi${gmmi}ImrwgOm${tm}.sbs"
 
 	)
 done

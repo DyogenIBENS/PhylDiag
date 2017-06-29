@@ -1,41 +1,44 @@
 # PhylDiag
 [![DOI](https://zenodo.org/badge/19742670.svg)](https://zenodo.org/badge/latestdoi/19742670)
 
-
-From the comparison of two extant genomes and corresponding gene trees (or gene families), PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
+From the comparison of two extant genomes and corresponding gene families, PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
 
 **Inputs**
-1. two extant *genomes*, G1 and G2
-2. *gene families*, F
+* two extant *genomes*, G1 and G2
+* *a set of gene families*, F
+
+**Outputs**
+* *conserved segments*
+
+Example of
+* genome:  data/Homo.sapiens.genome.bz2
+* set of families: data/Euarchontoglires.families.bz2
+* conserved segments: res/Homo.sapiens_Mus.musculus_fEuarchontoglires.sbs
+
+Gene families can be computed from a forest of phylogenetic gene trees, see https://github.com/DyogenIBENS/LibsDyogen.
 
 A genome is a set of chromosomes.
 A chromosome is a list of genes.
-A gene is a pair (gene name, strand).
+A gene is a pair (gene name, transcription orientation).
 
-F is an associative array that links, for each family,
+F, the set of gene families, is an associative array that links, for each family,
 * the family name (**key**)
 * to the set of names of the descendant genes (**values**)
 
-The name of the family is often the name of the ancestral gene, at the root of the gene family.
+The name of a gene family is often the name of the ancestral gene, at the root of the gene family.
 
-If you use phylogenetic gene trees, utils in LibsDyogen/scripts  can
-convert your trees into gene families.
+PhylDiag can also return *syntny blocks*, if
+* identification of micro-rearrangements,
+* identification of mono-genic conserved segments
+* identification of mono-genic inversions
 
-**Outputs**
-* Either (depending on the options of PhylDiag)
-    * *conserved segments*
-    * or *synteny blocks*, if
-        * the identification of micro-rearrangements,
-        * identification of mono-genic conserved segments,
-        * identification of mono-genic inversions
-
-        are disabled
+are disabled.
 
 PhylDiag is explained in more details in two publications
 1. [PhylDiag : identifying complex synteny blocks that include tandem duplications using phylogenetic gene trees](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-268)
 2. High precision detection of conserved segments from synteny blocks (FIXME update as soon as published)
 
-and in a french thesis manuscript
+and in a thesis manuscript in french
 
 3. [Étude de l’évolution de l’ordre des gènes de vertébrés par simulation](https://tel.archives-ouvertes.fr/tel-01398369/document)
 
@@ -44,7 +47,7 @@ and in a french thesis manuscript
 > "there is no difference between a synteny block with no gap (g=0) and a conserved segment"
 > -- <cite> [in High precision detection of conserved segments from synteny blocks]<cite/>
 
-Remark: "no gap", corresponds to "no micro-rearrangement" in its context
+Remark: "no gap", corresponds to "no micro-rearrangement" here
 
 *Conserved segments* can be considered as a specific type of *synteny blocks*.
 For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code.
@@ -100,133 +103,191 @@ bash ./checkPhylDiagIntegrity.sh
 
 ## Usage
 ### PhylDiag
-* The core of PhylDiag is in LibsDyogen/utils/myDiags.py.
-* Probability calculations are in LibsDyogen/utils/myProbas.py.
-* The wrapper of PhylDiag is src/phylDiag.py.
 
-Executing phylDiag without argument will show how to use the executable
 ```
-src/phylDiag.py
+src/phylDiag.py --help
 ```
+returns
+```
+usage: phylDiag.py [-h] [-m MINCHRLEN] [-f {None,InBothGenomes,InFamilies}]
+                   [-t TANDEMGAPMAX] [-d {MD,ED,DPD,CD}] [-g GAPMAX]
+                   [--imr | --no-imr] [--imcs | --no-imcs] [--mmg MMG]
+                   [--truncation | --no-truncation]
+                   [--truncationMax TRUNCATIONMAX] [-v]
+                   G1 G2 F
 
-It shows
+positional arguments:
+  G1                    genome1
+  G2                    genome2
+  F                     set of gene families
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m MINCHRLEN, --minChrLen MINCHRLEN
+                        minimum number of genes in considered chromosomes
+                        (default: 2)
+  -f {None,InBothGenomes,InFamilies}, --filter {None,InBothGenomes,InFamilies}
+                        filter type (default: InBothGenomes)
+  -t TANDEMGAPMAX, --tandemGapMax TANDEMGAPMAX
+                        maximum gap between tandem duplicates in the same
+                        cluster (default: 10)
+  -d {MD,ED,DPD,CD}, --distanceMetric {MD,ED,DPD,CD}
+                        metric used for the calculation of 2D distances. CD:
+                        Chebyshev, MD: Manhattan, DPD: Diagonal Pseudo
+                        Distance, ED: Euclidian (default: CD)
+  -g GAPMAX, --gapMax GAPMAX
+                        maximum 2D gap between chained homologies (default: 5)
+  --imr                 identify micro-rearrangements (default: True)
+  --no-imr
+  --imcs                identify mono-genic conserved segments (default: True)
+  --no-imcs
+  --mmg MMG             maximum micro-gap, maximum gap allowed between: the
+                        homology of a detectable micro-segment and the nearest
+                        homology of a diagonal (default: 1)
+  --truncation          truncate overlapping diagonals (default: True)
+  --no-truncation
+  --truncationMax TRUNCATIONMAX
+                        maximum truncated length of the smallest overlapping
+                        diagonals, above the diag. is fully removed, without
+                        truncation (default: 10)
+  -v, --verbose         verbosity (default: False)
 ```
-- ERROR - Not enough arguments
- Usage : src/phylDiag.py
-	1: genome1 <type 'file'>
-	2: genome2 <type 'file'>
-	3: families <type 'file'>
-	  -filterType <type 'str'> (InBothGenomes)
-	  -tandemGapMax <type 'int'> (10)
-	  -gapMax <type 'str'> (5)
-	+/-distinguishMonoGenicDiags (True)
-	  -distanceMetric <type 'str'> (CD)
-	  -pThreshold <type 'str'> (None)
-	  -gapMaxMicroInv <type 'str'> (1)
-	+/-identifyMonoGenicInvs (True)
-	+/-identifyMicroRearrangements (True)
-	  -truncationMax <type 'str'> (10)
-	  -minChromLength <type 'int'> (2)
-	+/-sameStrand (True)
-	  -nbHpsRecommendedGap <type 'int'> (2)
-	  -targetProbaRecommendedGap <type 'float'> (0.01)
-	  -validateImpossToCalc_mThreshold <type 'int'> (3)
-	  -optimisation <type 'str'> (cython)
-	+/-verbose (False)
-	+/-removeUnofficialChromosomes (True)
-```
-Numbered parameters are required and other parameters are optional, default values used are written between brackets.
 
 3 files are required :
-- 2 genomes files
-- 1 ancGenes file (for gene family definitions)
+- genome1
+- genome2
+- families
+in this order
 
-Examples of genomes and ancGenes files are given in <PhylDiagRootPath>/data.
-For instance you could use human and mouse genomes and the anGenes defining families from the Euarchontoglire ancestor = MRCA(human,mouse)
+If you want to execute phylDiag with all default options
 
-(TODO explain all options)
-
-* If the gapMax is set to 'None', PhylDiag chooses itself the advised gapMax, see article [1].
-* The distance metric may be either the 'DPD', 'ED', 'MD' or 'CD'; the default value is 'CD'
-* pThreshold is the p-value threshold for the statistical validation of synteny blocks, default value is 'None', meaning
-that their is no statistical validation of synteny blocks.
-* By default the filtering of extant genomes is InBothGenomes, meaning that only homologs are kept.
-
-Other parameters are not explained in PhylDiag article and novice users should avoid changing them
-
-A standard way to launch PhylDiag is thus
 ```
-src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -truncationMax=5 > res/consevedSegments.txt
+src/phylDiag.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 > res/consevedSegments.sbs
+```
+Each family is defined as a set of genes that derive from one gene in Euarchontoglires.
+Euarchontoglires is the most recent common ancestor of extant human and mouse.
+
+* The distance metric may be either the 'DPD', 'ED', 'MD' or 'CD' (in brackets). The default distance metric is 'CD' (in parenthesis).
+* By default the filtering of extant genomes is 'InBothGenomes', meaning that only homologs present in both genomes are kept.
+
+A standard way to launch PhylDiag is
+```
+src/phylDiag.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 --tandemGapMax=5 --gapMax=5 --truncationMax=5 > res/consevedSegments.txt
 ```
 
-Adding '+verbose' (set the verbose boolean to True) returns more information in the logErr
+Adding '--verbose' returns more information in logErr
 ```
-src/phylDiag.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 -tandemGapMax=5 -gapMax=5 -truncationMax=5 +verbose > res/conservedSegments.txt 2> res/logErr.txt
+src/phylDiag.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 --tandemGapMax=5 --gapMax=5 --truncationMax=5 --verbose > res/consevedSegments.txt 2> res/logErr.txt
 ```
 
 ### PhylDiag Viewer
 
-Here again, executing phylDiagHomologyMatrixViewer without argument will show how to use the executable
+This viewer draw homology matrices with conserved segments.
+
 ```
-src/phylDiagHomologyMatrixViewer.py
+src/phylDiagViewer.py --help
+```
+returns
+```
+usage: phylDiagViewer.py [-h] [-m MINCHRLEN]
+                         [-f {None,InBothGenomes,InFamilies}]
+                         [-t TANDEMGAPMAX] [-d {MD,ED,DPD,CD}] [-g GAPMAX]
+                         [--imr | --no-imr] [--imcs | --no-imcs] [--mmg MMG]
+                         [--truncation | --no-truncation]
+                         [--truncationMax TRUNCATIONMAX] [-v]
+                         [--ROI1 chr1:beg1-end1] [--ROI2 chr2:beg2-end2]
+                         [--withSbs | --withoutSbs] [-s INSBS] [-i] [-b] [-r]
+                         [-a SCALERECTS] [--considerAllComps] [-l] [-o OUTSBS]
+                         G1 G2 F IMAGE
+
+Graphical visualisation of synteny blocks in homology matrices
+
+positional arguments:
+  G1                    genome1
+  G2                    genome2
+  F                     set of gene families
+  IMAGE                 path to the returned image.svg
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+  ... (same as with phylDiag)
+
+  --ROI1 chr1:beg1-end1
+                        region of interest (ROI) on the first genome (default:
+                        None)
+  --ROI2 chr2:beg2-end2
+                        region of interest (ROI) on the second genome
+                        (default: None)
+  --withSbs             draw sbs in the homology matrix (default: True)
+  --withoutSbs
+  -s INSBS, --inSbs INSBS
+                        synteny blocks to draw (*.sbs) (default: None)
+  -i, --withSbIds       draw ids of synteny blocks (default: False)
+  -b, --geneIdxsToTbIdxs
+                        convert gene idxs to tandem block idxs (default:
+                        False)
+  -r, --chrsInTbs       draw chromosomes in tandem blocks (after collapsing
+                        clusters of tandem duplicates) (default: False)
+  -a SCALERECTS, --scaleRects SCALERECTS
+                        scale factor of rectangle widths, if they are too
+                        small increase it (default: 1.0)
+  --onlyROIcomp         consider only comparisons of both ROIs (change the
+                        filtering) (default: False)
+  -l, --liveView        turn on direct view with firefox as soon as the
+                        computation is finished (default: False)
+  -o OUTSBS, --outSbs OUTSBS
+                        information about drawn sbs (default: res/sbs.txt)
+
+Warning: with --withoutSbs it may not return the desired homology matrix
 ```
 
-This returns
-```
-- ERROR - Not enough arguments
- Usage : src/phylDiagHomologyMatrixViewer.py
-	1: genome1 <type 'file'>
-	2: genome2 <type 'file'>
-	3: ancGenes <type 'file'>
-	4: chr1:deb1-fin1 <type 'str'>
-	5: chr2:deb2-fin2 <type 'str'>
-	  -gapMax <type 'str'> (None)
-	+/-sameStrand (True)
-	  -filterType <type 'str'> (InCommonAncestor)
-	  -minChromLength <type 'int'> (1)
-	  -pThreshold <type 'float'> (0.001)
-	  -out:syntenyBlocks <type 'str'> (./res/syntenyBlocksDrawer.txt)
-	+/-mode:chromosomesRewrittenInTbs (False)
-	+/-convertGenicToTbCoordinates (False)
-	  -distanceMetric <type 'str'> (CD)
-	  -nbHpsRecommendedGap <type 'int'> (2)
-	  -targetProbaRecommendedGap <type 'float'> (0.01)
-	  -out:imageName <type 'str'> (./res/homologyMatrix.svg)
-	+/-verbose (True)
+#### Whole genome comparison
 
+Draw the homology matrix of the comparison of the human and the mouse genomes
+```
+src/phylDiagViewer.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 --tandemGapMax=5 --gapMax=5 res/WMH_Hs_Mm.svg --scaleRects=40
+```
+The output image can be seen with firefox.
+<a>
+  <img src="res/WMH_Hs_Mm.svg" width="100%" height="144">
+</a>
 
-	Show the homology matrix with coloured synteny blocks (also called diagonals).
-	- Each colour represents a synteny block.
-	- On the x-axis are the genes of the 1st genome in the desired window
-	- On the y-axis are the genes of the 2nd genome in the desired window
-	- Each coloured rectangle in the matrix represents a filiation relationship restricted to the ancGene species. Couloured rectangle means the corresponding horizontal and vertical genes come from the same ancestral gene in the ancGene species. Take care that coulour genes are not homology relationship. For instance if the ancestor had two paralogs in its genome, there will be two distinct filiation relationships for genes herited from these genes. Genes are coloured if they are in the same filiation relationship class.
-	- '+' indicates filiation relationships that have horizontal gene and vertical gene in the same direction on both chromosomes
-	  '-' indicates filiation relationships that have horizontal gene and vertical gene in opposite directions on each chromosomes
-```
-Numbered parameters are required and other parameters are optional, used default value are written between brackets.
+#### Comparison of two regions of interest (ROI)
 
-To see the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome, execute
+A region of interest is a segment of one chromosome, for instance the section between the 100th gene and the 200th gene of chromosome X in the first genome (--ROI1=X:100-200).
+Another example: '4:45-80' means chromosome 4 from the 45th gene to the 80th gene.
 ```
-src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ -tandemGapMax=5 -gapMax=5 -truncationMax=5 -out:imageName=res/MH.svg -out:syntenyBlocks=res/syntenyBlocksDrawerMH.txt
+a=Euarchontoglires
+s1=Homo.sapiens
+s2=Mus.musculus
+c1=X
+r1="130-245"
+c2=X
+r2="20-150"
+dm="CD"
+gm=10
+suffix=Hs_${c1}.${r1}_Mm_${c2}.${r2}_${dm}${gm}
+src/phylDiagViewer.py data/${s1}.genome.bz2 data/${s2}.genome.bz2 data/${a}.families.bz2 --distanceMetric=${dm} --gapMax=${gm} --ROI1=$c1:$r1 --ROI2=$c2:$r2 res/MH_${suffix}.svg --outSbs=res/${suffix}.sbs.txt --onlyROIcomp
 ```
-"X:1-~" means X chromosome from the 1st gene to the last gene
-```
-For instance "4:45-80" means the 4th chromosome from the 45th gene to the 80th gene
-```
-The image MH.svg can be viewed with an internet browser as firefox.
+<a>
+  <img src="res/MH_Hs_X.130-245_Mm_X.20-150_CD10.svg" width="100%" height="144">
+</a>
 
-It is also possible to draw the Matrix of Homology Packs (MHP)
+A ROI may be a whole chromosome, e.g. 'X:1-~' is the ROI of chromosome X from the first gene to the last gene, ~.
+
+To compute the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome, execute
 ```
-src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 X:1-~ X:1-~ +mode:chromosomesRewrittenInTbs -tandemGapMax=5 -gapMax=5 -truncationMax=5 -out:imageName=./res/MHP.svg -out:syntenyBlocks=./res/syntenyBlocksDrawerMHP.txt
+src/phylDiagViewer.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 --ROI1=X:1-~ --ROI2=X:1-~ res/MH.svg --outSbs=res/sbs.txt
 ```
 
-Many parameters can be customised, for instance a user can execute
+It is also possible to draw the Matrix of Homology Packs (MHP), with the option --chrsInTbs. The MHP is the MH after filtering genomes and collapsing tandem duplicates.
 ```
-Title=PhylDiag && S1=Homo.sapiens && S2=Mus.musculus && C1=X && R1="100-250" && C2=X && R2="1-100" && DM="DPD" && D=10 && src/phylDiagHomologyMatrixViewer.py data/genesST.Homo.sapiens.list.bz2 data/genesST.Mus.musculus.list.bz2 data/ancGenes.Euarchontoglires.list.bz2 +mode:chromosomesRewrittenInTbs -distanceMetric=${DM} -gapMax=${D} $C1:$R1 $C2:$R2 -out:imageName=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_MHP.svg -out:syntenyBlocks=res/${Title}_${S1}_${C1}.${R1}_${S2}_${C2}.${R2}_${DM}${D}_syntenyBlocksDrawerMHP.txt -verbose -pThreshold=0.001
+src/phylDiagHomologyMatrixViewer.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 --ROI1=X:1-~ --ROI2=X:1-~ --chrsInTbs ./res/MHP.svg --outSbs=./res/syntenyBlocksDrawerMHP.txt
 ```
 
 ## Update
-If you want to keep PhylDiag up to date, you need to update LibsDyogen first (see [the Update section of LibsDyogen](https://raw.githubusercontent.com/DyogenIBENS/LibsDyogen/master/README.md)).
+If you want to keep PhylDiag up to date, update LibsDyogen first (see [the Update section of LibsDyogen](https://raw.githubusercontent.com/DyogenIBENS/LibsDyogen/master/README.md)).
 
 Then
 ```
@@ -255,6 +316,16 @@ If you want to contribute to this deposit please
 4. push to the branch: `git push origin my-new-feature`
 5. submit a pull request
 
+## Roadmap
+
+1. use the "sort-join" algorithm of "step2" (page 3) for an optimisation of the homology matrix calculation
+
+Khalid Mahmood, Geoffrey I. Webb, Jiangning Song, James C. Whisstock, Arun S. Konagurthu; *Efficient large-scale protein sequence comparison and gene matching to identify orthologs and co-orthologs.* Nucleic Acids Res 2012; 40 (6): e44. doi: 10.1093/nar/gkr1261
+
+url : https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315314/pdf/gkr1261.pdf
+
+2. Use  [Cairo](https://www.cairographics.org/) to draw matrices of homologies
+
 ## Credits
 * Joseph Lucas: conceptualization and implementation of phylDiag
 * Hugues Roest Crollius: supervision
@@ -265,12 +336,24 @@ If you want to contribute to this deposit please
 ## License
 This code may be freely distributed and modified under the terms of the GNU General Public License version 3 (GPL v3)
 and the CeCILL licence version 2 of the CNRS. These licences are contained in the files:
-* LICENSE-GPL.txt (or http://www.gnu.org/licenses/gpl-3.0-standalone.html)
-* LICENCE-CeCILL.txt (or http://www.cecill.info/licences/Licence_CeCILL_V2-en.html)
+* LICENSE-GPL.txt (http://www.gnu.org/licenses/gpl-3.0-standalone.html)
+* LICENCE-CeCILL.txt (http://www.cecill.info/licences/Licence_CeCILL_V2-en.html)
+
 Copyright for this code is held jointly by the Dyogen (DYnamic and Organisation of GENomes) team
 of the Institut de Biologie de l'Ecole Normale Supérieure (IBENS) 46 rue d'Ulm Paris, and the individual authors.
 
 ## Contacts
-
 * [Joseph Lucas](jlucas@ens.fr)
 * [Hugues Roest Crollius](hrc@ens.fr)
+
+## Cite as
+Please cite our article "High precision detection of conserved segments from synteny blocks" accepted in Plos One, as soon as it is published.
+
+FIXME
+
+Otherwise cite our previous article
+
+Joseph MEX Lucas, Matthieu Muffato, and Hugues Roest Crollius. Phyldiag: identifying
+complex synteny blocks that include tandem duplications using phylogenetic gene trees.
+BMC Bioinformatics, 15(1):268, 2014
+

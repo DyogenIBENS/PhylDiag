@@ -10,7 +10,6 @@ from utils import myPhylTree, myTools, myDiags, myLightGenomes, myIntervals
 __doc__ = """ Extract ancGenes of sbs extremities """
 __author__ = 'jlucas'
 
-modesOrthos = list(myDiags.FilterType._keys)
 arguments = myTools.checkArgs(
     # allPairwiseComparisons and for each comparison the ancGene file for gene
     # family definition.
@@ -24,9 +23,9 @@ arguments = myTools.checkArgs(
      ("distinguishMonoGenicDiags", bool, True),
      ('distanceMetric', str, 'CD'),
      ('pThreshold', str, 'None'),
-     ('gapMaxMicroInv', str, '0'),
-     ('identifyMonoGenicInvs', bool, False),
-     ('identifyMicroRearrangements', bool, True),
+     ('gapMax_Diag_Sbs', str, '0'),
+     ('identifyMonoGenicCs', bool, False),
+     ('identifyMicroRearr', bool, True),
      ('truncationMax', str, 'None'),
      ("minChromLength", int, 2),
      ("sameStrand", bool, True),
@@ -39,7 +38,7 @@ arguments = myTools.checkArgs(
     __doc__
     )
 
-for (argN, tpe) in [('gapMax', int), ('truncationMax', int), ('gapMaxMicroInv', int), ('pThreshold', float)]:
+for (argN, tpe) in [('gapMax', int), ('truncationMax', int), ('gapMax_Diag_Sbs', int), ('pThreshold', float)]:
     if arguments[argN] == 'None':
         arguments[argN] = None
     else:
@@ -48,7 +47,7 @@ for (argN, tpe) in [('gapMax', int), ('truncationMax', int), ('gapMaxMicroInv', 
         except:
             raise TypeError('%s is either an int or None' % argN)
 
-filterType = myDiags.FilterType[modesOrthos.index(arguments["filterType"])]
+filterType = myDiags.FilterType.__getattr__(arguments["filterType"])
 
 phylTree = myPhylTree.PhylogeneticTree(arguments["speciesTree"])
 setOfExtantSpecies = set(phylTree.listSpecies)
@@ -63,22 +62,22 @@ for sp in setOfExtantSpecies:
     extantGenome = myLightGenomes.LightGenome(arguments['extantGenomes'] % str(sp))
     allSbsExtremities[sp] = set()
     sbsInPairComp = myDiags.extractSbsInPairCompGenomes(ancGenome, extantGenome, ancGenes,
-        filterType=filterType,
-        tandemGapMax=arguments['tandemGapMax'],
-        gapMax=arguments["gapMax"],
-        distinguishMonoGenicDiags=arguments["distinguishMonoGenicDiags"],
-        distanceMetric=arguments['distanceMetric'],
-        pThreshold=arguments['pThreshold'],
-        gapMaxMicroInv=arguments["gapMaxMicroInv"],
-        identifyMonoGenicInvs=arguments["identifyMonoGenicInvs"],
-        identifyMicroRearrangements=arguments['identifyMicroRearrangements'],
-        truncationMax=arguments['truncationMax'],
-        minChromLength=arguments["minChromLength"],
-        sameStrand=arguments["sameStrand"],
-        nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
-        targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
-        validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
-        verbose=arguments['verbose'])
+                                                        filterType=filterType,
+                                                        tandemGapMax=arguments['tandemGapMax'],
+                                                        gapMax=arguments["gapMax"],
+                                                        distinguishMonoGenicDiags=arguments["distinguishMonoGenicDiags"],
+                                                        distanceMetric=arguments['distanceMetric'],
+                                                        pThreshold=arguments['pThreshold'],
+                                                        gapMax_Diag_Sbs=arguments["gapMax_Diag_Sbs"],
+                                                        identifyMonoGenicCs=arguments["identifyMonoGenicCs"],
+                                                        identifyMicroRearr=arguments['identifyMicroRearr'],
+                                                        truncationMax=arguments['truncationMax'],
+                                                        minChromLength=arguments["minChromLength"],
+                                                        sameStrand=arguments["sameStrand"],
+                                                        nbHpsRecommendedGap=arguments['nbHpsRecommendedGap'],
+                                                        targetProbaRecommendedGap=arguments['targetProbaRecommendedGap'],
+                                                        validateImpossToCalc_mThreshold=arguments['validateImpossToCalc_mThreshold'],
+                                                        verbose=arguments['verbose'])
 
     # record sbs
     myDiags.printSbsFile(sbsInPairComp, ancGenome, extantGenome, stream=open(arguments['out:sbs'] % sp, 'w'))

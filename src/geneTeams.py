@@ -43,18 +43,18 @@ Journal of Computational Biology, 12(6-7):638-656, 2005.)
 import sys
 
 import utils.myTools as myTools
+import utils.myDiags as myDiags
 import utils.myGeneTeams as myGeneTeams
 import utils.myLightGenomes as myLightGenomes
 
 # Arguments
-modesOrthos = list(myGeneTeams.FilterType._keys)
 arguments = myTools.checkArgs(
     [("genome1", file),
      ("genome2", file),
      ("families", file)],
     [("tandemGapMax", int, 0),
      ("gapMax", str, 'None'),
-     ("filterType", str, modesOrthos),
+     ("filterType", str, myDiags.FilterType),
      ("minChromLength", int, 1),
      ('verbose', bool, False)],
     __doc__
@@ -75,7 +75,7 @@ genome2 = myLightGenomes.LightGenome(arguments["genome2"])
 print >> sys.stderr, "Genome2"
 print >> sys.stderr, "Nb of Chr = ", len(genome2)
 families = myLightGenomes.Families(arguments["families"])
-filterType = myGeneTeams.FilterType[modesOrthos.index(arguments["filterType"])]
+filterType = myDiags.FilterType.__getattr__(arguments["filterType"])
 statsDiags = []
 
 print >> sys.stderr, "Begining of the extraction of gene teams"

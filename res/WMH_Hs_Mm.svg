@@ -13,12 +13,12 @@
 </svg>
 <svg x="5" y="95" viewBox="0 0 95 5" width="95" height="5">
   <text x="50.000000" y="3.500000" font-size="2.000000" text-anchor="middle" fill="#000" stroke="none" font-weight="300" font-family="Arial" transform="" >
-   data/genesST.Homo.sapiens.list.bz2
+   data/Homo.sapiens.genome.bz2
   </text>
 </svg>
 <svg x="0" y="0" viewBox="0 0 5 95" width="5" height="95">
   <text x="2.500000" y="51.000000" font-size="2.000000" text-anchor="middle" fill="#000" stroke="none" font-weight="300" font-family="Arial" transform="rotate(-90, 2.5, 50.0)" >
-   data/genesST.Mus.musculus.list.bz2
+   data/Mus.musculus.genome.bz2
   </text>
 </svg>
 <svg preserveAspectRatio="xMidYMid meet" x="5" y="5" viewBox="0 0 100 100" width="90" height="90" >

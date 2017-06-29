@@ -77,8 +77,7 @@ genome1Name = genome1.name
 genome2Name = genome2.name
 genome1_ = {}
 families = myLightGenomes.Families(arguments["families"])
-modesFilter = list(myDiags.FilterType._keys)
-filterType = myDiags.FilterType[modesFilter.index(arguments["filterType"])]
+filterType = myDiags.FilterType.__getattr__(arguments["filterType"])
 #thresholdChr = 50
 #chromosomes are shown as a list of genes
 #print >> sys.stderr, "List of (chromosomes, length in genes) of Genome 1, for chr of size > %s " % thresholdChr

@@ -1,14 +1,34 @@
 Tandem Blocks scale
-chromosome X de data/genesST.Homo.sapiens.list.bz2	beginC1	endC1	chromosome X de data/genesST.Mus.musculus.list.bz2	beginC2	endC2	length in ancestral genes
+chromosome X de data/Homo.sapiens.genome.bz2	beginC1	endC1	chromosome X de data/Mus.musculus.genome.bz2	beginC2	endC2	length in families
 c1	beg1	end1	c2	beg2	end2	hps	pVal
-X	34	103	X	642	709	63	0
-X	104	138	X	339	372	25	0.0
-X	127	193	X	46	102	51	0
-X	193	239	X	3	45	43	0.0
-X	248	267	X	608	626	19	0.0
-X	274	277	X	632	635	4	1.40487870226e-08
-X	283	499	X	376	606	196	0
-X	503	507	X	103	106	4	5.62008304339e-08
-X	508	522	X	128	143	15	0.0
-X	523	526	X	144	147	4	1.40487870226e-08
-X	530	711	X	150	332	147	0
+X	12	14	X	544	542	3	None
+X	16	79	X	620	553	61	None
+X	154	195	X	43	2	42	None
+X	200	218	X	541	523	19	None
+X	219	220	X	546	545	2	None
+X	221	224	X	547	550	4	None
+X	225	225	X	551	551	1	0
+X	427	427	X	281	281	1	0
+X	80	88	X	311	301	9	None
+X	91	105	X	298	286	13	None
+X	89	90	X	299	300	2	None
+X	106	107	X	47	48	2	None
+X	109	153	X	50	94	44	None
+X	108	108	X	49	49	1	0
+X	226	285	X	314	374	58	None
+X	287	376	X	376	471	86	None
+X	379	379	X	475	475	1	None
+X	381	382	X	476	477	2	None
+X	384	384	X	478	478	1	None
+X	385	426	X	480	521	41	None
+X	286	286	X	375	375	1	0
+X	377	378	X	473	472	2	None
+X	380	380	X	474	474	1	None
+X	383	383	X	479	479	1	None
+X	428	446	X	95	116	19	None
+X	451	468	X	121	138	17	None
+X	470	525	X	140	197	54	None
+X	527	606	X	200	280	75	None
+X	447	450	X	119	117	3	None
+X	469	469	X	139	139	1	0
+X	526	526	X	198	198	1	0

@@ -492,31 +492,30 @@ def test(arguments):
         scene = svgDrw.addGenomesItemToScene(genomesItems, scene, sizeGene=1)
         scene.write_svg(filename=outFileName)
 
-        filterType = list(myDiags.FilterType._keys)
-        filterType = myDiags.FilterType[filterType.index('None')]
+        filterType = myDiags.FilterType.__getattr__("None")
         myGenomesDrawer.homologyMatrixViewer(genomes['Initial'], genomes['Inversion'], families, '0:1-~', '0:1-~',
-                         filterType=filterType,
-                         distanceMetric='CD',
-                         gapMax=2,
-                         distinguishMonoGenicDiags=True,
-                         pThreshold=None,
-                         gapMaxMicroInv=0,
-                         identifyMonoGenicInvs=False,
-                         identifyMicroRearrangements=True,
-                         truncationMax=None,
-                         sameStrand=True,
-                         validateImpossToCalc_mThreshold=3,
-                         nbHpsRecommendedGap=2,
-                         targetProbaRecommendedGap=0.01,
-                         chromosomesRewrittenInTbs=False,
-                         scaleFactorRectangles=1.0,
-                         considerAllPairComps=True,
-                         switchOnDirectView=False,
-                         optimisation=None,
-                         inSbsInPairComp=None,
-                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
-                         outImageFileName="./homologyMatrix.svg",
-                         verbose=True)
+                                             filterType=filterType,
+                                             distanceMetric='CD',
+                                             gapMax=2,
+                                             distinguishMonoGenicDiags=True,
+                                             pThreshold=None,
+                                             gapMax_Diag_Sbs=0,
+                                             identifyMonoGenicCs=False,
+                                             identifyMicroRearr=True,
+                                             truncationMax=None,
+                                             sameStrand=True,
+                                             validateImpossToCalc_mThreshold=3,
+                                             nbHpsRecommendedGap=2,
+                                             targetProbaRecommendedGap=0.01,
+                                             chromosomesRewrittenInTbs=False,
+                                             scaleFactorRectangles=1.0,
+                                             onlyROIcomp=False,
+                                             switchOnDirectView=False,
+                                             optimisation=None,
+                                             inSbsInPairComp=None,
+                                             outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                                             outImageFileName="./homologyMatrix.svg",
+                                             verbose=True)
         os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
     elif scenario == 17:
@@ -563,31 +562,30 @@ def test(arguments):
         scene.write_svg(filename=outFileName)
 
 
-        filterType = list(myDiags.FilterType._keys)
-        filterType = myDiags.FilterType[filterType.index('None')]
+        filterType = myDiags.FilterType.__getattr__("None")
         myGenomesDrawer.homologyMatrixViewer(genomes['Inversion'], genomes['Initial'], families, '0:1-~', '0:1-~',
-                         filterType=filterType,
-                         distanceMetric='CD',
-                         gapMax=2,
-                         distinguishMonoGenicDiags=False,
-                         pThreshold=None,
-                         gapMaxMicroInv=0,
-                         identifyMonoGenicInvs=False,
-                         identifyMicroRearrangements=True,
-                         truncationMax=None,
-                         sameStrand=True,
-                         validateImpossToCalc_mThreshold=3,
-                         nbHpsRecommendedGap=2,
-                         targetProbaRecommendedGap=0.01,
-                         chromosomesRewrittenInTbs=False,
-                         scaleFactorRectangles=1.0,
-                         considerAllPairComps=True,
-                         switchOnDirectView=False,
-                         optimisation=None,
-                         inSbsInPairComp=None,
-                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
-                         outImageFileName="./homologyMatrix.svg",
-                         verbose=True)
+                                             filterType=filterType,
+                                             distanceMetric='CD',
+                                             gapMax=2,
+                                             distinguishMonoGenicDiags=False,
+                                             pThreshold=None,
+                                             gapMax_Diag_Sbs=0,
+                                             identifyMonoGenicCs=False,
+                                             identifyMicroRearr=True,
+                                             truncationMax=None,
+                                             sameStrand=True,
+                                             validateImpossToCalc_mThreshold=3,
+                                             nbHpsRecommendedGap=2,
+                                             targetProbaRecommendedGap=0.01,
+                                             chromosomesRewrittenInTbs=False,
+                                             scaleFactorRectangles=1.0,
+                                             onlyROIcomp=False,
+                                             switchOnDirectView=False,
+                                             optimisation=None,
+                                             inSbsInPairComp=None,
+                                             outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                                             outImageFileName="./homologyMatrix.svg",
+                                             verbose=True)
         os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
     elif scenario == 18:
@@ -645,31 +643,30 @@ def test(arguments):
             scene.add(item)
         scene.write_svg(filename=outFileName)
 
-        filterType = list(myDiags.FilterType._keys)
-        filterType = myDiags.FilterType[filterType.index('None')]
+        filterType = myDiags.FilterType.__getattr__("None")
         myGenomesDrawer.homologyMatrixViewer(genomes['gBirth'], genomes['Initial'], families, '0:1-~', '1:1-~',
-                         filterType=filterType,
-                         distanceMetric='CD',
-                         gapMax=1,
-                         distinguishMonoGenicDiags=False,
-                         pThreshold=None,
-                         gapMaxMicroInv=0,
-                         identifyMonoGenicInvs=False,
-                         identifyMicroRearrangements=True,
-                         truncationMax=None,
-                         sameStrand=True,
-                         validateImpossToCalc_mThreshold=3,
-                         nbHpsRecommendedGap=2,
-                         targetProbaRecommendedGap=0.01,
-                         chromosomesRewrittenInTbs=False,
-                         scaleFactorRectangles=1.0,
-                         considerAllPairComps=True,
-                         switchOnDirectView=False,
-                         optimisation=None,
-                         inSbsInPairComp=None,
-                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
-                         outImageFileName="./homologyMatrix.svg",
-                         verbose=True)
+                                             filterType=filterType,
+                                             distanceMetric='CD',
+                                             gapMax=1,
+                                             distinguishMonoGenicDiags=False,
+                                             pThreshold=None,
+                                             gapMax_Diag_Sbs=0,
+                                             identifyMonoGenicCs=False,
+                                             identifyMicroRearr=True,
+                                             truncationMax=None,
+                                             sameStrand=True,
+                                             validateImpossToCalc_mThreshold=3,
+                                             nbHpsRecommendedGap=2,
+                                             targetProbaRecommendedGap=0.01,
+                                             chromosomesRewrittenInTbs=False,
+                                             scaleFactorRectangles=1.0,
+                                             onlyROIcomp=False,
+                                             switchOnDirectView=False,
+                                             optimisation=None,
+                                             inSbsInPairComp=None,
+                                             outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                                             outImageFileName="./homologyMatrix.svg",
+                                             verbose=True)
         os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
     elif scenario == 19:
@@ -755,31 +752,30 @@ def test(arguments):
             scene.add(item)
         scene.write_svg(filename=outFileName)
 
-        filterType = list(myDiags.FilterType._keys)
-        filterType = myDiags.FilterType[filterType.index('None')]
+        filterType = myDiags.FilterType.__getattr__("None")
         myGenomesDrawer.homologyMatrixViewer(genomes1['gBirth'], genomes2['Inversion'], families, '2:1-~', '1:1-~',
-                         filterType=filterType,
-                         distanceMetric='CD',
-                         gapMax=1,
-                         distinguishMonoGenicDiags=False,
-                         pThreshold=None,
-                         gapMaxMicroInv=0,
-                         identifyMonoGenicInvs=False,
-                         identifyMicroRearrangements=True,
-                         truncationMax=None,
-                         sameStrand=True,
-                         validateImpossToCalc_mThreshold=3,
-                         nbHpsRecommendedGap=2,
-                         targetProbaRecommendedGap=0.01,
-                         chromosomesRewrittenInTbs=False,
-                         scaleFactorRectangles=1.0,
-                         considerAllPairComps=True,
-                         switchOnDirectView=False,
-                         optimisation=None,
-                         inSbsInPairComp=None,
-                         outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
-                         outImageFileName="./homologyMatrix.svg",
-                         verbose=True)
+                                             filterType=filterType,
+                                             distanceMetric='CD',
+                                             gapMax=1,
+                                             distinguishMonoGenicDiags=False,
+                                             pThreshold=None,
+                                             gapMax_Diag_Sbs=0,
+                                             identifyMonoGenicCs=False,
+                                             identifyMicroRearr=True,
+                                             truncationMax=None,
+                                             sameStrand=True,
+                                             validateImpossToCalc_mThreshold=3,
+                                             nbHpsRecommendedGap=2,
+                                             targetProbaRecommendedGap=0.01,
+                                             chromosomesRewrittenInTbs=False,
+                                             scaleFactorRectangles=1.0,
+                                             onlyROIcomp=False,
+                                             switchOnDirectView=False,
+                                             optimisation=None,
+                                             inSbsInPairComp=None,
+                                             outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                                             outImageFileName="./homologyMatrix.svg",
+                                             verbose=True)
         os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
     elif scenario == 20:
@@ -836,32 +832,31 @@ def test(arguments):
             scene.add(item)
         scene.write_svg(filename=outFileName)
 
-        filterType = list(myDiags.FilterType._keys)
-        filterType = myDiags.FilterType[filterType.index('None')]
+        filterType = myDiags.FilterType.__getattr__("None")
         for x in [1, 2, 3]:
             myGenomesDrawer.homologyMatrixViewer(genomes['Initial'], genomes[x], families, '0:1-~', '0:1-~',
-                             filterType=filterType,
-                             distanceMetric='CD',
-                             gapMax=1,
-                             distinguishMonoGenicDiags=False,
-                             pThreshold=None,
-                             gapMaxMicroInv=0,
-                             identifyMonoGenicInvs=False,
-                             identifyMicroRearrangements=True,
-                             truncationMax=None,
-                             sameStrand=True,
-                             validateImpossToCalc_mThreshold=3,
-                             nbHpsRecommendedGap=2,
-                             targetProbaRecommendedGap=0.01,
-                             chromosomesRewrittenInTbs=False,
-                             scaleFactorRectangles=1.0,
-                             considerAllPairComps=True,
-                             switchOnDirectView=False,
-                             optimisation=None,
-                             inSbsInPairComp=None,
-                             outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
-                             outImageFileName="./homologyMatrix" + str(x) + ".svg",
-                             verbose=True)
+                                                 filterType=filterType,
+                                                 distanceMetric='CD',
+                                                 gapMax=1,
+                                                 distinguishMonoGenicDiags=False,
+                                                 pThreshold=None,
+                                                 gapMax_Diag_Sbs=0,
+                                                 identifyMonoGenicCs=False,
+                                                 identifyMicroRearr=True,
+                                                 truncationMax=None,
+                                                 sameStrand=True,
+                                                 validateImpossToCalc_mThreshold=3,
+                                                 nbHpsRecommendedGap=2,
+                                                 targetProbaRecommendedGap=0.01,
+                                                 chromosomesRewrittenInTbs=False,
+                                                 scaleFactorRectangles=1.0,
+                                                 onlyROIcomp=False,
+                                                 switchOnDirectView=False,
+                                                 optimisation=None,
+                                                 inSbsInPairComp=None,
+                                                 outSyntenyBlocksFileName="./syntenyBlocksDrawer.txt",
+                                                 outImageFileName="./homologyMatrix" + str(x) + ".svg",
+                                                 verbose=True)
             os.system("%s %s" % ('firefox', "./homologyMatrix.svg"))
 
     elif scenario == 21:
@@ -907,8 +902,7 @@ def test(arguments):
             scene.add(item)
         scene.write_svg(filename=outFileName)
 
-        filterType = list(myDiags.FilterType._keys)
-        filterType = myDiags.FilterType[filterType.index('None')]
+        filterType = myDiags.FilterType.__getattr__("None")
         WHM = myGenomesDrawer.drawWholeGenomeHomologyMatrices(genomes['Ini'], genomes['afterDispDup'], families,
                                                           inSbsInPairComp=myTools.Dict2d(list),
                                                           filterType=filterType,
