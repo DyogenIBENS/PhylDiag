@@ -2,40 +2,42 @@
 [![DOI](https://zenodo.org/badge/19742670.svg)](https://zenodo.org/badge/latestdoi/19742670)
 
 
-From the comparison of two extant genomes and corresponding gene trees (or gene families), PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
+From the comparison of two extant genomes and corresponding gene families, PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
 
 **Inputs**
-1. two extant *genomes*, G1 and G2
-2. *gene families*, F
+* two extant *genomes*, G1 and G2
+* *a set of gene families*, F
+
+**Outputs**
+* *conserved segments*
+
+The folder data/ contains examples of genomes (genes.S1.list.bz2) and gene families (ancGenes.A.list.bz2).
+The folder res/ contains examples of conserved segments (S1_S2_fA.sbs).
+
+Gene families can be computed from a forest of phylogenetic gene trees, see https://github.com/DyogenIBENS/LibsDyogen.
 
 A genome is a set of chromosomes.
 A chromosome is a list of genes.
-A gene is a pair (gene name, strand).
+A gene is a pair (gene name, transcription orientation).
 
-F is an associative array that links, for each family,
+F, the set of gene families, is an associative array that links, for each family,
 * the family name (**key**)
 * to the set of names of the descendant genes (**values**)
 
-The name of the family is often the name of the ancestral gene, at the root of the gene family.
+The name of a gene family is often the name of the ancestral gene, at the root of the gene family.
 
-If you use phylogenetic gene trees, utils in LibsDyogen/scripts  can
-convert your trees into gene families.
+PhylDiag can also return *syntny blocks*, if
+* identification of micro-rearrangements,
+* identification of mono-genic conserved segments
+* identification of mono-genic inversions
 
-**Outputs**
-* Either (depending on the options of PhylDiag)
-    * *conserved segments*
-    * or *synteny blocks*, if
-        * the identification of micro-rearrangements,
-        * identification of mono-genic conserved segments,
-        * identification of mono-genic inversions
-
-        are disabled
+are disabled.
 
 PhylDiag is explained in more details in two publications
 1. [PhylDiag : identifying complex synteny blocks that include tandem duplications using phylogenetic gene trees](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-268)
 2. High precision detection of conserved segments from synteny blocks (FIXME update as soon as published)
 
-and in a french thesis manuscript
+and in a thesis manuscript in french
 
 3. [Étude de l’évolution de l’ordre des gènes de vertébrés par simulation](https://tel.archives-ouvertes.fr/tel-01398369/document)
 
@@ -44,7 +46,7 @@ and in a french thesis manuscript
 > "there is no difference between a synteny block with no gap (g=0) and a conserved segment"
 > -- <cite> [in High precision detection of conserved segments from synteny blocks]<cite/>
 
-Remark: "no gap", corresponds to "no micro-rearrangement" in its context
+Remark: "no gap", corresponds to "no micro-rearrangement" here
 
 *Conserved segments* can be considered as a specific type of *synteny blocks*.
 For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code.
@@ -265,8 +267,9 @@ If you want to contribute to this deposit please
 ## License
 This code may be freely distributed and modified under the terms of the GNU General Public License version 3 (GPL v3)
 and the CeCILL licence version 2 of the CNRS. These licences are contained in the files:
-* LICENSE-GPL.txt (or http://www.gnu.org/licenses/gpl-3.0-standalone.html)
-* LICENCE-CeCILL.txt (or http://www.cecill.info/licences/Licence_CeCILL_V2-en.html)
+* LICENSE-GPL.txt (http://www.gnu.org/licenses/gpl-3.0-standalone.html)
+* LICENCE-CeCILL.txt (http://www.cecill.info/licences/Licence_CeCILL_V2-en.html)
+
 Copyright for this code is held jointly by the Dyogen (DYnamic and Organisation of GENomes) team
 of the Institut de Biologie de l'Ecole Normale Supérieure (IBENS) 46 rue d'Ulm Paris, and the individual authors.
 
@@ -274,3 +277,15 @@ of the Institut de Biologie de l'Ecole Normale Supérieure (IBENS) 46 rue d'Ulm 
 
 * [Joseph Lucas](jlucas@ens.fr)
 * [Hugues Roest Crollius](hrc@ens.fr)
+
+## Cite as
+Please cite our article "High precision detection of conserved segments from synteny blocks" accepted in Plos One, as soon as it is published.
+
+FIXME
+
+Otherwise cite our previous article
+
+Joseph MEX Lucas, Matthieu Muffato, and Hugues Roest Crollius. Phyldiag: identifying
+complex synteny blocks that include tandem duplications using phylogenetic gene trees.
+BMC Bioinformatics, 15(1):268, 2014
+
