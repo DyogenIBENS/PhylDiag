@@ -250,7 +250,7 @@ src/phylDiagViewer.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 
 ```
 The output image can be seen with firefox.
 <a>
-  <img src="https://raw.githubusercontent.com/DyogenIBENS/PhylDiag/master/res/WMH_Hs_Mm.svg" width="100%" height="144">
+  <img src="doc/res/WMH_Hs_Mm.png" width="100%" height="144">
 </a>
 
 #### Comparison of two regions of interest (ROI)
@@ -271,7 +271,7 @@ suffix=Hs_${c1}.${r1}_Mm_${c2}.${r2}_${dm}${gm}
 src/phylDiagViewer.py data/${s1}.genome.bz2 data/${s2}.genome.bz2 data/${a}.families.bz2 --distanceMetric=${dm} --gapMax=${gm} --ROI1=$c1:$r1 --ROI2=$c2:$r2 res/MH_${suffix}.svg --outSbs=res/${suffix}.sbs.txt --onlyROIcomp
 ```
 <a>
-  <img src="https://raw.githubusercontent.com/DyogenIBENS/PhylDiag/master/res/MH_Hs_X.130-245_Mm_X.20-150_CD10.svg" width="100%" height="144">
+  <img src="doc/MH_Hs_X.130-245_Mm_X.20-150_CD10.png" width="100%" height="144">
 </a>
 
 A ROI may be a whole chromosome, e.g. 'X:1-~' is the ROI of chromosome X from the first gene to the last gene, ~.
