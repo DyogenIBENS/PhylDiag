@@ -30,9 +30,7 @@ The name of a gene family is often the name of the ancestral gene, at the root o
 PhylDiag can also return *syntny blocks*, if
 * identification of micro-rearrangements,
 * identification of mono-genic conserved segments
-* identification of mono-genic inversions
-
-are disabled.
+are disabled (--no-imr and --no-imcs).
 
 PhylDiag is explained in more details in two publications
 1. [PhylDiag : identifying complex synteny blocks that include tandem duplications using phylogenetic gene trees](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-268)
