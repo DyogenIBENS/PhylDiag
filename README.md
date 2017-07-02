@@ -250,7 +250,7 @@ src/phylDiagViewer.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 
 ```
 The output image can be seen with firefox.
 <a>
-  <img src="res/WMH_Hs_Mm.svg" width="100%" height="144">
+  <img src="https://raw.githubusercontent.com/DyogenIBENS/PhylDiag/master/res/WMH_Hs_Mm.svg" width="100%" height="144">
 </a>
 
 #### Comparison of two regions of interest (ROI)
@@ -271,7 +271,7 @@ suffix=Hs_${c1}.${r1}_Mm_${c2}.${r2}_${dm}${gm}
 src/phylDiagViewer.py data/${s1}.genome.bz2 data/${s2}.genome.bz2 data/${a}.families.bz2 --distanceMetric=${dm} --gapMax=${gm} --ROI1=$c1:$r1 --ROI2=$c2:$r2 res/MH_${suffix}.svg --outSbs=res/${suffix}.sbs.txt --onlyROIcomp
 ```
 <a>
-  <img src="res/MH_Hs_X.130-245_Mm_X.20-150_CD10.svg" width="100%" height="144">
+  <img src="https://raw.githubusercontent.com/DyogenIBENS/PhylDiag/master/res/MH_Hs_X.130-245_Mm_X.20-150_CD10.svg" width="100%" height="144">
 </a>
 
 A ROI may be a whole chromosome, e.g. 'X:1-~' is the ROI of chromosome X from the first gene to the last gene, ~.
@@ -320,9 +320,7 @@ If you want to contribute to this deposit please
 
 1. use the "sort-join" algorithm of "step2" (page 3) for an optimisation of the homology matrix calculation
 
-Khalid Mahmood, Geoffrey I. Webb, Jiangning Song, James C. Whisstock, Arun S. Konagurthu; *Efficient large-scale protein sequence comparison and gene matching to identify orthologs and co-orthologs.* Nucleic Acids Res 2012; 40 (6): e44. doi: 10.1093/nar/gkr1261
-
-url : https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315314/pdf/gkr1261.pdf
+Khalid Mahmood, Geoffrey I. Webb, Jiangning Song, James C. Whisstock, Arun S. Konagurthu; [*Efficient large-scale protein sequence comparison and gene matching to identify orthologs and co-orthologs.*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315314/pdf/gkr1261.pdf) Nucleic Acids Res 2012; 40 (6): e44. doi: 10.1093/nar/gkr1261
 
 2. Use  [Cairo](https://www.cairographics.org/) to draw matrices of homologies
 
