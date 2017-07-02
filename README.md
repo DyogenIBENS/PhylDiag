@@ -44,13 +44,8 @@ and in a thesis manuscript in french
 
 ##### Link between synteny blocks and conserved segments
 
-> "there is no difference between a synteny block with no gap (g=0) and a conserved segment"
-> -- <cite> [in High precision detection of conserved segments from synteny blocks]<cite/>
-
-Remark: "no gap", corresponds to "no micro-rearrangement" here
-
-*Conserved segments* can be considered as a specific type of *synteny blocks*.
-For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code.
+*Conserved segments* can be considered as a specific type of *synteny blocks*, with a threshold between micro and macro-rearrangements equal to 0 ancestral genes.
+For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code, or with the extension *.sbs.
 
 ## Installation
 [Install the LibsDyogen library first.](https://github.com/DyogenIBENS/LibsDyogen)
@@ -103,6 +98,7 @@ bash ./checkPhylDiagIntegrity.sh
 
 ## Usage
 ### PhylDiag
+We assume that you are in the main folder of PhylDiag.
 
 ```
 src/phylDiag.py --help
@@ -159,12 +155,11 @@ optional arguments:
 - families
 in this order
 
-If you want to execute phylDiag with all default options
-
+Execute phylDiag with default values of options
 ```
 src/phylDiag.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 > res/consevedSegments.sbs
 ```
-Each family is defined as a set of genes that derive from one gene in Euarchontoglires.
+Here, each family is defined as a set of genes that derive from one gene in Euarchontoglires.
 Euarchontoglires is the most recent common ancestor of extant human and mouse.
 
 * The distance metric may be either the 'DPD', 'ED', 'MD' or 'CD' (in brackets). The default distance metric is 'CD' (in parenthesis).
@@ -276,7 +271,7 @@ src/phylDiagViewer.py data/${s1}.genome.bz2 data/${s2}.genome.bz2 data/${a}.fami
 
 A ROI may be a whole chromosome, e.g. 'X:1-~' is the ROI of chromosome X from the first gene to the last gene, ~.
 
-To compute the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome, execute
+Compute the Matrix of Homologies (MH) of the human X chromosome compared to the mouse X chromosome
 ```
 src/phylDiagViewer.py data/Homo.sapiens.genome.bz2 data/Mus.musculus.genome.bz2 data/Euarchontoglires.families.bz2 --ROI1=X:1-~ --ROI2=X:1-~ res/MH.svg --outSbs=res/sbs.txt
 ```
@@ -301,12 +296,12 @@ If you want a more stable version, after `git pull`, you can downgrade to the la
 2. Get the latest tag name ``latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)``
 3. Checkout the latest tag `git checkout $latestTag`
 
-Otherwise, after `git fetch --tags`
+After `git fetch --tags`, you can also switch to any anterior tagged version
 1. List all tagged versions: `git tag -l`
 2. Checkout to the version you want: `git checkout <tagName>`
 
 
-**Please ensure that the versions of PylDiag and LibsDyogen share the same tagged version or correspond to the last commits.**
+**Please ensure that the versions of PylDiag and LibsDyogen share the same tagged version or correspond to their last commits.**
 
 ## Contributing
 If you want to contribute to this deposit please
@@ -318,18 +313,18 @@ If you want to contribute to this deposit please
 
 ## Roadmap
 
-1. use the "sort-join" algorithm of "step2" (page 3) for an optimisation of the homology matrix calculation
+1. Optimise the computation of the homology matrix with the "sort-join" algorithm of "step2" (page 3)
 
 Khalid Mahmood, Geoffrey I. Webb, Jiangning Song, James C. Whisstock, Arun S. Konagurthu; [*Efficient large-scale protein sequence comparison and gene matching to identify orthologs and co-orthologs.*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315314/pdf/gkr1261.pdf) Nucleic Acids Res 2012; 40 (6): e44. doi: 10.1093/nar/gkr1261
 
-2. Use  [Cairo](https://www.cairographics.org/) to draw matrices of homologies
+2. Draw matrices of homologies with [Cairo](https://www.cairographics.org/)
 
 ## Credits
-* Joseph Lucas: conceptualization and implementation of phylDiag
+* Joseph Lucas: conceptualisation and implementation of phylDiag
 * Hugues Roest Crollius: supervision
 * Lucas Tittmann: improved the clustering of tandem duplicates
 * Nga thi thuy Nguyen: optimisation of the core algorithm of PhylDiag with cython
-* Matthieu Muffato: implemented several python functions
+* Matthieu Muffato: implementation several python functions in LibsDyogen
 
 ## License
 This code may be freely distributed and modified under the terms of the GNU General Public License version 3 (GPL v3)
