@@ -1,7 +1,7 @@
 # PhylDiag
 [![DOI](https://zenodo.org/badge/19742670.svg)](https://zenodo.org/badge/latestdoi/19742670)
 
-From the comparison of two extant genomes and corresponding gene families, PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
+From the comparison of two extant genomes and corresponding gene trees (or gene families), PhylDiag detects conserved segments, i.e. segments of chromosomes unbroken during evolution.
 
 **Inputs**
 * two extant *genomes*, G1 and G2
@@ -152,6 +152,31 @@ optional arguments:
                         truncation (default: 10)
   -v, --verbose         verbosity (default: False)
 ```
+- ERROR - Not enough arguments
+ Usage : src/phylDiag.py
+	1: genome1 <type 'file'>
+	2: genome2 <type 'file'>
+	3: families <type 'file'>
+	  -filterType <type 'str'> (InBothGenomes)
+	  -tandemGapMax <type 'int'> (10)
+	  -gapMax <type 'str'> (5)
+	+/-distinguishMonoGenicDiags (True)
+	  -distanceMetric <type 'str'> (CD)
+	  -pThreshold <type 'str'> (None)
+	  -gapMaxMicroInv <type 'str'> (1)
+	+/-identifyMonoGenicInvs (True)
+	+/-identifyMicroRearrangements (True)
+	  -truncationMax <type 'str'> (10)
+	  -minChromLength <type 'int'> (2)
+	+/-sameStrand (True)
+	  -nbHpsRecommendedGap <type 'int'> (2)
+	  -targetProbaRecommendedGap <type 'float'> (0.01)
+	  -validateImpossToCalc_mThreshold <type 'int'> (3)
+	  -optimisation <type 'str'> (cython)
+	+/-verbose (False)
+	+/-removeUnofficialChromosomes (True)
+```
+Numbered parameters are required and other parameters are optional, default values used are written between brackets.
 
 3 files are required :
 - genome1
@@ -241,6 +266,7 @@ optional arguments:
 
 Warning: with --withoutSbs it may not return the desired homology matrix
 ```
+Numbered parameters are required and other parameters are optional, used default value are written between brackets.
 
 #### Whole genome comparison
 
