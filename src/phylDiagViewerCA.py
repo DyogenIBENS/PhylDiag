@@ -1,10 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# PhylDiag version 2.0 (6/11/2015)
-# python 2.7
-# Copyright © 2015 IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
-# mail : hrc@ens.fr or jlucas@ens.fr
+# Copyright IBENS/Dyogen : Joseph LUCAS, Matthieu MUFFATO and Hugues ROEST CROLLIUS
+# mail : jlucas@ens.fr or hrc@ens.fr
 # Licences GLP v3 and CeCILL v2
 
 import utils.myLightGenomes as myLightGenomes

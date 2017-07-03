@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Copyright IBENS/Dyogen : Joseph LUCAS and Hugues ROEST CROLLIUS
+# mail : jlucas@ens.fr or hrc@ens.fr
+# Licences GLP v3 and CeCILL v2
+
 import sys
 import argparse
 import collections
