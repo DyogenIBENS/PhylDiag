@@ -32,6 +32,7 @@ The name of a gene family is often the name of the ancestral gene, at the root o
 PhylDiag can also return *syntny blocks*, if
 * identification of micro-rearrangements,
 * identification of mono-genic conserved segments
+
 are disabled (--no-imr and --no-imcs).
 
 PhylDiag is explained in more details in two publications
@@ -303,7 +304,7 @@ After `git fetch --tags`, you can also switch to any anterior tagged version
 
 **Please ensure that the versions of PylDiag and LibsDyogen share the same tagged version or correspond to their last commits.**
 
-## Contributing
+## Contribute
 If you want to contribute to this deposit please
 1. fork it
 2. create your feature branch: `git checkout -b my-new-feature`
