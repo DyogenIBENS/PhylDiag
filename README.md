@@ -14,6 +14,7 @@ Example of
 * genome:  data/Homo.sapiens.genome
 * set of families: data/Euarchontoglires.families
 * conserved segments: res/Homo.sapiens_Mus.musculus_fEuarchontoglires.sbs
+
 (phylDiag automatically uncompresses files with extensions \*.bz2)
 
 Gene families can be computed from a forest of phylogenetic gene trees, see https://github.com/DyogenIBENS/LibsDyogen.
