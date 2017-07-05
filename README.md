@@ -34,7 +34,7 @@ are disabled (--no-imr and --no-imcs).
 
 PhylDiag is explained in more details in two publications
 1. [PhylDiag : identifying complex synteny blocks that include tandem duplications using phylogenetic gene trees](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-268)
-2. High precision detection of conserved segments from synteny blocks (FIXME update as soon as published)
+2. [High precision detection of conserved segments from synteny blocks"](https://doi.org/10.1371/journal.pone.0180198)
 
 and in a thesis manuscript in french
 
@@ -338,13 +338,5 @@ of the Institut de Biologie de l'Ecole Normale Supérieure (IBENS) 46 rue d'Ulm 
 * [Hugues Roest Crollius](hrc@ens.fr)
 
 ## Cite as
-Please cite our article "High precision detection of conserved segments from synteny blocks" accepted in Plos One, as soon as it is published.
-
-FIXME
-
-Otherwise cite our previous article
-
-Joseph MEX Lucas, Matthieu Muffato, and Hugues Roest Crollius. Phyldiag: identifying
-complex synteny blocks that include tandem duplications using phylogenetic gene trees.
-BMC Bioinformatics, 15(1):268, 2014
+Lucas JM, Roest Crollius H (2017) High precision detection of conserved segments from synteny blocks. PLoS ONE 12(7): e0180198. https://doi.org/10.1371/journal.pone.0180198
 
