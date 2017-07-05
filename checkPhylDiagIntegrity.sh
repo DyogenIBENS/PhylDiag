@@ -265,9 +265,9 @@ done
 ##########################################################
 data="data/benchmark"
 benchmarkCmdLines=(
-"src/benchmark/comparePhylDiagAndADHORESbsToSimulatedSbs.py ${data}/speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=${data}/%s.genome.bz2 -pAncGenes=${data}/%s.families.bz2 -pSimulatedSbs=${data}/%s.%s.sbs.bz2  -preComputePairwiseSbs -oriented")
+"src/benchmark/comparePhylDiagAndADHORESbsToSimulatedSbs.py ${data}/speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=${data}/%s.genome.bz2 -pAncGenes=${data}/%s.families.bz2 -pSimulatedSbs=${data}/%s.%s.cs.bz2  -preComputePairwiseSbs -oriented")
 benchmarkCmdLines+=(
-"src/benchmark/compareCyntenatorSbsToSimulatedSbs.py ${data}/speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=${data}/%s.genome.bz2 -pAncGenes=${data}/%s.families.bz2 -pSimulatedSbs=%s.%s.sbs.bz2 -preComputePairwiseSbs -oriented")
+"src/benchmark/compareCyntenatorSbsToSimulatedSbs.py ${data}/speciesTree.phylTree Mus.musculus Gallus.gallus Amniota -pSimGenomes=${data}/%s.genome.bz2 -pAncGenes=${data}/%s.families.bz2 -pSimulatedSbs=${data}/%s.%s.cs.bz2 -preComputePairwiseSbs -oriented")
 for line in "${benchmarkCmdLines[@]}"
 	do
 		echo -e "${green}${line}${NC}"
