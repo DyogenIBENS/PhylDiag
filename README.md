@@ -48,7 +48,50 @@ and in a thesis manuscript in french
 *Conserved segments* can be considered as a specific type of *synteny blocks*, with a threshold between micro and macro-rearrangements equal to 0 ancestral genes.
 For this reason you may see some *conserved segments* being named more generally *synteny blocks* in the code, or with the extension *.sbs.
 
-## Installation
+## Installation using Docker
+
+Using Docker, you should be able to install PhylDiag on [Linux distributions, MacOS and Windows (7 or later) through docker](https://blog.codeship.com/docker-for-windows-linux-and-mac/). (Tested using Windows 10 and Linux)
+(NB: if you use a Debian distribution, you may prefer to read next section for a more native installation.)
+
+First, install [docker](https://docs.docker.com/engine/installation/).
+
+Then, build the docker image (phyldiagi) from the Dockerfile at the root of the Github deposit of PhylDiag
+```bash
+docker build -t phyldiagi https://github.com/DyogenIBENS/PhylDiag.git
+```
+(NB: There is no need to install LibsDyogen, Docker will do it after reading the Dockerfile.)
+
+Then:
+1. Create a container (phyldiagc) from the image
+2. Share Input/Output folders between host and container:
+    * input: `INDIR` on the host and `/IN` in container
+    * output: `OUTDIR` on the host and `/OUT` in container
+3. Start a bash shell in the container
+Make these 3 actions with, for instance
+```bash
+INDIR=${PWD} && OUTDIR=${HOME}/phyldiag_results
+docker run --name phyldiagc -v ${INDIR}:/IN -v ${OUTDIR}:/OUT -ti phyldiagi bash
+```
+
+From the new shell, you can use all executables installed in the container to process data from /IN/ to /OUT/, for instance:
+```bash
+PhylDiag/src/phylDiag.py /IN/Homo.sapiens.genome.bz2 /IN/Mus.musculus.genome.bz2 /IN/Euarchontoglires.families.bz2 > /OUT/res.sbs
+```
+Exit the container with `exit`.
+
+Later you can go back inside the container with:
+```bash
+docker start -i phyldiagc
+```
+
+If you are on Windows:
+1. Make sure that Docker is activated and that it uses Hyper-V; by default it should be the case
+2. Start windows Powershell
+3. Change directories with backslashes instead of slashes (e.g. cd `.\path\folder\containingDockerfile\`)
+4. Once you are in the folder of the dockerfile, build the image with `docker build .\`
+5. Run the image with `docker run --name phyldiagc -v /c/Users/<user>/Desktop:/IN -it phyldiagi /bin/bash`, with <user>, your user name
+
+## Installation on a Debian distribution
 [Install the LibsDyogen library first.](https://github.com/DyogenIBENS/LibsDyogen)
 From now on we assume that the path to the folder LibsDyogen is in the PYTHONPATH.
 
