@@ -55,14 +55,19 @@ Using Docker, you should be able to install PhylDiag on [Linux distributions, Ma
 
 First, install [docker](https://docs.docker.com/engine/installation/).
 
-Then, build the docker image (phyldiagi) from the Dockerfile at the root of the Github deposit of PhylDiag
+Then, download the Dockerfile, at the root of the Github deposit of PhylDiag, into ~/Downloads
 ```bash
-docker build -t phyldiagi https://github.com/DyogenIBENS/PhylDiag.git
+wget https://raw.githubusercontent.com/DyogenIBENS/PhylDiag/master/Dockerfile -P ~/Downloads
 ```
-(NB: There is no need to install LibsDyogen, Docker will do it after reading the Dockerfile.)
+Move into the folder containing the Dockerfile and build the image (let's name it "phyldiagi")
+```bash
+cd ~/Downloads
+docker build -t phyldiagi ./
+```
+(NB: There is no need to install LibsDyogen, Docker will do it after reading the Dockerfile. Building the image may take some time: the output image will contain i-ADHoRe 3.0, Cyntenator and homology teams, in addition to PhylDiag.)
 
 Then:
-1. Create a container (phyldiagc) from the image
+1. Create a container ("phyldiagc") from the image
 2. Share Input/Output folders between host and container:
     * input: `INDIR` on the host and `/IN` in container
     * output: `OUTDIR` on the host and `/OUT` in container
