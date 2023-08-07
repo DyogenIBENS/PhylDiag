@@ -29,7 +29,7 @@ F, the set of gene families, is an associative array that links, for each family
 
 The name of a gene family is often the name of the ancestral gene, at the root of the gene family.
 
-PhylDiag can also return *syntny blocks*, if
+PhylDiag can also return *synteny blocks*, if
 * identification of micro-rearrangements,
 * identification of mono-genic conserved segments
 
